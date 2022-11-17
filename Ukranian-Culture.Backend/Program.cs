@@ -1,8 +1,6 @@
 using Entities;
 using Microsoft.EntityFrameworkCore;
-
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -30,7 +28,13 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+var services = (IServiceScopeFactory)app.Services.GetService(typeof(IServiceScopeFactory))!;
+
+using (var db = services.CreateScope().ServiceProvider.GetService<RepositoryContext>())
+{
+    db!.Database.Migrate();
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
