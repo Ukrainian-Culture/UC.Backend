@@ -2,12 +2,10 @@
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace UkranianCulture.Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialData : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,15 +22,6 @@ namespace UkranianCulture.Backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                });
-
-            migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "Id", "Age", "Name" },
-                values: new object[,]
-                {
-                    { 1, 14, "Vadym" },
-                    { 2, 18, "Bohdan" }
                 });
         }
 

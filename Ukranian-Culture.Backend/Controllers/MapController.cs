@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ukranian_Culture.Backend.Controllers
 {
@@ -7,6 +9,13 @@ namespace Ukranian_Culture.Backend.Controllers
     [ApiController]
     public class MapController : ControllerBase
     {
+        private readonly RepositoryContext _repositoryContext;
+
+        public MapController(RepositoryContext repositoryContext)
+        {
+            _repositoryContext = repositoryContext;
+        }
+
         [HttpGet]
         public IActionResult GetCitys()
         {
@@ -17,6 +26,12 @@ namespace Ukranian_Culture.Backend.Controllers
                 new {city = "Kyiv"},
                 new {city = "Odessa"}
             });
+        }
+
+        [HttpGet("Users")]
+        public IActionResult GetUsers()
+        {
+            return Ok(_repositoryContext.Users.AsNoTracking());
         }
     }
 }

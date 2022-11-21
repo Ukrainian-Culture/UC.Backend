@@ -14,7 +14,7 @@ builder.Services.AddDbContext<RepositoryContext>(
         b => b.MigrationsAssembly("Ukranian-Culture.Backend")
         )
 );
-
+builder.Services.AddDbContext<RepositoryContext>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policyBuilder =>
