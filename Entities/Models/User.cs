@@ -2,8 +2,8 @@
 
 public class User
 {
-    public int Id { get; init; }
-    public string Name { get; init; } = null!;
-    public string Login { get; init; } = null!;
-    public string Phone { get; init; } = null!;
+    public int Id { get; set; }
+    public string Name { get; set; } = null!;
+    public string Login { get; set; } = null!;
+    public string Phone { get; set; } = null!;
 }
