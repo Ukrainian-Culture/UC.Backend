@@ -1,3 +1,6 @@
+using Entities;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -5,8 +8,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<RepositoryContext>(
+    opts => opts.UseSqlServer(
+        builder.Configuration.GetConnectionString("Db_connection"),
+        b => b.MigrationsAssembly("Ukranian-Culture.Backend")
+    )
+);
+
 var app = builder.Build();
 var logger = NLog.LogManager.GetCurrentClassLogger();
+
+var services = (IServiceScopeFactory)app.Services.GetService(typeof(IServiceScopeFactory))!;
+using (var db = services.CreateScope().ServiceProvider.GetService<RepositoryContext>())
+{
+    db!.Database.Migrate();
+}
 
 try
 {
