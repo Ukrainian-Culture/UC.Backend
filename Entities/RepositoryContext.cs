@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using Entities.Configurations;
+using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Entities;
@@ -21,6 +22,14 @@ public class RepositoryContext : DbContext
         modelBuilder.Entity<Culture>()
             .HasMany(cul => cul.Categories)
             .WithOne(a => a.Culture);
+
+        modelBuilder.ApplyConfiguration(new ArticlesConfiguration());
+        modelBuilder.ApplyConfiguration(new UsersConfigurations());
+        modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+        modelBuilder.ApplyConfiguration(new InfoConfiguration());
+        modelBuilder.ApplyConfiguration(new ArticleLocaleConfiguration());
+        modelBuilder.ApplyConfiguration(new CultureConfiguration());
+        modelBuilder.ApplyConfiguration(new CategoryLocaleConfiguration());
     }
 
     public DbSet<User> Users { get; set; } = null!;
