@@ -37,6 +37,6 @@ public class RepositoryContext : DbContext
     public DbSet<Info> Info { get; set; } = null!;
     public DbSet<Category> Categories { get; set; } = null!;
     public DbSet<CategoryLocale> CategoryLocales { get; set; } = null!;
-    public DbSet<ArticlesLocale> ArticlesLoxaLocales { get; set; } = null!;
+    public DbSet<ArticlesLocale> ArticlesLocales { get; set; } = null!;
     public DbSet<Culture> Cultures { get; set; } = null!;
 }
