@@ -16,7 +16,7 @@ public class ArticlesConfiguration : IEntityTypeConfiguration<Article>
                 Type = "file",
                 Region = "hmelnytsk",
                 CategoryId = 1,
-                InfoId = 1
+                Date = new DateTime(1886, 2, 1)
             },
             new Article
             {
@@ -24,7 +24,7 @@ public class ArticlesConfiguration : IEntityTypeConfiguration<Article>
                 Type = "file",
                 Region = "Kyiv",
                 CategoryId = 1,
-                InfoId = 2
+                Date = new DateTime(2001, 01, 01)
             }
         );
     }
