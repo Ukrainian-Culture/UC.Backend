@@ -8,7 +8,11 @@ namespace Ukranian_Culture.Backend
     {
         public MappingProfile()
         {
-            CreateMap<Tuple<Article,ArticlesLocale>,HistoryDto>();
+            CreateMap<Article, HistoryDto>().ForMember(x => x.SubText, opt => opt.Ignore());
+            CreateMap<ArticlesLocale, HistoryDto>()
+                .ForMember(x => x.Date, opt => opt.Ignore())
+                .ForMember(x => x.ActicleId, opt => opt.Ignore())
+                .ForMember(x => x.Region, opt => opt.Ignore());
         }
     }
 }
