@@ -7,6 +7,5 @@ public interface IRepositoryManager
     IArticleRepository Articles { get; }
     ICategoryLocalesRepository CategoryLocales { get; }
     ICategoryRepository Categories { get; }
-    IInfoRepository Infos { get; }
     Task SaveAsync();
 }

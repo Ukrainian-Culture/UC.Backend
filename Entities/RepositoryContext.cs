@@ -26,7 +26,6 @@ public class RepositoryContext : DbContext
         modelBuilder.ApplyConfiguration(new ArticlesConfiguration());
         modelBuilder.ApplyConfiguration(new UsersConfigurations());
         modelBuilder.ApplyConfiguration(new CategoryConfiguration());
-        modelBuilder.ApplyConfiguration(new InfoConfiguration());
         modelBuilder.ApplyConfiguration(new ArticleLocaleConfiguration());
         modelBuilder.ApplyConfiguration(new CultureConfiguration());
         modelBuilder.ApplyConfiguration(new CategoryLocaleConfiguration());
@@ -34,7 +33,6 @@ public class RepositoryContext : DbContext
 
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<Article> Articles { get; set; } = null!;
-    public DbSet<Info> Info { get; set; } = null!;
     public DbSet<Category> Categories { get; set; } = null!;
     public DbSet<CategoryLocale> CategoryLocales { get; set; } = null!;
     public DbSet<ArticlesLocale> ArticlesLocales { get; set; } = null!;

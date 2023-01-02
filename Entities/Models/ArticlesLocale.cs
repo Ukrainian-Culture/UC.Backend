@@ -6,9 +6,10 @@ public class ArticlesLocale
 {
     public int Id { get; init; }
     [ForeignKey(nameof(Culture))] public int CultureId { get; init; }
+    public Culture Culture { get; set; } = null!;
+
     public string Title { get; init; } = null!;
     public string Content { get; init; } = null!;
-
-
-    public Culture Culture { get; set; } = null!;
+    public string SubText { get; set; } = null!;
+    public string ShortDescription { get; set; } = null!;
 }
