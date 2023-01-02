@@ -1,5 +1,8 @@
+using System.Net;
 using Contracts;
 using Entities;
+using Entities.ErrorModels;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using Repositories;
@@ -23,6 +26,27 @@ builder.Services.AddDbContext<RepositoryContext>(
 );
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 var app = builder.Build();
+
+app.UseExceptionHandler(appError =>
+    appError.Run(async context =>
+    {
+        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        context.Response.ContentType = "application/json";
+
+        var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+        if (contextFeature is not null)
+        {
+            ILoggerManager logger = new LoggerManager();
+            logger.LogError($"Something went wrong: {contextFeature.Error}");
+
+            await context.Response.WriteAsync(new ErrorDetails
+            {
+                StatusCode = context.Response.StatusCode,
+                Message = "Internal server error"
+            }.ToString());
+        }
+    }));
+
 var logger = LogManager.GetCurrentClassLogger();
 
 var services = (IServiceScopeFactory)app.Services.GetService(typeof(IServiceScopeFactory))!;

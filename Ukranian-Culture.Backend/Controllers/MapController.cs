@@ -10,6 +10,7 @@ namespace Ukranian_Culture.Backend.Controllers
         [HttpGet]
         public IActionResult GetCitys()
         {
+            throw new Exception("asd");
             return Ok(new[]
             {
                 new {city = "I-F"},
