@@ -1,5 +1,7 @@
+using Contracts;
 using Entities;
 using Microsoft.EntityFrameworkCore;
+using Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +16,7 @@ builder.Services.AddDbContext<RepositoryContext>(
         b => b.MigrationsAssembly("Ukranian-Culture.Backend")
     )
 );
-
+builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 var app = builder.Build();
 var logger = NLog.LogManager.GetCurrentClassLogger();
 
