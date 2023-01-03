@@ -4,5 +4,5 @@ namespace Contracts;
 
 public interface IArticleLocalesRepository
 {
-    public Task<ArticlesLocale> GetArticleByIdAsync(int id, ChangesType trackChanges);
+    public Task<ArticlesLocale> GetArticleLocaleByIdAsync(int id, ChangesType trackChanges);
 }
