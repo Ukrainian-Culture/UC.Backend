@@ -11,6 +11,7 @@ public class RepositoryManager : IRepositoryManager
     private IArticleRepository? _articleRepository;
     private ICategoryLocalesRepository? _categoryLocalesRepository;
     private ICategoryRepository? _categoryRepository;
+    private ICultureRepository? _cultureRepository;
     public RepositoryManager(RepositoryContext repositoryContext)
     {
         _repositoryContext = repositoryContext;
@@ -30,6 +31,9 @@ public class RepositoryManager : IRepositoryManager
 
     public ICategoryRepository Categories
         => _categoryRepository ??= new CategoryRepository(_repositoryContext);
+
+    public ICultureRepository Cultures
+        => _cultureRepository ??= new CultureRepository(_repositoryContext);
 
     public async Task SaveAsync() => await _repositoryContext.SaveChangesAsync();
 }
