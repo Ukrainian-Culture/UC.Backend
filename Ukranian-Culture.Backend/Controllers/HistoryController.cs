@@ -19,8 +19,8 @@ namespace Ukranian_Culture.Backend.Controllers
             _repositoryManager = repositoryManager;
         }
 
-        [HttpGet("{region:int}")]
-        public IActionResult GetHistoryByRegion(string region)
+        [HttpGet("{region}")]
+        public async Task<IActionResult> GetHistoryByRegion(string region)
         {
             return Ok();
         }
