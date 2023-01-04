@@ -13,9 +13,6 @@ public class ArticleRepository : RepositoryBase<Article>, IArticleRepository
     {
     }
 
-    public async Task<IEnumerable<Article>> GetAllArticlesAsync(ChangesType trackChanges)
-        => await FindAll(trackChanges).ToListAsync();
-
     public async Task<IEnumerable<Article>> GetAllByConditionAsync(Expression<Func<Article, bool>> expression, ChangesType trackChanges)
         => await FindByCondition(expression, trackChanges).ToListAsync();
 }
