@@ -10,5 +10,5 @@ public class ArticleTileDto
     public string Region { get; init; } = null!;
     public string SubText { get; set; } = null!;
     public string Title { get; set; } = null!;
-    public string Category { get; set; } = null!;
+    public string? Category { get; set; } = null!;
 }

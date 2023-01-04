@@ -1,22 +1,24 @@
 ﻿using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using System.Security.Principal;
 using Contracts;
 using Entities.DTOs;
 using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-
+using Ukranian_Culture.Backend.Controllers;
+using Mappers;
 namespace Ukranian_Culture.Backend.Controllers;
 
 [Route("api/{cultureId:int}/[controller]")]
 [ApiController]
-public class ArticlesController : ControllerBase
+public class ArticlesTileController : ControllerBase
 {
     private readonly IRepositoryManager _repositoryManager;
 
-    public ArticlesController(IRepositoryManager repositoryManager)
+    public ArticlesTileController(IRepositoryManager repositoryManager)
     {
         _repositoryManager = repositoryManager;
     }
@@ -27,7 +29,7 @@ public class ArticlesController : ControllerBase
 
         var culture = await GetCultureDataAsync(cultureId);
         var articles = await GetArticlesByConditionAsync(_ => true);
-        var result = await JoinArticleAndArticleLocalInOneModel(culture, articles);
+        var result = await CreateArticleTileDtos(culture, articles);
         return Ok(result);
     }
 
@@ -36,46 +38,36 @@ public class ArticlesController : ControllerBase
     {
         var culture = await GetCultureDataAsync(cultureId);
         var articles = await GetArticlesByConditionAsync(article => article.Region == regionName);
-        var result = await JoinArticleAndArticleLocalInOneModel(culture, articles);
+        var result = await CreateArticleTileDtos(culture, articles);
         return Ok(result);
     }
 
-    private async Task<IEnumerable<ArticleTileDto>> JoinArticleAndArticleLocalInOneModel(Culture culture, IEnumerable<Article> articles)
+    [HttpGet("{categoryId:int}")]
+    public async Task<IActionResult> GetArticlesByCategory(int cultureId, int categoryId)
     {
-        return culture
-            .ArticlesTranslates
-            .Join(articles,
-                articleLocale => articleLocale.Id,
-                article => article.Id,
-                await CreateArticleTileDto(culture.Id));
+        var culture = await GetCultureDataAsync(cultureId);
+        var articles = await GetArticlesByConditionAsync(article => article.CategoryId == categoryId);
+        var result = await CreateArticleTileDtos(culture, articles);
+        return Ok(result);
     }
-    private async Task<Func<ArticlesLocale, Article, ArticleTileDto>> CreateArticleTileDto(int cultureId)
-    {
-        var categories = await GetCategories(cultureId);
 
-        return (articleLocale, article) => new ArticleTileDto
-        {
-            ArticleId = article.Id,
-            Type = article.Type,
-            Region = article.Region,
-            SubText = articleLocale.SubText,
-            Title = articleLocale.Title,
-            Category = categories[article.CategoryId]
-        };
-    }
-    private async Task<Dictionary<int, string>> GetCategories(int cultureId)
+    private async Task<IEnumerable<ArticleTileDto>> CreateArticleTileDtos(Culture culture, IEnumerable<Article> articles)
     {
-        return (await _repositoryManager.CategoryLocales.GetCategoriesByCulture(cultureId, ChangesType.AsNoTracking))
-            .ToDictionary(a => a.CategoryId, a => a.Name);
+        var articlesLocale = culture.ArticlesTranslates.ToList();
+        var categories = culture.Categories.ToDictionary(a => a.CategoryId, a => a.Name);
+
+        return await new MapperArticleTileDto()
+            .MappedTwoModelsInOne(articles, articlesLocale, categories);
     }
+
     private async Task<IEnumerable<Article>> GetArticlesByConditionAsync(Expression<Func<Article, bool>> expression)
-    {
-        return await _repositoryManager
+        => await _repositoryManager
             .Articles
             .GetAllByConditionAsync(expression, ChangesType.AsNoTracking);
-    }
+
     private async Task<Culture> GetCultureDataAsync(int cultureId)
-    {
-        return await _repositoryManager.Cultures.GetCultureWithContentAsync(cultureId, ChangesType.AsNoTracking);
-    }
+        => await _repositoryManager
+            .Cultures
+            .GetCultureWithContentAsync(cultureId, ChangesType.AsNoTracking);
+
 }
