@@ -1,11 +1,4 @@
-﻿using Contracts;
-using Entities;
-using Entities.Models;
-using FluentAssertions;
-using Repositories;
-using Ukrainian_Culture.Tests.DbModels;
-
-namespace Ukrainian_Culture.Tests;
+﻿namespace Ukrainian_Culture.Tests.RepositoriesTests;
 
 public class CultureRepositoryTests
 {
@@ -43,7 +36,7 @@ public class CultureRepositoryTests
         var cultureRepository = new CultureRepository(_context);
         //Act
 
-        var result = (await cultureRepository.GetCultureWithContentAsync(cultureId, ChangesType.AsNoTracking));
+        var result = await cultureRepository.GetCultureWithContentAsync(cultureId, ChangesType.AsNoTracking);
         //Assert
         result.ArticlesTranslates.Should().HaveCount(1);
         result.Categories.Should().HaveCount(1);
@@ -72,7 +65,7 @@ public class CultureRepositoryTests
         var cultureRepository = new CultureRepository(_context);
         //Act
 
-        var result = (await cultureRepository.GetCultureWithContentAsync(cultureId, ChangesType.AsNoTracking));
+        var result = await cultureRepository.GetCultureWithContentAsync(cultureId, ChangesType.AsNoTracking);
         //Assert
         result.ArticlesTranslates.Should().BeEmpty();
         result.Categories.Should().HaveCount(1);
@@ -100,7 +93,7 @@ public class CultureRepositoryTests
         var cultureRepository = new CultureRepository(_context);
         //Act
 
-        var result = (await cultureRepository.GetCultureWithContentAsync(cultureId, ChangesType.AsNoTracking));
+        var result = await cultureRepository.GetCultureWithContentAsync(cultureId, ChangesType.AsNoTracking);
         //Assert
         result.ArticlesTranslates.Should().HaveCount(1);
         result.Categories.Should().BeEmpty();
@@ -134,7 +127,7 @@ public class CultureRepositoryTests
         var cultureRepository = new CultureRepository(_context);
         //Act
 
-        var result = (await cultureRepository.GetCultureWithContentAsync(idToCompare, ChangesType.AsNoTracking));
+        var result = await cultureRepository.GetCultureWithContentAsync(idToCompare, ChangesType.AsNoTracking);
         //Assert
         result.Name.Should().Be(expectedLanguage);
     }
@@ -147,7 +140,7 @@ public class CultureRepositoryTests
         try
         {
             //Act
-            var result = (await cultureRepository.GetCultureWithContentAsync(2, ChangesType.AsNoTracking));
+            var result = await cultureRepository.GetCultureWithContentAsync(2, ChangesType.AsNoTracking);
         }
         catch (Exception ex)
         {

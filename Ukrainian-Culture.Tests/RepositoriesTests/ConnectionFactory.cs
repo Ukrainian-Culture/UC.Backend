@@ -1,14 +1,4 @@
-﻿using Entities;
-using Entities.Configurations;
-using Entities.Models;
-using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Ukrainian_Culture.Tests.DbModels;
-
-namespace Ukrainian_Culture.Tests;
+﻿namespace Ukrainian_Culture.Tests.RepositoriesTests;
 
 public class ConnectionFactory : IDisposable
 {

@@ -1,9 +1,4 @@
-﻿using Entities.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-
-namespace Ukrainian_Culture.Tests.DbModels;
+﻿namespace Ukrainian_Culture.Tests.RepositoriesTests.DbModels;
 
 public class UserModel : ITestableModel
 {

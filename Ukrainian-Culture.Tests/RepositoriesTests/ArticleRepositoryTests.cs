@@ -1,11 +1,4 @@
-﻿using Contracts;
-using Entities;
-using Entities.Models;
-using FluentAssertions;
-using Repositories;
-using Ukrainian_Culture.Tests.DbModels;
-
-namespace Ukrainian_Culture.Tests;
+﻿namespace Ukrainian_Culture.Tests.RepositoriesTests;
 
 public class ArticleRepositoryTests
 {

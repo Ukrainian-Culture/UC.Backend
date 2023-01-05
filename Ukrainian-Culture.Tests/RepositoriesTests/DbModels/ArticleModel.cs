@@ -1,8 +1,4 @@
-﻿using Entities.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-
-namespace Ukrainian_Culture.Tests.DbModels;
+﻿namespace Ukrainian_Culture.Tests.RepositoriesTests.DbModels;
 
 public class ArticleModel : ITestableModel
 {
