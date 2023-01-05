@@ -2,6 +2,7 @@
 using Entities;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Repositories;
 
@@ -16,10 +17,10 @@ public class ArticleLocalesRepository : RepositoryBase<ArticlesLocale>, IArticle
        => await FindByCondition(art => art.Id == id, trackChanges)
            .SingleAsync();
 
-    public IEnumerable<ArticlesLocale> GetAllArticlesLocale(ChangesType trackChanges)
-        => FindAll(trackChanges).ToList();
+    public async Task<IEnumerable<ArticlesLocale>> GetArticlesLocaleByCondition(Expression<Func<ArticlesLocale,bool>> expression ,ChangesType trackChanges)
+        => await FindByCondition(expression, trackChanges).ToListAsync();
 
-    public void CreateArticlesLocale(ArticlesLocale articleL) => Create(articleL);
-    public void UpdateArticlesLocale(ArticlesLocale articleL) => Update(articleL);
-    public void DeleteArticlesLocale(ArticlesLocale articleL) => Delete(articleL);
+    public void CreateArticlesLocale(ArticlesLocale articleLocale) => Create(articleLocale);
+    public void UpdateArticlesLocale(ArticlesLocale articleLocale) => Update(articleLocale);
+    public void DeleteArticlesLocale(ArticlesLocale articleLocale) => Delete(articleLocale);
 }

@@ -1,11 +1,12 @@
 ﻿using Entities.Models;
+using System.Linq.Expressions;
 
 namespace Contracts;
 
 public interface IArticleRepository
 {
-    public Task<IEnumerable<Article>> GetArticlesByRegoinAsync(string region, ChangesType trackChanges);
-    public Task<Article> GetArticleByIdAsync(int id, ChangesType trackChanges);
+    Task<IEnumerable<Article>> GetArticlesByCondition(Expression<Func<Article, bool>> expression, ChangesType trackChanges);
+    Task<Article> GetArticleByIdAsync(int id, ChangesType trackChanges);
 
     void CreateArticle(Article article);
     void UpdateArticle(Article article);

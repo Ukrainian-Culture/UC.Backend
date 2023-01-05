@@ -2,6 +2,7 @@
 using Entities;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Repositories;
 
@@ -12,9 +13,8 @@ public class ArticleRepository : RepositoryBase<Article>, IArticleRepository
     {
     }
 
-    public async Task<IEnumerable<Article>> GetArticlesByRegoinAsync(string region, ChangesType trackChanges)
-        => await FindByCondition(art => art.Region == region, trackChanges)
-            .ToListAsync();
+    public async Task<IEnumerable<Article>> GetArticlesByCondition(Expression<Func<Article, bool>> expression, ChangesType trackChanges)
+        => await FindByCondition(expression, trackChanges).ToListAsync();
 
     public async Task<Article> GetArticleByIdAsync(int id, ChangesType trackChanges)
         => await FindByCondition(art => art.Id == id, trackChanges)
