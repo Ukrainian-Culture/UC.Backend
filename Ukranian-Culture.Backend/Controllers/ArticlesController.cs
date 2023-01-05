@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Security.Principal;
+using AutoMapper;
 using Contracts;
 using Entities.DTOs;
 using Entities.Models;
@@ -9,7 +10,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Ukranian_Culture.Backend.Controllers;
-using Mappers;
 namespace Ukranian_Culture.Backend.Controllers;
 
 [Route("api/{cultureId:int}/[controller]")]
@@ -17,10 +17,11 @@ namespace Ukranian_Culture.Backend.Controllers;
 public class ArticlesTileController : ControllerBase
 {
     private readonly IRepositoryManager _repositoryManager;
-
-    public ArticlesTileController(IRepositoryManager repositoryManager)
+    private readonly IMapper _mapper;
+    public ArticlesTileController(IRepositoryManager repositoryManager, IMapper mapper)
     {
         _repositoryManager = repositoryManager;
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -51,13 +52,13 @@ public class ArticlesTileController : ControllerBase
         return Ok(result);
     }
 
-    private async Task<IEnumerable<ArticleTileDto>> CreateArticleTileDtos(Culture culture, IEnumerable<Article> articles)
+    private Task<IEnumerable<ArticleTileDto>> CreateArticleTileDtos(Culture culture, IEnumerable<Article> articles)
     {
         var articlesLocale = culture.ArticlesTranslates.ToList();
-        var categories = culture.Categories.ToDictionary(a => a.CategoryId, a => a.Name);
+        var articlesDto = articles
+            .Select((article, i) => _mapper.Map<ArticleTileDto>((article, articlesLocale[i])));
 
-        return await new MapperArticleTileDto()
-            .MappedTwoModelsInOne(articles, articlesLocale, categories);
+        return Task.FromResult(articlesDto);
     }
 
     private async Task<IEnumerable<Article>> GetArticlesByConditionAsync(Expression<Func<Article, bool>> expression)
