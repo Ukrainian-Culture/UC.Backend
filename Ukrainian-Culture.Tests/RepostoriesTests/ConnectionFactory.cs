@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Ukrainian_Culture.Tests.DbModels;
+using Ukrainian_Culture.Tests.RepostoryTests.DbModels;
 
-namespace Ukrainian_Culture.Tests;
+namespace Ukrainian_Culture.Tests.RepostoryTests;
 
 public class ConnectionFactory : IDisposable
 {

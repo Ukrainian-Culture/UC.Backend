@@ -5,9 +5,7 @@ namespace Contracts;
 
 public interface IArticleLocalesRepository
 {
-    public Task<ArticlesLocale> GetArticlesLocaleByIdAsync(int id, ChangesType trackChanges);
-
-    Task<IEnumerable<ArticlesLocale>> GetArticlesLocaleByCondition(Expression<Func<ArticlesLocale, bool>> expression, ChangesType trackChanges);
+    Task<IEnumerable<ArticlesLocale>> GetArticlesLocaleByConditionAsync(Expression<Func<ArticlesLocale, bool>> expression, ChangesType trackChanges);
 
     void CreateArticlesLocale(ArticlesLocale article);
     void UpdateArticlesLocale(ArticlesLocale article);

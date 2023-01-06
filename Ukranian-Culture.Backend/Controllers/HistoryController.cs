@@ -24,11 +24,16 @@ public class HistoryController : ControllerBase
     [HttpGet("{region}")]
     public async Task<IActionResult> GetHistoryByRegion(int culture, string region)
     {
-        var articles = await _repositoryManager.Articles.GetArticlesByCondition(art => art.Region == region, ChangesType.AsNoTracking);
+        var articles = await _repositoryManager.Articles.GetArticlesByConditionAsync(art => art.Region == region, ChangesType.AsNoTracking);
+
+        if (!articles.Any()) throw new Exception("Articles are absent");
 
         var articlesLocale = (await articles
             .Select(art => art.Id)
-            .Select( async id => await _repositoryManager.ArticleLocales.GetArticlesLocaleByCondition(artl => artl.Id == id && artl.CultureId == culture, ChangesType.AsNoTracking)).First()).ToList();
+            .Select( async id => await _repositoryManager.ArticleLocales.GetArticlesLocaleByConditionAsync(artl => artl.Id == id && artl.CultureId == culture, ChangesType.AsNoTracking)).First())
+            .ToList();
+
+        if (!articlesLocale.Any()) throw new Exception("ArticlesLocale are absent");
 
         var history = articles.Select((art, i) => _mapper.Map<HistoryDto>((art, articlesLocale[i])));
 
