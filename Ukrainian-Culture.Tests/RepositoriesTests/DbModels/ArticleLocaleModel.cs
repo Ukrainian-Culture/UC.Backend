@@ -1,5 +1,4 @@
-using Ukrainian_Culture.Tests.RepostoriesTests.DbModels;
-using Ukrainian_Culture.Tests.RepostoryTests.DbModels;
+namespace Ukrainian_Culture.Tests.RepositoriesTests.DbModels;
 
 public class ArticlesLocaleModel : ITestableModel
 {

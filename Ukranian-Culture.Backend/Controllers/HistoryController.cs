@@ -24,7 +24,9 @@ public class HistoryController : ControllerBase
     [HttpGet("{region}")]
     public async Task<IActionResult> GetHistoryByRegion(int culture, string region)
     {
-        var articles = await _repositoryManager.Articles.GetArticlesByConditionAsync(art => art.Region == region, ChangesType.AsNoTracking);
+        var articles = await _repositoryManager
+            .Articles
+            .GetAllByConditionAsync(art => art.Region == region, ChangesType.AsNoTracking);
 
         if (!articles.Any())
         {
@@ -32,12 +34,15 @@ public class HistoryController : ControllerBase
             return BadRequest();
         }
 
-        var articlesLocale = (await articles
+        var articlesLocale = articles
             .Select(art => art.Id)
-            .Select( async id => await _repositoryManager.ArticleLocales.GetArticlesLocaleByConditionAsync(artl => artl.Id == id && artl.CultureId == culture, ChangesType.AsNoTracking)).First())
-            .ToList();
+            .Select(id => _repositoryManager
+                    .ArticleLocales
+                    .GetArticlesLocaleByConditionAsync(artl => artl.Id == id && artl.CultureId == culture, ChangesType.AsNoTracking)
+                        .Result.FirstOrDefault()
+            ).ToList();
 
-        if (!articlesLocale.Any())
+        if (articlesLocale.Contains(null))
         {
             _logger.LogError("ArticlesLocale are absent");
             return BadRequest();

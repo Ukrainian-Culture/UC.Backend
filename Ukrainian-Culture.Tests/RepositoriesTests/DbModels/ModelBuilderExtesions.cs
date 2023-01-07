@@ -5,9 +5,9 @@ public static class ModelBuilderExtesions
     public static void CreateUserModel(this ModelBuilder model)
     {
         model.Entity<User>().HasKey(user => user.Id);
-        model.Entity<User>().Property(user => user.Login).IsRequired();
-        model.Entity<User>().Property(user => user.Name).IsRequired();
-        model.Entity<User>().Property(user => user.Phone).IsRequired();
+        model.Entity<User>().Property(user => user.Login);
+        model.Entity<User>().Property(user => user.Name);
+        model.Entity<User>().Property(user => user.Phone);
     }
     public static void CreateArticlesLocaleModel(this ModelBuilder modelBuilder)
     {
@@ -25,8 +25,8 @@ public static class ModelBuilderExtesions
     public static void CreateCultureModel(this ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Culture>().HasKey(culture => culture.Id);
-        modelBuilder.Entity<Culture>().Property(culture => culture.Name).IsRequired();
-        modelBuilder.Entity<Culture>().Property(culture => culture.DisplayedName).IsRequired();
+        modelBuilder.Entity<Culture>().Property(culture => culture.Name);
+        modelBuilder.Entity<Culture>().Property(culture => culture.DisplayedName);
 
         modelBuilder.Entity<Culture>()
             .HasMany(cul => cul.ArticlesTranslates)
@@ -56,10 +56,10 @@ public static class ModelBuilderExtesions
             .HasOne(article => article.Category)
             .WithMany(cat => cat.Articles);
 
-        modelBuilder.Entity<Article>().Property(article => article.Date).IsRequired();
-        modelBuilder.Entity<Article>().Property(article => article.Region).IsRequired();
-        modelBuilder.Entity<Article>().Property(article => article.Type).IsRequired();
-        modelBuilder.Entity<Article>().Property(article => article.CategoryId).IsRequired();
+        modelBuilder.Entity<Article>().Property(article => article.Date);
+        modelBuilder.Entity<Article>().Property(article => article.Region);
+        modelBuilder.Entity<Article>().Property(article => article.Type);
+        modelBuilder.Entity<Article>().Property(article => article.CategoryId);
     }
     public static void CreateCategoryModel(this ModelBuilder modelBuilder)
     {
