@@ -6,17 +6,19 @@ public class HistoryControllerTests
 {
     private readonly IRepositoryManager _repositoryManager = Substitute.For<IRepositoryManager>();
     private readonly IMapper _mapper;
+    private readonly ILoggerManager _logger;
 
     public HistoryControllerTests()
     {
         _mapper = new Mapper(new MapperConfiguration(conf => conf.AddProfile(new MappingProfile())));
+        _logger = new LoggerManager();
     }
 
     [Fact]
     public async Task GetHistoryOfRegion_ShouldReturnListOfHisrtoryDto_WhenDbIsNotEmpty()
     {
         //Arrange
-        var controller = new HistoryController(_mapper, _repositoryManager);
+        var controller = new HistoryController(_mapper, _repositoryManager, _logger);
 
         _repositoryManager.Articles
             .GetArticlesByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
@@ -60,10 +62,10 @@ public class HistoryControllerTests
     }
 
     [Fact]
-    public void GetHistoryOfRegion_ShouldThrowExceprion_WhenArticleDbIsEmpty()
+    public async Task GetHistoryOfRegion_ShouldReturnBadRequest_WhenArticleDbIsEmpty()
     {
         //Arrange
-        var controller = new HistoryController(_mapper, _repositoryManager);
+        var controller = new HistoryController(_mapper, _repositoryManager, _logger);
 
         _repositoryManager.Articles
             .GetArticlesByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
@@ -78,15 +80,18 @@ public class HistoryControllerTests
                 }
             });
 
-        //Assert and act
-        Assert.ThrowsAsync<Exception>(() => controller.GetHistoryByRegion(1, "Kyiv"));
+        //Act
+        var result = (await controller.GetHistoryByRegion(1,"Kyiv")) as BadRequestResult;
+
+        //Assert
+        result!.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
     }
 
     [Fact]
-    public void GetHistoryOfRegion_ShouldThrowExceprion_WhenArticlesLocaleDbIsEmpty()
+    public async Task GetHistoryOfRegion_ShouldThrowExceprion_WhenArticlesLocaleDbIsEmpty()
     {
         //Arrange
-        var controller = new HistoryController(_mapper, _repositoryManager);
+        var controller = new HistoryController(_mapper, _repositoryManager, _logger);
 
         _repositoryManager.Articles
             .GetArticlesByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
@@ -105,8 +110,11 @@ public class HistoryControllerTests
         _repositoryManager.ArticleLocales.GetArticlesLocaleByConditionAsync(Arg.Any<Expression<Func<ArticlesLocale, bool>>>(), Arg.Any<ChangesType>())
             .Returns(Enumerable.Empty<ArticlesLocale>());
 
-        //Assert and act
-        Assert.ThrowsAsync<Exception>(() => controller.GetHistoryByRegion(1, "Kyiv"));
+        //Act
+        var result = (await controller.GetHistoryByRegion(1, "Kyiv")) as BadRequestResult;
+
+        //Assert
+        result!.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
     }
     [Fact]
     public async Task GetHistoryOfRegion_ShouldReturnCorrectResult_WhenArticleDbAndArticlesLocaleDbAreNotEmpty()
@@ -150,7 +158,7 @@ public class HistoryControllerTests
                 }
             });
 
-        var controller = new HistoryController(_mapper, _repositoryManager);
+        var controller = new HistoryController(_mapper, _repositoryManager, _logger);
 
         //Act
         var result = await controller.GetHistoryByRegion(1, "Kyiv") as OkObjectResult;
