@@ -4,10 +4,10 @@ using Entities.Models;
 
 namespace Repositories;
 
-public class CategoryLocalesRepository : RepositoryBase<CategoryLocale>, ICategoryLocalesRepository
+public class CategoryLocalesRepository : ICategoryLocalesRepository// RepositoryBase<CategoryLocale>,
 {
     public CategoryLocalesRepository(RepositoryContext context)
-        : base(context)
+      //  : base(context)
     {
     }
 }

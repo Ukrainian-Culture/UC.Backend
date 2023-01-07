@@ -4,25 +4,34 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Entities.Configurations;
 
-public class UsersConfigurations// : IEntityTypeConfiguration<User>
+public class UsersConfigurations : IEntityTypeConfiguration<User>
 {
-    //public void Configure(EntityTypeBuilder<User> builder)
-    //{
-    //    builder.HasData(
-    //        new User
-    //        {
-    //            Id = 1,
-    //            Name = "Vadym",
-    //            Login = "pflfoof",
-    //            Phone = "380785774545"
-    //        },
-    //        new User
-    //        {
-    //            Id = 2,
-    //            Name = "Bohdan",
-    //            Login = "maltokent",
-    //            Phone = "2122921001"
-    //        }
-    //    );
-    //}
+    public void Configure(EntityTypeBuilder<User> builder)
+    {
+        builder.HasData(
+            new User
+            {
+                Id = "169a9df2-231c-45e8-9a0a-c7333f0dc9f4",
+                FirstName = "Vadym",
+                LastName="Orlov",
+                UserName="Vadym",
+                NormalizedUserName="VADYM",
+                NormalizedEmail="VADYM@GMAIL.COM",
+                Email="Vadym@gmail.com",
+                PasswordHash= "6925a4905d02cc4c26872e1713a0a5f2"
+
+            },
+            new User
+            {
+                Id = "87d76511-8b74-4250-aef1-c47b8cb9308f",
+                FirstName = "Bohdan",
+                LastName="Vivchar",
+                UserName = "Bohdan",
+                NormalizedUserName = "BOHDAN",
+                NormalizedEmail = "BOHDAN@GMAIL.COM",
+                Email = "Bohdan@gmail.com",
+                PasswordHash = "6925a4905d02cc4c26872e1813a0a5f2"
+            }
+        );
+    }
 }

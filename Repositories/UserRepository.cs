@@ -16,12 +16,10 @@ public class UserRepository : RepositoryBase<User> , IUserRepository
         => await FindAll(trackChanges)
             .ToListAsync();
 
-    public async Task<User> GetUserByIdAsync(int id, ChangesType trackChanges)
-    {
-        throw new NotImplementedException();
-    }
-        //=> await FindByCondition(user => user.Id == id , trackChanges)
-        //    .SingleAsync();
+    public async Task<User> GetUserByIdAsync(string id, ChangesType trackChanges)
+        => await FindByCondition(user => user.Id == id, trackChanges)
+            .SingleAsync();
+
 
     public void CreateUser(User user) => Create(user);
     public void UpdateUser(User user) => Update(user);

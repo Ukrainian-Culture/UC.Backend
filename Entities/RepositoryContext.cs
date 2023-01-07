@@ -11,11 +11,6 @@ public class RepositoryContext : IdentityDbContext<User>
     public RepositoryContext()
     {
     }
-
-    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //{
-    //    optionsBuilder.UseSqlServer(@"Server=(localdb)\\MSSQLLocalDB; database=UC;Trusted_Connection=true;");
-    //}
     public RepositoryContext(DbContextOptions options)
         : base(options)
     {
@@ -42,7 +37,7 @@ public class RepositoryContext : IdentityDbContext<User>
             .WithOne(a => a.Culture);
 
         modelBuilder.ApplyConfiguration(new ArticlesConfiguration());
-        //modelBuilder.ApplyConfiguration(new UsersConfigurations());
+        modelBuilder.ApplyConfiguration(new UsersConfigurations());
         modelBuilder.ApplyConfiguration(new CategoryConfiguration());
         modelBuilder.ApplyConfiguration(new ArticleLocaleConfiguration());
         modelBuilder.ApplyConfiguration(new CultureConfiguration());
@@ -53,9 +48,9 @@ public class RepositoryContext : IdentityDbContext<User>
     private void SeedRoles(ModelBuilder builder)
     {
         builder.Entity<IdentityRole>().HasData(
-            new IdentityRole() { Id = "431f29e9-13ff-4f5f-b178-511610d5103f", Name = "Admin", ConcurrencyStamp = "1", NormalizedName = "Admin"},
+            new IdentityRole() { Id = "431f29e9-13ff-4f5f-b178-511610d5103f", Name = "Admin", ConcurrencyStamp = "1", NormalizedName = "Admin" },
             new IdentityRole() { Id = "5adbec33-97c5-4041-be6a-e0f3d3ca6f44", Name = "User", ConcurrencyStamp = "2", NormalizedName = "User" }
             );
     }
-  
+
 }

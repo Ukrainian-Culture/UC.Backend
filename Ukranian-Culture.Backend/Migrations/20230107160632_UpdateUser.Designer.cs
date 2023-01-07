@@ -4,6 +4,7 @@ using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace UkranianCulture.Backend.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20230107160632_UpdateUser")]
+    partial class UpdateUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,12 +27,14 @@ namespace UkranianCulture.Backend.Migrations
 
             modelBuilder.Entity("Entities.Models.Article", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -51,16 +56,16 @@ namespace UkranianCulture.Backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("5eca5808-4f44-4c4c-b481-72d2bdf24203"),
-                            CategoryId = new Guid("858feff1-770f-4090-922a-a8dd9b16e0ee"),
+                            Id = 1,
+                            CategoryId = 1,
                             Date = new DateTime(1886, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Region = "hmelnytsk",
                             Type = "file"
                         },
                         new
                         {
-                            Id = new Guid("5b32effd-2636-4cab-8ac9-3258c746aa53"),
-                            CategoryId = new Guid("858feff1-770f-4090-922a-a8dd9b16e0ee"),
+                            Id = 2,
+                            CategoryId = 1,
                             Date = new DateTime(2001, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Region = "Kyiv",
                             Type = "file"
@@ -69,11 +74,11 @@ namespace UkranianCulture.Backend.Migrations
 
             modelBuilder.Entity("Entities.Models.ArticlesLocale", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("CultureId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("CultureId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -100,8 +105,8 @@ namespace UkranianCulture.Backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e847e218-1be2-40c2-9d44-d4c93bbf493b"),
-                            CultureId = new Guid("4fd5d8c1-f34b-4824-b252-69910285e681"),
+                            Id = 1,
+                            CultureId = 1,
                             Content = "About Bohdan Khmelnytsky .... ",
                             ShortDescription = "About Bohdan Khmelnytsky",
                             SubText = "About Bohdan Khmelnytsky",
@@ -109,8 +114,8 @@ namespace UkranianCulture.Backend.Migrations
                         },
                         new
                         {
-                            Id = new Guid("e847e218-1be2-40c2-9d44-d4c93bbf493b"),
-                            CultureId = new Guid("0a315a0f-4860-4302-bb79-dec86e87d378"),
+                            Id = 1,
+                            CultureId = 2,
                             Content = "Про Богдана Хмельницького .... ",
                             ShortDescription = "Про Богдана Хмельницького",
                             SubText = "Про Богдана Хмельницького",
@@ -118,8 +123,8 @@ namespace UkranianCulture.Backend.Migrations
                         },
                         new
                         {
-                            Id = new Guid("0a2e4bf1-ce88-4008-8e7b-ad6855572a6d"),
-                            CultureId = new Guid("4fd5d8c1-f34b-4824-b252-69910285e681"),
+                            Id = 2,
+                            CultureId = 1,
                             Content = "About Ivan Mazepa .... ",
                             ShortDescription = "About Ivan Mazepa",
                             SubText = "About Ivan Mazepa",
@@ -127,8 +132,8 @@ namespace UkranianCulture.Backend.Migrations
                         },
                         new
                         {
-                            Id = new Guid("0a2e4bf1-ce88-4008-8e7b-ad6855572a6d"),
-                            CultureId = new Guid("0a315a0f-4860-4302-bb79-dec86e87d378"),
+                            Id = 2,
+                            CultureId = 2,
                             Content = "Про Івана Мазепу .... ",
                             ShortDescription = "Про Івана Мазепу",
                             SubText = "Про Івана Мазепу",
@@ -138,9 +143,11 @@ namespace UkranianCulture.Backend.Migrations
 
             modelBuilder.Entity("Entities.Models.Category", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.HasKey("Id");
 
@@ -149,21 +156,21 @@ namespace UkranianCulture.Backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("858feff1-770f-4090-922a-a8dd9b16e0ee")
+                            Id = 1
                         },
                         new
                         {
-                            Id = new Guid("0e5809cd-d66e-4b1d-ac25-27a36750ebbd")
+                            Id = 2
                         });
                 });
 
             modelBuilder.Entity("Entities.Models.CategoryLocale", b =>
                 {
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("CultureId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("CultureId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -178,35 +185,37 @@ namespace UkranianCulture.Backend.Migrations
                     b.HasData(
                         new
                         {
-                            CategoryId = new Guid("858feff1-770f-4090-922a-a8dd9b16e0ee"),
-                            CultureId = new Guid("4fd5d8c1-f34b-4824-b252-69910285e681"),
+                            CategoryId = 1,
+                            CultureId = 1,
                             Name = "People"
                         },
                         new
                         {
-                            CategoryId = new Guid("858feff1-770f-4090-922a-a8dd9b16e0ee"),
-                            CultureId = new Guid("0a315a0f-4860-4302-bb79-dec86e87d378"),
+                            CategoryId = 1,
+                            CultureId = 2,
                             Name = "Люди"
                         },
                         new
                         {
-                            CategoryId = new Guid("0e5809cd-d66e-4b1d-ac25-27a36750ebbd"),
-                            CultureId = new Guid("4fd5d8c1-f34b-4824-b252-69910285e681"),
+                            CategoryId = 2,
+                            CultureId = 1,
                             Name = "Food"
                         },
                         new
                         {
-                            CategoryId = new Guid("0e5809cd-d66e-4b1d-ac25-27a36750ebbd"),
-                            CultureId = new Guid("0a315a0f-4860-4302-bb79-dec86e87d378"),
+                            CategoryId = 2,
+                            CultureId = 2,
                             Name = "Їжа"
                         });
                 });
 
             modelBuilder.Entity("Entities.Models.Culture", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("DisplayedName")
                         .IsRequired()
@@ -223,13 +232,13 @@ namespace UkranianCulture.Backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("4fd5d8c1-f34b-4824-b252-69910285e681"),
+                            Id = 1,
                             DisplayedName = "English",
                             Name = "en"
                         },
                         new
                         {
-                            Id = new Guid("0a315a0f-4860-4302-bb79-dec86e87d378"),
+                            Id = 2,
                             DisplayedName = "Ukrainian",
                             Name = "ua"
                         });
@@ -312,37 +321,27 @@ namespace UkranianCulture.Backend.Migrations
                         {
                             Id = "169a9df2-231c-45e8-9a0a-c7333f0dc9f4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a385a9fa-3f6b-4348-ba48-2bfe69bcac5f",
-                            Email = "Vadym@gmail.com",
+                            ConcurrencyStamp = "e3af51c8-5134-4640-b777-c767938add25",
                             EmailConfirmed = false,
                             FirstName = "Vadym",
                             LastName = "Orlov",
                             LockoutEnabled = false,
-                            NormalizedEmail = "VADYM@GMAIL.COM",
-                            NormalizedUserName = "VADYM",
-                            PasswordHash = "6925a4905d02cc4c26872e1713a0a5f2",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3314c092-778b-42a7-9bea-c8863699d398",
-                            TwoFactorEnabled = false,
-                            UserName = "Vadym"
+                            SecurityStamp = "c02d0817-bd3c-405f-8fd5-25042059894c",
+                            TwoFactorEnabled = false
                         },
                         new
                         {
                             Id = "87d76511-8b74-4250-aef1-c47b8cb9308f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "28bb76b1-4142-47ad-9633-2a60933830d6",
-                            Email = "Bohdan@gmail.com",
+                            ConcurrencyStamp = "0d8e6e17-c8f8-4687-ab75-4bbad13b82e3",
                             EmailConfirmed = false,
                             FirstName = "Bohdan",
                             LastName = "Vivchar",
                             LockoutEnabled = false,
-                            NormalizedEmail = "BOHDAN@GMAIL.COM",
-                            NormalizedUserName = "BOHDAN",
-                            PasswordHash = "6925a4905d02cc4c26872e1813a0a5f2",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "1df0335e-b26a-4c32-959b-9e4c9ba3a84e",
-                            TwoFactorEnabled = false,
-                            UserName = "Bohdan"
+                            SecurityStamp = "ca39f882-c929-4804-bed0-eef0bc50c5b7",
+                            TwoFactorEnabled = false
                         });
                 });
 

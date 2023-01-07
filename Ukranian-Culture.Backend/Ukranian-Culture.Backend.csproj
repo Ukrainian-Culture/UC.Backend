@@ -26,7 +26,6 @@
 
   <ItemGroup>
     <Folder Include="Logs\" />
-    <Folder Include="UkranianCulture\Backend\" />
   </ItemGroup>
 
   <ItemGroup>
