@@ -1,7 +1,9 @@
 using System.Net;
 using Contracts;
 using Entities;
+using Entities.DTOs;
 using Entities.ErrorModels;
+using Entities.Models;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using NLog;
@@ -36,6 +38,7 @@ builder.Services.AddDbContext<RepositoryContext>(
     )
 );
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
+builder.Services.AddAutoMapper(typeof(Program));
 var app = builder.Build();
 
 app.UseExceptionHandler(appError =>
