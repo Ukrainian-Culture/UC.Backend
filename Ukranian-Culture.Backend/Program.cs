@@ -1,11 +1,18 @@
 using System.Net;
+using System.Text;
 using Contracts;
 using Entities;
 using Entities.ErrorModels;
+using Entities.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NLog;
 using Repositories;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Ukranian_Culture.Backend;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,7 +31,40 @@ builder.Services.AddDbContext<RepositoryContext>(
         b => b.MigrationsAssembly("Ukranian-Culture.Backend")
     )
 );
+builder.Services.AddIdentity<User,IdentityRole>(opts => {
+    opts.Password.RequiredLength = 8; 
+    opts.Password.RequireNonAlphanumeric = false; 
+    opts.Password.RequireLowercase = false;
+    opts.Password.RequireUppercase = false; 
+    opts.Password.RequireDigit = false; 
+})
+   .AddEntityFrameworkStores<RepositoryContext>()
+   .AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication(option =>
+{
+    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(option =>
+    {
+        option.SaveToken = true;
+        option.RequireHttpsMetadata = false;
+        option.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["JWT:ValidAudience"],
+            ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+        };
+    });
+
+builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+builder.Services.AddMvc();
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
+
 var app = builder.Build();
 
 app.UseExceptionHandler(appError =>
@@ -66,6 +106,7 @@ try
     app.UseHttpsRedirection();
 
     app.UseAuthorization();
+    app.UseAuthentication();
 
     app.MapControllers();
 }

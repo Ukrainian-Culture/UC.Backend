@@ -17,8 +17,11 @@ public class UserRepository : RepositoryBase<User> , IUserRepository
             .ToListAsync();
 
     public async Task<User> GetUserByIdAsync(int id, ChangesType trackChanges)
-        => await FindByCondition(user => user.Id == id , trackChanges)
-            .SingleAsync();
+    {
+        throw new NotImplementedException();
+    }
+        //=> await FindByCondition(user => user.Id == id , trackChanges)
+        //    .SingleAsync();
 
     public void CreateUser(User user) => Create(user);
     public void UpdateUser(User user) => Update(user);
