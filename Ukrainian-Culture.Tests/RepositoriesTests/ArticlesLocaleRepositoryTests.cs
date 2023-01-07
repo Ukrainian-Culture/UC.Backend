@@ -1,4 +1,4 @@
-﻿namespace Ukrainian_Culture.Tests.RepostoryTests;
+﻿namespace Ukrainian_Culture.Tests.RepositoriesTests;
 
 public class ArticlesLocaleRepositoryTests
 {

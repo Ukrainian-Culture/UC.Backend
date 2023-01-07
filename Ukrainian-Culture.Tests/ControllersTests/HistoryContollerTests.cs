@@ -1,6 +1,4 @@
-﻿using NSubstitute;
-
-namespace Ukrainian_Culture.Tests.ControllersTests;
+﻿namespace Ukrainian_Culture.Tests.ControllersTests;
 
 public class HistoryControllerTests
 {
@@ -21,7 +19,7 @@ public class HistoryControllerTests
         var controller = new HistoryController(_mapper, _repositoryManager, _logger);
 
         _repositoryManager.Articles
-            .GetArticlesByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
+            .GetAllByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
             .Returns(new List<Article>()
             {
                 new()
@@ -68,7 +66,7 @@ public class HistoryControllerTests
         var controller = new HistoryController(_mapper, _repositoryManager, _logger);
 
         _repositoryManager.Articles
-            .GetArticlesByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
+            .GetAllByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
             .Returns(Enumerable.Empty<Article>());
 
         _repositoryManager.ArticleLocales.GetArticlesLocaleByConditionAsync(Arg.Any<Expression<Func<ArticlesLocale, bool>>>(), Arg.Any<ChangesType>())
@@ -94,7 +92,7 @@ public class HistoryControllerTests
         var controller = new HistoryController(_mapper, _repositoryManager, _logger);
 
         _repositoryManager.Articles
-            .GetArticlesByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
+            .GetAllByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
             .Returns(new List<Article>()
             {
                 new()
@@ -121,7 +119,7 @@ public class HistoryControllerTests
     {
         //Arrange
         _repositoryManager.Articles
-            .GetArticlesByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
+            .GetAllByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
             .Returns(new List<Article>()
             {
                 new()
