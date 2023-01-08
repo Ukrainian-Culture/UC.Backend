@@ -13,13 +13,13 @@ public class AccountRepository : IAccountRepository
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly RoleManager<Roles> _roleManager;
     private readonly IConfiguration _configuration;
 
     public AccountRepository(UserManager<User> userManager,
         SignInManager<User> signInManager,
         IConfiguration configuration,
-        RoleManager<IdentityRole> roleManager)
+        RoleManager<Roles> roleManager)
     {
         _userManager = userManager;
         _signInManager = signInManager;

@@ -4,6 +4,7 @@ using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace UkranianCulture.Backend.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20230108125020_UserID")]
+    partial class UserID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,7 +49,7 @@ namespace UkranianCulture.Backend.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Articles", (string)null);
+                    b.ToTable("Articles");
 
                     b.HasData(
                         new
@@ -95,7 +98,7 @@ namespace UkranianCulture.Backend.Migrations
 
                     b.HasIndex("CultureId");
 
-                    b.ToTable("ArticlesLocales", (string)null);
+                    b.ToTable("ArticlesLocales");
 
                     b.HasData(
                         new
@@ -144,7 +147,7 @@ namespace UkranianCulture.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
@@ -173,7 +176,7 @@ namespace UkranianCulture.Backend.Migrations
 
                     b.HasIndex("CultureId");
 
-                    b.ToTable("CategoryLocales", (string)null);
+                    b.ToTable("CategoryLocales");
 
                     b.HasData(
                         new
@@ -218,7 +221,7 @@ namespace UkranianCulture.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cultures", (string)null);
+                    b.ToTable("Cultures");
 
                     b.HasData(
                         new

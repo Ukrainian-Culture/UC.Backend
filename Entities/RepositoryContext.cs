@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Entities;
 
-public class RepositoryContext : IdentityDbContext<User>
+public class RepositoryContext : IdentityDbContext<User,Roles,Guid>
 {
     public RepositoryContext()
     {
@@ -47,9 +47,11 @@ public class RepositoryContext : IdentityDbContext<User>
 
     private void SeedRoles(ModelBuilder builder)
     {
-        builder.Entity<IdentityRole>().HasData(
-            new IdentityRole() { Id = "431f29e9-13ff-4f5f-b178-511610d5103f", Name = "Admin", ConcurrencyStamp = "1", NormalizedName = "Admin" },
-            new IdentityRole() { Id = "5adbec33-97c5-4041-be6a-e0f3d3ca6f44", Name = "User", ConcurrencyStamp = "2", NormalizedName = "User" }
+        var firstId = new Guid("431f29e9-13ff-4f5f-b178-511610d5103f");
+        var SecondId = new Guid("5adbec33-97c5-4041-be6a-e0f3d3ca6f44");
+        builder.Entity<Roles>().HasData(
+            new Roles() { Id = firstId, Name = "Admin", ConcurrencyStamp = "1", NormalizedName = "Admin" },
+            new Roles() { Id = SecondId, Name = "User", ConcurrencyStamp = "2", NormalizedName = "User" }
             );
     }
 

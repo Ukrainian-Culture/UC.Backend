@@ -27,17 +27,15 @@
 //        {
 //            new()
 //            {
-//                Id = 1,
-//                Name = "1",
-//                Login = "1",
-//                Phone = "1"
+//                Id = "1",
+//                FirstName = "1",
+//                LastName = "1"
 //            },
 //            new()
 //            {
-//                Id = 2,
-//                Login = "2",
-//                Name = "2",
-//                Phone = "2"
+//                Id = "2",
+//                FirstName = "2",
+//                LastName = "2"
 //            }
 //        });
 //        await _context.SaveChangesAsync();
@@ -48,8 +46,8 @@
 
 //        //Assert
 //        users.Count.Should().Be(2);
-//        users[0].Id.Should().Be(1);
-//        users[1].Id.Should().Be(2);
+//        users[0].Id.Should().Be("1");
+//        users[1].Id.Should().Be("2");
 //    }
 
 //    [Fact]
@@ -73,29 +71,27 @@
 //        {
 //            new()
 //            {
-//                Id = 1,
-//                Name = "1",
-//                Login = "1",
-//                Phone = "1"
+//                Id = "1",
+//                FirstName = "1",
+//                LastName = "1"
 //            },
 //            new()
 //            {
-//                Id = 2,
-//                Login = "2",
-//                Name = "2",
-//                Phone = "2"
+//                Id = "2",
+//                FirstName = "2",
+//                LastName = "2"
 //            }
 //        });
 //        await _context.SaveChangesAsync();
 //        var userRepository = new UserRepository(_context);
 
 //        //Act
-//        var user = await userRepository.GetUserByIdAsync(1, ChangesType.AsNoTracking);
+//        var user = await userRepository.GetUserByIdAsync("1", ChangesType.AsNoTracking);
 
 //        //Assert
-//        user.Id.Should().Be(1);
-//        user.Name.Should().Be("1");
-//        user.Phone.Should().Be("1");
+//        user.Id.Should().Be("1");
+//        user.FirstName.Should().Be("1");
+//        user.LastName.Should().Be("1");
 //    }
 
 //    [Fact]
@@ -106,7 +102,7 @@
 //        try
 //        {
 //            //Act
-//            var user = await userRepository.GetUserByIdAsync(1, ChangesType.AsNoTracking);
+//            var user = await userRepository.GetUserByIdAsync("1", ChangesType.AsNoTracking);
 //        }
 //        catch (Exception ex)
 //        {
@@ -124,10 +120,9 @@
 //        //Act
 //        userRepository.CreateUser(new User
 //        {
-//            Id = 1,
-//            Name = "1",
-//            Login = "1",
-//            Phone = "1"
+//            Id = "1",
+//            FirstName = "1",
+//            LastName = "1"
 //        });
 //        await _context.SaveChangesAsync();
 
@@ -145,9 +140,9 @@
 //            //Act
 //            userRepository.CreateUser(new User
 //            {
-//                Id = 1,
-//                Login = "1",
-//                Phone = "1"
+//                Id = "1",
+//                FirstName = "1",
+//                LastName = "1"
 //            });
 //            await _context.SaveChangesAsync();
 //        }
@@ -163,12 +158,11 @@
 //        //Arrange
 //        _context.Users.AddRange(new List<User>
 //        {
-//            new()
+//             new()
 //            {
-//                Id = 1,
-//                Name = "1",
-//                Login = "1",
-//                Phone = "1"
+//                Id = "1",
+//                FirstName = "1",
+//                LastName = "1"
 //            }
 //        });
 //        await _context.SaveChangesAsync();
@@ -179,10 +173,9 @@
 //            //Act
 //            userRepository.CreateUser(new User
 //            {
-//                Id = 1,
-//                Name = "1",
-//                Login = "1",
-//                Phone = "1"
+//                Id = "1",
+//                FirstName = "1",
+//                LastName = "1"
 //            });
 //            await _context.SaveChangesAsync();
 //        }
@@ -200,22 +193,21 @@
 //        //Arrange
 //        var user = new User
 //        {
-//            Id = 1,
-//            Name = "1",
-//            Login = "1",
-//            Phone = "1"
+//            Id = "1",
+//            FirstName = "1",
+//            LastName = "1"
 //        };
 //        _context.Users.Add(user);
 //        await _context.SaveChangesAsync();
 //        var userRepository = new UserRepository(_context);
 
 //        //Act
-//        user.Name = "new name";
+//        user.FirstName = "new name";
 //        userRepository.UpdateUser(user);
 //        await _context.SaveChangesAsync();
 
 //        //Assert
-//        (await _context.Users.FirstAsync(use => use.Id == user.Id)).Name.Should().Be("new name");
+//        (await _context.Users.FirstAsync(use => use.Id == user.Id)).FirstName.Should().Be("new name");
 //    }
 
 //    [Fact]
@@ -225,10 +217,9 @@
 //        //Arrange
 //        var user = new User
 //        {
-//            Id = 1,
-//            Name = "1",
-//            Login = "1",
-//            Phone = "1"
+//            Id = "1",
+//            FirstName = "1",
+//            LastName = "1"
 //        };
 //        _context.Users.Add(user);
 //        await _context.SaveChangesAsync();
@@ -237,7 +228,7 @@
 //        try
 //        {
 //            //Act
-//            user.Id = 2;
+//            user.Id = "2";
 //            userRepository.UpdateUser(user);
 //            await _context.SaveChangesAsync();
 //        }
@@ -255,10 +246,9 @@
 //        //Arrange
 //        var user = new User
 //        {
-//            Id = 1,
-//            Name = "1",
-//            Login = "1",
-//            Phone = "1"
+//            Id = "1",
+//            FirstName = "1",
+//            LastName = "1"
 //        };
 //        _context.Users.Add(user);
 //        await _context.SaveChangesAsync();
@@ -277,10 +267,9 @@
 //        //Arrange
 //        _context.Users.Add(new User
 //        {
-//            Id = 2,
-//            Name = "2",
-//            Login = "2",
-//            Phone = "2"
+//            Id = "2",
+//            FirstName = "2",
+//            LastName = "2"
 //        });
 //        await _context.SaveChangesAsync();
 //        var userRepository = new UserRepository(_context);
@@ -290,10 +279,9 @@
 //            //Act
 //            var user = new User
 //            {
-//                Id = 1,
-//                Name = "1",
-//                Login = "1",
-//                Phone = "1"
+//                Id = "1",
+//                FirstName = "1",
+//                LastName = "1"
 //            };
 //            userRepository.DeleteUser(user);
 //            await _context.SaveChangesAsync();
@@ -316,10 +304,9 @@
 //            //Act
 //            var user = new User
 //            {
-//                Id = 1,
-//                Name = "1",
-//                Login = "1",
-//                Phone = "1"
+//                Id = "1",
+//                FirstName = "1",
+//                LastName = "1"
 //            };
 //            userRepository.DeleteUser(user);
 //            await _context.SaveChangesAsync();

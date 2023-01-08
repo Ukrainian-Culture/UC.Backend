@@ -14,6 +14,7 @@ using Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Ukranian_Culture.Backend;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +32,7 @@ builder.Services.AddDbContext<RepositoryContext>(
         b => b.MigrationsAssembly("Ukranian-Culture.Backend")
     )
 );
-builder.Services.AddIdentity<User,IdentityRole>(opts => {
+builder.Services.AddIdentity<User,Roles>(opts => {
     opts.Password.RequiredLength = 8; 
     opts.Password.RequireNonAlphanumeric = false; 
     opts.Password.RequireLowercase = false;
@@ -63,7 +64,7 @@ builder.Services.AddAuthentication(option =>
 
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 builder.Services.AddMvc();
-builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
+builder.Services.AddTransient<IRepositoryManager, RepositoryManager>();
 
 var app = builder.Build();
 

@@ -16,7 +16,7 @@ public class UserRepository : RepositoryBase<User> , IUserRepository
         => await FindAll(trackChanges)
             .ToListAsync();
 
-    public async Task<User> GetUserByIdAsync(string id, ChangesType trackChanges)
+    public async Task<User> GetUserByIdAsync(Guid id, ChangesType trackChanges)
         => await FindByCondition(user => user.Id == id, trackChanges)
             .SingleAsync();
 
