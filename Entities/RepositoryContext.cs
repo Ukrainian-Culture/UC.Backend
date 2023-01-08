@@ -25,6 +25,7 @@ public class RepositoryContext : IdentityDbContext<User,Roles,Guid>
     {
         base.OnModelCreating(modelBuilder);
         SeedRoles(modelBuilder);
+        
         modelBuilder.Entity<CategoryLocale>().HasKey(ct => new { ct.CategoryId, ct.CultureId });
         modelBuilder.Entity<ArticlesLocale>().HasKey(article => new { article.Id, article.CultureId });
 
