@@ -9,14 +9,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v1
+        with:
+          ref: ${{ github.head_ref }}
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
-          
-      - name: Run dotnet format
-        run: dotnet format --verify-no-changes --verbosity detailed --exclude *.csproj
 
       - name: Restore dependencies
         run: dotnet restore
@@ -24,3 +23,17 @@ jobs:
         run: dotnet build --no-restore
       - name: Test
         run: dotnet test --no-build --verbosity normal 
+      - name: Run dotnet format
+        run: dotnet format --verbosity detailed
+        
+      - name: Check for modified files
+        id: git-check
+        run: echo "modified=$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)" >> $GITHUB_OUTPUT
+      - name: Push changes
+        if: steps.git-check.outputs.modified == 'true'
+        run: |
+          git config user.name 'd4-5'
+          git config user.email '111686428+d4-5@users.noreply.github.com'
+          git remote set-url origin https://x-access-token:${{ secrets.REPO_SCOPE_TOKEN }}@github.com/${{ github.repository }}
+          git commit -am "Auto code formatting"
+          git push
