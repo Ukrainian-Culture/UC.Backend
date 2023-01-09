@@ -68,7 +68,7 @@ public class AccountRepository : IAccountRepository
         if (result.Succeeded)
         {
             await _userManager.AddToRoleAsync(user, role);
-            _userManager.UpdateAsync(user);
+            await _userManager.UpdateAsync(user);
         }
         return result;
     }
