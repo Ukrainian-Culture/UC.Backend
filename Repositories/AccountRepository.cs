@@ -1,6 +1,8 @@
 ﻿using Contracts;
 using Entities.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -29,11 +31,7 @@ public class AccountRepository : IAccountRepository
     public async Task<string> LoginAsync(SignInUser signInModel)
     {
         var result = await _signInManager.PasswordSignInAsync(signInModel.FirstName, signInModel.Password, false, false);
-
-        if (!result.Succeeded)
-        {
-            return null;
-        }
+        if (!result.Succeeded) return string.Empty;
 
         var authClaims = new List<Claim>
         {
@@ -49,7 +47,6 @@ public class AccountRepository : IAccountRepository
             claims: authClaims,
             signingCredentials: new SigningCredentials(authSigninKey, SecurityAlgorithms.HmacSha256Signature)
             );
-
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
@@ -57,7 +54,6 @@ public class AccountRepository : IAccountRepository
     {
         var user = new User()
         {
-            //Id=signUpModel.Id,
             FirstName = signUpModel.FirstName,
             LastName = signUpModel.LastName,
             Email = signUpModel.Email,

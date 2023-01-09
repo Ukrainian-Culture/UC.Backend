@@ -33,7 +33,7 @@ public class AccountController : ControllerBase
     {
         var result = await _accountRepository.LoginAsync(signInModel);
 
-        if (string.IsNullOrEmpty(result))
+        if (string.IsNullOrWhiteSpace(result))
         {
             return Unauthorized();
         }
