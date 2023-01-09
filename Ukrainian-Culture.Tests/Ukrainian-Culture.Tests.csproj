@@ -34,8 +34,4 @@
     <ProjectReference Include="..\Ukranian-Culture.Backend\Ukranian-Culture.Backend.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ControllersTests\" />
-  </ItemGroup>
-
 </Project>

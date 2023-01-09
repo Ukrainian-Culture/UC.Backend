@@ -30,9 +30,14 @@ public class ArticlesController : ControllerBase
     [HttpGet("{id:int}", Name = "ArticleById")]
     public async Task<IActionResult> GetArticleById(int id)
     {
-        var article =
-            await _repositoryManager.Articles.GetFirstByConditionAsync(art => art.Id == id, ChangesType.AsNoTracking);
-        return Ok(article);
+        if (await _repositoryManager.Articles.GetFirstByConditionAsync(art => art.Id == id, ChangesType.AsNoTracking)
+            is { } article)
+        {
+            return Ok(article);
+        }
+
+        _logger.LogError($"Article with id : \"{id}\" no contain in db");
+        return NotFound($"Article with id : \"{id}\" no contain in db");
     }
 
     [HttpPost]
@@ -60,7 +65,7 @@ public class ArticlesController : ControllerBase
         if (article is null)
         {
             _logger.LogInfo($"Article with id: {id} doesn't exist in the database.");
-            return NotFound();
+            return NotFound($"Article with id : \"{id}\" no contain in db");
         }
 
         _repositoryManager.Articles.DeleteArticle(article);
@@ -82,8 +87,8 @@ public class ArticlesController : ControllerBase
 
         if (articleEntity is null)
         {
-            _logger.LogInfo($"article with id: {id} doesn't exist in the database.");
-            return NotFound();
+            _logger.LogInfo($"Article with id: {id} doesn't exist in the database.");
+            return NotFound($"Article with id : \"{id}\" no contain in db");
         }
 
         _mapper.Map(articleToUpdate, articleEntity);
