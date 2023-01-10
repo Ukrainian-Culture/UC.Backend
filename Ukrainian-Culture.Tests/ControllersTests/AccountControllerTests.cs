@@ -14,7 +14,7 @@ public class AccountControllerTests
     private readonly IAccountRepository _account= Substitute.For<IAccountRepository>();
 
     [Fact]
-    public async Task AccountController_SignUpAddUserToDB()
+    public async Task SignUp_ShouldReturnOkStatus_WhenUserDataIsCorrect()
     {
         //arrange
         _account.SignUpAsync(Arg.Any<SignUpUser>(), "User").Returns(IdentityResult.Success);
@@ -37,7 +37,7 @@ public class AccountControllerTests
     }
 
     [Fact]
-    public async Task AccountController_SignUpInvalidPasswortReturnNull()
+    public async Task SignUp_ShouldReturnNull_WhenInvalidPassword()
     {
         //arrange
         _account.SignUpAsync(Arg.Any<SignUpUser>(), "User").Returns(IdentityResult.Failed());
@@ -60,7 +60,7 @@ public class AccountControllerTests
     }
 
     [Fact]
-    public async Task AccountController_LoginReturnStringToken()
+    public async Task Login_ShouldReturnStringToken_WhenUserDataIsCorrect()
     {
         //arrange
         string expected = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiVm9sb2R5YTIyQGdtYWlsLmNvbSIsImp0aSI6IjgwZGJiN2E0LWE0MzktNGZiYi1iNWYxLTA4ODdiMTY1ODBlNSIsImV4cCI6MTY3MzM1ODEwOSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzNDEiLCJhdWQiOiJVc2VyIn0.7g5ajeanSgyojTqBmQ6PqcUhjzx0V2zp3xGcec_4vbg";
@@ -80,7 +80,7 @@ public class AccountControllerTests
         result.Equals(expected);
     }
     [Fact]
-    public async Task AccountController_LoginInvalidPasswordReturnEmptyStringToken()
+    public async Task Login_ShouldReturnEmptyStringToken_WhenInvalidPassword()
     {
         //arrange
         string expected ="";
