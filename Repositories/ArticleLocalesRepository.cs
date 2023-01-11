@@ -13,7 +13,7 @@ public class ArticleLocalesRepository : RepositoryBase<ArticlesLocale>, IArticle
     {
     }
 
-    public async Task<IEnumerable<ArticlesLocale>> GetArticlesLocaleByConditionAsync(Expression<Func<ArticlesLocale,bool>> expression ,ChangesType trackChanges)
+    public async Task<IEnumerable<ArticlesLocale>> GetArticlesLocaleByConditionAsync(Expression<Func<ArticlesLocale, bool>> expression, ChangesType trackChanges)
         => await FindByCondition(expression, trackChanges).ToListAsync();
 
     public void CreateArticlesLocale(ArticlesLocale articleLocale) => Create(articleLocale);

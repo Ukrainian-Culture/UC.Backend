@@ -6,8 +6,8 @@ namespace Entities.Configurations;
 
 public class CategoryLocaleConfiguration : IEntityTypeConfiguration<CategoryLocale>
 {
-    private readonly CultureConfiguration _cultureConfig=new();
-    private readonly CategoryConfiguration _categoryConfig=new();
+    private readonly CultureConfiguration _cultureConfig = new();
+    private readonly CategoryConfiguration _categoryConfig = new();
     public void Configure(EntityTypeBuilder<CategoryLocale> builder)
     {
         builder.HasData(

@@ -15,19 +15,19 @@ public class UsersConfigurations : IEntityTypeConfiguration<User>
             {
                 Id = _firstId,
                 FirstName = "Vadym",
-                LastName="Orlov",
-                UserName="Vadym",
-                NormalizedUserName="VADYM",
-                NormalizedEmail="VADYM@GMAIL.COM",
-                Email="Vadym@gmail.com",
-                PasswordHash= "6925a4905d02cc4c26872e1713a0a5f2"
+                LastName = "Orlov",
+                UserName = "Vadym",
+                NormalizedUserName = "VADYM",
+                NormalizedEmail = "VADYM@GMAIL.COM",
+                Email = "Vadym@gmail.com",
+                PasswordHash = "6925a4905d02cc4c26872e1713a0a5f2"
 
             },
             new User
             {
-                Id =_secondId,
+                Id = _secondId,
                 FirstName = "Bohdan",
-                LastName="Vivchar",
+                LastName = "Vivchar",
                 UserName = "Bohdan",
                 NormalizedUserName = "BOHDAN",
                 NormalizedEmail = "BOHDAN@GMAIL.COM",

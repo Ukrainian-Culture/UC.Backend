@@ -43,12 +43,13 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddIdentity<User,Roles>(opts => {
-    opts.Password.RequiredLength = 8; 
-    opts.Password.RequireNonAlphanumeric = false; 
+builder.Services.AddIdentity<User, Roles>(opts =>
+{
+    opts.Password.RequiredLength = 8;
+    opts.Password.RequireNonAlphanumeric = false;
     opts.Password.RequireLowercase = false;
-    opts.Password.RequireUppercase = false; 
-    opts.Password.RequireDigit = false; 
+    opts.Password.RequireUppercase = false;
+    opts.Password.RequireDigit = false;
 })
    .AddEntityFrameworkStores<RepositoryContext>()
    .AddDefaultTokenProviders();
@@ -124,7 +125,7 @@ try
 }
 catch (Exception ex)
 {
-    logger.Error(ex,"Error!");
+    logger.Error(ex, "Error!");
 }
 finally
 {

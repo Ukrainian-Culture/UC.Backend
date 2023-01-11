@@ -82,7 +82,7 @@ public class HistoryControllerTests
             });
 
         //Act
-        var result = (await controller.GetHistoryByRegion(cultureId,"Kyiv")) as BadRequestResult;
+        var result = (await controller.GetHistoryByRegion(cultureId, "Kyiv")) as BadRequestResult;
 
         //Assert
         result!.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);

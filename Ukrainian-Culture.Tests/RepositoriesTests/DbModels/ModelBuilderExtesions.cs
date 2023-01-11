@@ -34,7 +34,7 @@ public static class ModelBuilderExtesions
         modelBuilder.Entity<ArticlesLocale>().Property(artLoc => artLoc.SubText);
         modelBuilder.Entity<ArticlesLocale>().Property(artLoc => artLoc.Title);
         modelBuilder.Entity<ArticlesLocale>().Property(artLoc => artLoc.Content);
-    } 
+    }
     public static void CreateCultureModel(this ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Culture>().HasKey(culture => culture.Id);
@@ -50,7 +50,7 @@ public static class ModelBuilderExtesions
             .HasMany(cul => cul.Categories)
             .WithOne(a => a.Culture)
             .HasForeignKey(cul => cul.CultureId);
-    } 
+    }
     public static void CreateCategoriesLocaleModel(this ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<CategoryLocale>().HasKey(ct => new { ct.CategoryId, ct.CultureId });

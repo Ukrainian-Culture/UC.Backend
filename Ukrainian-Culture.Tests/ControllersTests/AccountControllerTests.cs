@@ -4,22 +4,22 @@ namespace Ukrainian_Culture.Tests.ControllersTests;
 
 public class AccountControllerTests
 {
-    private readonly IAccountRepository _account= Substitute.For<IAccountRepository>();
+    private readonly IAccountRepository _account = Substitute.For<IAccountRepository>();
 
     [Fact]
     public async Task SignUp_ShouldReturnOkStatus_WhenUserDataIsCorrect()
     {
         //arrange
         _account.SignUpAsync(Arg.Any<SignUpUser>(), "User").Returns(IdentityResult.Success);
-        var controller =new AccountController(_account);
+        var controller = new AccountController(_account);
         string role = "User";
         var user = new SignUpUser()
         {
             FirstName = "Name1",
             LastName = "Surname1",
-            Email= "Name1@gmail.com",
-            Password="TTCGCghcvhj",
-            ConfirmPassword="TTCGCghcvhj"
+            Email = "Name1@gmail.com",
+            Password = "TTCGCghcvhj",
+            ConfirmPassword = "TTCGCghcvhj"
         };
         //act
         var result = await controller.SignUp(user, role) as OkObjectResult;
@@ -76,7 +76,7 @@ public class AccountControllerTests
     public async Task Login_ShouldReturnEmptyStringToken_WhenInvalidPassword()
     {
         //arrange
-        string expected ="";
+        string expected = "";
         _account.LoginAsync(Arg.Any<SignInUser>()).Returns(expected);
         var controller = new AccountController(_account);
         var user = new SignInUser()

@@ -44,7 +44,7 @@ public class ArticlesLocaleRepositoryTests
 
     [Theory]
     [MemberData(nameof(TestData))]
-    public async Task GetArticlesLocaleByConditionAsync_SholdReturnCollectionOfAllElements_WhenExpressionIsEqualToTrueAndDbIsNotEmpty(ArticlesLocale expected, Guid idExpected)
+    public async Task GetArticlesLocaleByConditionAsync_SholdReturnCollectionOfAllElements_WhenExpressionIsEqualToTrueAndDbIsNotEmpty(ArticlesLocale expected)
     {
         //Arrange
         Guid articleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");

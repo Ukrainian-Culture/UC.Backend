@@ -41,7 +41,7 @@ public class HistoryController : ControllerBase
                 .GetArticlesLocaleByConditionAsync(artL => articlesIds.Contains(artL.Id) && artL.CultureId == culture,
                     ChangesType.AsNoTracking))
             .ToList();
-            
+
 
         if (!articlesLocale.Any())
         {
