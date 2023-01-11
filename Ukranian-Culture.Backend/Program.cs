@@ -1,25 +1,37 @@
 using System.Net;
+using System.Text;
 using Contracts;
 using Entities;
-using Entities.DTOs;
 using Entities.ErrorModels;
 using Entities.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NLog;
 using Repositories;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Ukranian_Culture.Backend;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), @"\nlog.config"));
 builder.Services.AddScoped<ILoggerManager, LoggerManager>();
-builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddDbContext<RepositoryContext>(
+    opts => opts.UseSqlServer(
+        builder.Configuration.GetConnectionString("Db_connection")!,
+        b => b.MigrationsAssembly("Ukranian-Culture.Backend")
+    )
+);
 
 builder.Services.AddCors(options =>
 {
@@ -31,14 +43,41 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddDbContext<RepositoryContext>(
-    opts => opts.UseSqlServer(
-        builder.Configuration.GetConnectionString("Db_connection")!,
-        b => b.MigrationsAssembly("Ukranian-Culture.Backend")
-    )
-);
-builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
-builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddIdentity<User, Roles>(opts =>
+{
+    opts.Password.RequiredLength = 8;
+    opts.Password.RequireNonAlphanumeric = false;
+    opts.Password.RequireLowercase = false;
+    opts.Password.RequireUppercase = false;
+    opts.Password.RequireDigit = false;
+})
+   .AddEntityFrameworkStores<RepositoryContext>()
+   .AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication(option =>
+{
+    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(option =>
+    {
+        option.SaveToken = true;
+        option.RequireHttpsMetadata = false;
+        option.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["JWT:ValidAudience"],
+            ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+        };
+    });
+
+builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+builder.Services.AddMvc();
+builder.Services.AddTransient<IRepositoryManager, RepositoryManager>();
+
 var app = builder.Build();
 
 app.UseExceptionHandler(appError =>
@@ -76,18 +115,17 @@ try
         app.UseSwagger();
         app.UseSwaggerUI();
     }
-
     app.UseCors("CorsPolicy");
-
     app.UseHttpsRedirection();
 
     app.UseAuthorization();
+    app.UseAuthentication();
 
     app.MapControllers();
 }
 catch (Exception ex)
 {
-    logger.Error(ex,"Error!");
+    logger.Error(ex, "Error!");
 }
 finally
 {

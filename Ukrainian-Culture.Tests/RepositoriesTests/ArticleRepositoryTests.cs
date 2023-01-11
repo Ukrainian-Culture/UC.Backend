@@ -13,20 +13,24 @@ public class ArticleRepositoryTests
     public async Task GetAllByConditionAsync_SholdReturnAllCollection_WhenExpressionIsEqualToTrueAndDbIsNotEmpty()
     {
         //Arrange
+        Guid firstArticleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        Guid secondArticleId = new("5b32effd-1111-4cab-8ac9-3258c746aa53");
+        Guid categoryId = new("5b32effd-2636-4cab-8ac9-3258c746aa53");
+
         _context.Articles.AddRange(new List<Article>()
             {
                 new()
                 {
-                    Id = 1,
-                    CategoryId = 1,
+                    Id = firstArticleId,
+                    CategoryId = categoryId,
                     Date = new DateTime(1, 1, 1),
                     Region = "1",
                     Type = "1"
                 },
                 new()
                 {
-                    Id = 2,
-                    CategoryId = 1,
+                    Id = secondArticleId,
+                    CategoryId = categoryId,
                     Date = new DateTime(2, 2, 2),
                     Region = "2",
                     Type = "2"
@@ -34,7 +38,7 @@ public class ArticleRepositoryTests
             }
         );
 
-        _context.Categories.Add(new Category { Id = 1 });
+        _context.Categories.Add(new Category { Id = categoryId });
         await _context.SaveChangesAsync();
 
         var articleRepository = new ArticleRepository(_context);
@@ -45,30 +49,64 @@ public class ArticleRepositoryTests
 
         //Assert
         article.Should().HaveCount(2);
-        article[0].Id.Should().Be(1);
-        article[1].Id.Should().Be(2);
+        article[0].Id.Should().Be(firstArticleId);
+        article[1].Id.Should().Be(secondArticleId);
     }
 
+    public static IEnumerable<object[]> TestData()
+    {
+        Guid firstArticleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        Guid secondArticleId = new("5b32effd-1111-4cab-8ac9-3258c746aa53");
+        Guid categoryId = new("5b32effd-2636-4cab-8ac9-3258c746aa53");
+
+        yield return new object[]
+        {
+            new Article
+            {
+                Id = firstArticleId,
+                CategoryId = categoryId,
+                Date = new DateTime(1, 1, 1),
+                Region = "1",
+                Type = "1"
+            }, firstArticleId
+        };
+
+        yield return new object[]
+        {
+            new Article
+            {
+                Id = secondArticleId,
+                CategoryId = categoryId,
+                Date = new DateTime(2, 2, 2),
+                Region = "2",
+                Type = "2"
+            }, secondArticleId
+        };
+    }
 
     [Theory]
     [MemberData(nameof(TestData))]
-    public async Task GetAllByConditionAsync_SholdReturnPartOfCollection_WhenHasCorrectExpressionAndDbIsNotEmpty(Article expected, int idToCompare)
+    public async Task GetAllByConditionAsync_SholdReturnPartOfCollection_WhenHasCorrectExpressionAndDbIsNotEmpty(Article expected, Guid idToCompare)
     {
         //Arrange
+        Guid firstArticleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        Guid secondArticleId = new("5b32effd-1111-4cab-8ac9-3258c746aa53");
+        Guid categoryId = new("5b32effd-2636-4cab-8ac9-3258c746aa53");
+
         _context.Articles.AddRange(new List<Article>()
             {
                 new ()
                 {
-                    Id = 1,
-                    CategoryId = 1,
+                    Id = firstArticleId,
+                    CategoryId = categoryId,
                     Date = new DateTime(1, 1, 1),
                     Region = "1",
                     Type = "1"
                 },
                 new()
                 {
-                    Id = 2,
-                    CategoryId = 1,
+                    Id = secondArticleId,
+                    CategoryId = categoryId,
                     Date = new DateTime(2, 2, 2),
                     Region = "2",
                     Type = "2"
@@ -76,7 +114,7 @@ public class ArticleRepositoryTests
             }
         );
 
-        _context.Categories.Add(new Category { Id = 1 });
+        _context.Categories.Add(new Category { Id = categoryId });
         await _context.SaveChangesAsync();
 
         var articleRepository = new ArticleRepository(_context);
@@ -93,32 +131,6 @@ public class ArticleRepositoryTests
                                    art.CategoryId == expected.CategoryId &&
                                    art.Region == expected.Region &&
                                    art.Type == expected.Type);
-    }
-    public static IEnumerable<object[]> TestData()
-    {
-        yield return new object[]
-        {
-            new Article
-            {
-                Id = 1,
-                CategoryId = 1,
-                Date = new DateTime(1, 1, 1),
-                Region = "1",
-                Type = "1"
-            }, 1
-        };
-
-        yield return new object[]
-        {
-            new Article
-            {
-                Id = 2,
-                CategoryId = 1,
-                Date = new DateTime(2, 2, 2),
-                Region = "2",
-                Type = "2"
-            }, 2
-        };
     }
 
     [Fact]
@@ -139,20 +151,24 @@ public class ArticleRepositoryTests
     public async Task GetAllByConditionAsync_SholdReturnEmptyCollection_WhenExpressionIsEqualToFalseAndDbIsNotEmpty()
     {
         //Arrange
+        Guid firstArticleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        Guid secondArticleId = new("5b32effd-1111-4cab-8ac9-3258c746aa53");
+        Guid categoryId = new("5b32effd-2636-4cab-8ac9-3258c746aa53");
+
         _context.Articles.AddRange(new List<Article>()
             {
                 new()
                 {
-                    Id = 1,
-                    CategoryId = 1,
+                    Id = firstArticleId,
+                    CategoryId = categoryId,
                     Date = new DateTime(1, 1, 1),
                     Region = "1",
                     Type = "1"
                 },
                 new()
                 {
-                    Id = 2,
-                    CategoryId = 1,
+                    Id = secondArticleId,
+                    CategoryId = categoryId,
                     Date = new DateTime(2, 2, 2),
                     Region = "2",
                     Type = "2"
@@ -160,7 +176,7 @@ public class ArticleRepositoryTests
             }
         );
 
-        _context.Categories.Add(new Category { Id = 1 });
+        _context.Categories.Add(new Category { Id = categoryId });
         await _context.SaveChangesAsync();
 
         var articleRepository = new ArticleRepository(_context);
@@ -177,12 +193,15 @@ public class ArticleRepositoryTests
     public async Task GetAllByConditionAsync_SholdReturnEmptyCollection_WhenExpressionIsUncorrectAndDbIsNotEmpty()
     {
         //Arrange
+        Guid firstArticleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        Guid categoryId = new("5b32effd-2636-4cab-8ac9-3258c746aa53");
+
         _context.Articles.AddRange(new List<Article>()
             {
                 new()
                 {
-                    Id = 1,
-                    CategoryId = 1,
+                    Id = firstArticleId,
+                    CategoryId = categoryId,
                     Date = new DateTime(1, 1, 1),
                     Region = "1",
                     Type = "1"
@@ -190,13 +209,13 @@ public class ArticleRepositoryTests
             }
         );
 
-        _context.Categories.Add(new Category { Id = 1 });
+        _context.Categories.Add(new Category { Id = categoryId });
         await _context.SaveChangesAsync();
 
         var articleRepository = new ArticleRepository(_context);
 
         //Act
-        int nonExistedId = 2;
+        Guid nonExistedId = new("5b32effd-1111-4cab-8ac9-3258c746aa53");
         var article
             = (await articleRepository.GetAllByConditionAsync(art => art.Id == nonExistedId, ChangesType.AsNoTracking)).ToList();
 

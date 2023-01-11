@@ -1,9 +1,8 @@
-﻿namespace Entities.Models;
+﻿using Microsoft.AspNetCore.Identity;
 
-public class User
+namespace Entities.Models;
+public class User : IdentityUser<Guid>
 {
-    public int Id { get; set; }
-    public string Name { get; set; } = null!;
-    public string Login { get; set; } = null!;
-    public string Phone { get; set; } = null!;
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
 }

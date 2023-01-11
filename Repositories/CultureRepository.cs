@@ -12,7 +12,7 @@ public class CultureRepository : RepositoryBase<Culture>, ICultureRepository
     {
     }
 
-    public async Task<Culture> GetCultureWithContentAsync(int cultureId, ChangesType asNoTracking)
+    public async Task<Culture> GetCultureWithContentAsync(Guid cultureId, ChangesType asNoTracking)
     => await Context.Cultures.AsNoTracking()
             .Include(cult => cult.ArticlesTranslates)
             .Include(cult => cult.Categories)

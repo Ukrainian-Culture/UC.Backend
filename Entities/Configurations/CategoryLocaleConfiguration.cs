@@ -6,31 +6,33 @@ namespace Entities.Configurations;
 
 public class CategoryLocaleConfiguration : IEntityTypeConfiguration<CategoryLocale>
 {
+    private readonly CultureConfiguration _cultureConfig = new();
+    private readonly CategoryConfiguration _categoryConfig = new();
     public void Configure(EntityTypeBuilder<CategoryLocale> builder)
     {
         builder.HasData(
             new CategoryLocale
             {
-                CategoryId = 1,
-                CultureId = 1,
+                CategoryId = _categoryConfig.FirstId,
+                CultureId = _cultureConfig.FirstId,
                 Name = "People"
             },
             new CategoryLocale
             {
-                CategoryId = 1,
-                CultureId = 2,
+                CategoryId = _categoryConfig.FirstId,
+                CultureId = _cultureConfig.SecondId,
                 Name = "Люди"
             },
             new CategoryLocale
             {
-                CategoryId = 2,
-                CultureId = 1,
+                CategoryId = _categoryConfig.SecondId,
+                CultureId = _cultureConfig.FirstId,
                 Name = "Food"
             },
             new CategoryLocale
             {
-                CategoryId = 2,
-                CultureId = 2,
+                CategoryId = _categoryConfig.SecondId,
+                CultureId = _cultureConfig.SecondId,
                 Name = "Їжа"
             }
         );

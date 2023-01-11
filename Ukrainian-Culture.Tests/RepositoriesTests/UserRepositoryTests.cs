@@ -3,6 +3,8 @@
 public class UserRepositoryTests
 {
     private readonly RepositoryContext _context;
+    Guid firstId = new Guid("eff42197-94d2-4e2a-b5cf-bcb60082858d");
+    Guid secondId = new Guid("f4d8a14c-8f6f-4f22-b641-1c6b627a9482");
     public UserRepositoryTests()
     {
         using var factory = new ConnectionFactory();
@@ -17,17 +19,15 @@ public class UserRepositoryTests
         {
             new()
             {
-                Id = 1,
-                Name = "1",
-                Login = "1",
-                Phone = "1"
+                Id = firstId,
+                FirstName = "1",
+                LastName = "1"
             },
             new()
             {
-                Id = 2,
-                Login = "2",
-                Name = "2",
-                Phone = "2"
+                Id = secondId,
+                FirstName = "2",
+                LastName = "2"
             }
         });
         await _context.SaveChangesAsync();
@@ -38,8 +38,8 @@ public class UserRepositoryTests
 
         //Assert
         users.Count.Should().Be(2);
-        users[0].Id.Should().Be(1);
-        users[1].Id.Should().Be(2);
+        users[0].Id.Should().Be(firstId);
+        users[1].Id.Should().Be(secondId);
     }
 
     [Fact]
@@ -63,29 +63,27 @@ public class UserRepositoryTests
         {
             new()
             {
-                Id = 1,
-                Name = "1",
-                Login = "1",
-                Phone = "1"
+                Id = firstId,
+                FirstName = "1",
+                LastName = "1"
             },
             new()
             {
-                Id = 2,
-                Login = "2",
-                Name = "2",
-                Phone = "2"
+                Id = secondId,
+                FirstName = "2",
+                LastName = "2"
             }
         });
         await _context.SaveChangesAsync();
         var userRepository = new UserRepository(_context);
 
         //Act
-        var user = await userRepository.GetUserByIdAsync(1, ChangesType.AsNoTracking);
+        var user = await userRepository.GetUserByIdAsync(firstId, ChangesType.AsNoTracking);
 
         //Assert
-        user.Id.Should().Be(1);
-        user.Name.Should().Be("1");
-        user.Phone.Should().Be("1");
+        user.Id.Should().Be(firstId);
+        user.FirstName.Should().Be("1");
+        user.LastName.Should().Be("1");
     }
 
     [Fact]
@@ -96,7 +94,7 @@ public class UserRepositoryTests
         try
         {
             //Act
-            var user = await userRepository.GetUserByIdAsync(1, ChangesType.AsNoTracking);
+            var user = await userRepository.GetUserByIdAsync(firstId, ChangesType.AsNoTracking);
         }
         catch (Exception ex)
         {
@@ -114,10 +112,9 @@ public class UserRepositoryTests
         //Act
         userRepository.CreateUser(new User
         {
-            Id = 1,
-            Name = "1",
-            Login = "1",
-            Phone = "1"
+            Id = firstId,
+            FirstName = "1",
+            LastName = "1"
         });
         await _context.SaveChangesAsync();
 
@@ -135,9 +132,9 @@ public class UserRepositoryTests
             //Act
             userRepository.CreateUser(new User
             {
-                Id = 1,
-                Login = "1",
-                Phone = "1"
+                Id = firstId,
+                FirstName = "1",
+                LastName = "1"
             });
             await _context.SaveChangesAsync();
         }
@@ -153,12 +150,11 @@ public class UserRepositoryTests
         //Arrange
         _context.Users.AddRange(new List<User>
         {
-            new()
+             new()
             {
-                Id = 1,
-                Name = "1",
-                Login = "1",
-                Phone = "1"
+                Id = firstId,
+                FirstName = "1",
+                LastName = "1"
             }
         });
         await _context.SaveChangesAsync();
@@ -169,10 +165,9 @@ public class UserRepositoryTests
             //Act
             userRepository.CreateUser(new User
             {
-                Id = 1,
-                Name = "1",
-                Login = "1",
-                Phone = "1"
+                Id = firstId,
+                FirstName = "1",
+                LastName = "1"
             });
             await _context.SaveChangesAsync();
         }
@@ -190,22 +185,21 @@ public class UserRepositoryTests
         //Arrange
         var user = new User
         {
-            Id = 1,
-            Name = "1",
-            Login = "1",
-            Phone = "1"
+            Id = firstId,
+            FirstName = "1",
+            LastName = "1"
         };
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
         var userRepository = new UserRepository(_context);
 
         //Act
-        user.Name = "new name";
+        user.FirstName = "new name";
         userRepository.UpdateUser(user);
         await _context.SaveChangesAsync();
 
         //Assert
-        (await _context.Users.FirstAsync(use => use.Id == user.Id)).Name.Should().Be("new name");
+        (await _context.Users.FirstAsync(use => use.Id == user.Id)).FirstName.Should().Be("new name");
     }
 
     [Fact]
@@ -215,10 +209,9 @@ public class UserRepositoryTests
         //Arrange
         var user = new User
         {
-            Id = 1,
-            Name = "1",
-            Login = "1",
-            Phone = "1"
+            Id = firstId,
+            FirstName = "1",
+            LastName = "1"
         };
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
@@ -227,7 +220,7 @@ public class UserRepositoryTests
         try
         {
             //Act
-            user.Id = 2;
+            user.Id = secondId;
             userRepository.UpdateUser(user);
             await _context.SaveChangesAsync();
         }
@@ -245,10 +238,9 @@ public class UserRepositoryTests
         //Arrange
         var user = new User
         {
-            Id = 1,
-            Name = "1",
-            Login = "1",
-            Phone = "1"
+            Id = firstId,
+            FirstName = "1",
+            LastName = "1"
         };
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
@@ -267,10 +259,9 @@ public class UserRepositoryTests
         //Arrange
         _context.Users.Add(new User
         {
-            Id = 2,
-            Name = "2",
-            Login = "2",
-            Phone = "2"
+            Id = secondId,
+            FirstName = "2",
+            LastName = "2"
         });
         await _context.SaveChangesAsync();
         var userRepository = new UserRepository(_context);
@@ -280,10 +271,9 @@ public class UserRepositoryTests
             //Act
             var user = new User
             {
-                Id = 1,
-                Name = "1",
-                Login = "1",
-                Phone = "1"
+                Id = firstId,
+                FirstName = "1",
+                LastName = "1"
             };
             userRepository.DeleteUser(user);
             await _context.SaveChangesAsync();
@@ -306,10 +296,9 @@ public class UserRepositoryTests
             //Act
             var user = new User
             {
-                Id = 1,
-                Name = "1",
-                Login = "1",
-                Phone = "1"
+                Id = firstId,
+                FirstName = "1",
+                LastName = "1"
             };
             userRepository.DeleteUser(user);
             await _context.SaveChangesAsync();

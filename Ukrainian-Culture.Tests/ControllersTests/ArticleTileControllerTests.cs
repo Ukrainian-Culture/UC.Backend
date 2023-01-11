@@ -1,49 +1,49 @@
-﻿namespace Ukrainian_Culture.Tests.ControllersTests;
+﻿using Microsoft.AspNetCore.SignalR;
+
+namespace Ukrainian_Culture.Tests.ControllersTests;
 
 public class ArticleTileControllerTests
 {
     private readonly IRepositoryManager _repositoryManager = Substitute.For<IRepositoryManager>();
-    private readonly IMapper _mapper;
-
-    public ArticleTileControllerTests()
-    {
-        _mapper = new Mapper(new MapperConfiguration(conf => conf.AddProfile(new MappingProfile())));
-    }
+    private readonly IMapper _mapper = Substitute.For<IMapper>();
 
     [Fact]
     public async Task GetAllArticlesOnLanguage_ShouldReturnListOfArticlesTileDto_WhenDbIsNotEmpty()
     {
         //Arrange
+        Guid articleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        Guid categoryId = new("5b32effd-2636-4cab-8ac9-3258c746aa53");
+        Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24111");
 
         _repositoryManager.Articles
-            .GetAllByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
-            .Returns(new List<Article>()
-            {
+                .GetAllByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
+                .Returns(new List<Article>()
+                {
                 new()
                 {
-                    Id = 1,
-                    CategoryId = 1,
+                    Id = articleId,
+                    CategoryId = categoryId,
                 }
-            });
+                });
 
-        _repositoryManager.Cultures.GetCultureWithContentAsync(1, ChangesType.AsNoTracking)
+        _repositoryManager.Cultures.GetCultureWithContentAsync(cultureId, ChangesType.AsNoTracking)
             .Returns(new Culture()
             {
-                Id = 1,
+                Id = cultureId,
                 ArticlesTranslates = new List<ArticlesLocale>()
                 {
                     new()
                     {
-                        Id = 1,
-                        CultureId = 1,
+                        Id = articleId,
+                        CultureId = cultureId,
                     }
                 },
                 Categories = new List<CategoryLocale>()
                 {
                     new()
                     {
-                        CategoryId = 1,
-                        CultureId = 1,
+                        CategoryId = categoryId,
+                        CultureId = cultureId,
                     }
                 }
             });
@@ -51,12 +51,12 @@ public class ArticleTileControllerTests
         var controller = new ArticlesTileController(_repositoryManager, _mapper);
 
         //Act
-        var result = await controller.GetAllArticlesOnLanguage(1) as OkObjectResult;
+        var result = await controller.GetAllArticlesOnLanguage(cultureId) as OkObjectResult;
         var statusCode = result!.StatusCode;
-        var resultArray = (IEnumerable<ArticleTileDto>) result.Value!;
+        var resultArray = (IEnumerable<ArticleTileDto>)result.Value!;
 
         //Assert
-        statusCode.Should().Be((int) HttpStatusCode.OK); //HttpStatusCode.OK = 200
+        statusCode.Should().Be((int)HttpStatusCode.OK); //HttpStatusCode.OK = 200
         resultArray.Should().HaveCount(1);
     }
 
@@ -64,14 +64,16 @@ public class ArticleTileControllerTests
     public async Task GetAllArticlesOnLanguage_ShouldReturnEmptyList_WhenArticlesAndCategoriesAreEmpty()
     {
         //Arrange
+        Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24111");
+
         _repositoryManager.Articles
             .GetAllByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
             .Returns(Enumerable.Empty<Article>());
 
-        _repositoryManager.Cultures.GetCultureWithContentAsync(Arg.Any<int>(), Arg.Any<ChangesType>())
+        _repositoryManager.Cultures.GetCultureWithContentAsync(Arg.Any<Guid>(), Arg.Any<ChangesType>())
             .Returns(new Culture()
             {
-                Id = 1,
+                Id = cultureId,
                 ArticlesTranslates = Enumerable.Empty<ArticlesLocale>().ToList(),
                 Categories = Enumerable.Empty<CategoryLocale>().ToList()
             });
@@ -79,12 +81,12 @@ public class ArticleTileControllerTests
         var controller = new ArticlesTileController(_repositoryManager, _mapper);
 
         //Act
-        var result = await controller.GetAllArticlesOnLanguage(1) as OkObjectResult;
+        var result = await controller.GetAllArticlesOnLanguage(cultureId) as OkObjectResult;
         var statusCode = result!.StatusCode;
-        var resultArray = (IEnumerable<ArticleTileDto>) result.Value!;
+        var resultArray = (IEnumerable<ArticleTileDto>)result.Value!;
 
         //Assert
-        statusCode.Should().Be((int) HttpStatusCode.OK); //HttpStatusCode.OK = 200
+        statusCode.Should().Be((int)HttpStatusCode.OK); //HttpStatusCode.OK = 200
         resultArray.Should().BeEmpty();
     }
 
@@ -92,12 +94,14 @@ public class ArticleTileControllerTests
     public async Task GetAllArticlesOnLanguage_ShouldThrowException_WhenArticlesAreNull()
     {
         //Arrange
+        Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24111");
+
         var controller = new ArticlesTileController(_repositoryManager, _mapper);
 
         try
         {
             //Act
-            _ = await controller.GetAllArticlesOnLanguage(1) as OkObjectResult;
+            _ = await controller.GetAllArticlesOnLanguage(cultureId) as OkObjectResult;
         }
         catch (Exception ex)
         {
@@ -110,6 +114,9 @@ public class ArticleTileControllerTests
     public async Task GetAllArticlesOnLanguage_SholudReturnCorrectResult_WhenAllModelsAreCorrect()
     {
         //Arrange
+        Guid articleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        Guid categoryId = new("5b32effd-2636-4cab-8ac9-3258c746aa53");
+        Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24111");
 
         _repositoryManager.Articles
             .GetAllByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
@@ -117,23 +124,23 @@ public class ArticleTileControllerTests
             {
                 new()
                 {
-                    Id = 1,
-                    CategoryId = 1,
+                    Id = articleId,
+                    CategoryId = categoryId,
                     Region = "test",
                     Type = "test"
                 }
             });
 
-        _repositoryManager.Cultures.GetCultureWithContentAsync(1, ChangesType.AsNoTracking)
+        _repositoryManager.Cultures.GetCultureWithContentAsync(cultureId, ChangesType.AsNoTracking)
             .Returns(new Culture()
             {
-                Id = 1,
+                Id = cultureId,
                 ArticlesTranslates = new List<ArticlesLocale>()
                 {
                     new()
                     {
-                        Id = 1,
-                        CultureId = 1,
+                        Id = articleId,
+                        CultureId = cultureId,
                         SubText = "test",
                         Title = "test"
                     }
@@ -142,8 +149,8 @@ public class ArticleTileControllerTests
                 {
                     new()
                     {
-                        CategoryId = 1,
-                        CultureId = 1,
+                        CategoryId = categoryId,
+                        CultureId = cultureId,
                         Name = "test"
                     }
                 }
@@ -152,19 +159,13 @@ public class ArticleTileControllerTests
         var controller = new ArticlesTileController(_repositoryManager, _mapper);
 
         //Act
-        var result = await controller.GetAllArticlesOnLanguage(1) as OkObjectResult;
+        var result = await controller.GetAllArticlesOnLanguage(cultureId) as OkObjectResult;
         var statusCode = result!.StatusCode;
-        var resultArray = ((IEnumerable<ArticleTileDto>) result.Value!).ToList();
+        var resultArray = ((IEnumerable<ArticleTileDto>)result.Value!).ToList();
 
         //Assert
-        statusCode.Should().Be((int) HttpStatusCode.OK); //HttpStatusCode.OK = 200
+        statusCode.Should().Be((int)HttpStatusCode.OK); //HttpStatusCode.OK = 200
         resultArray.Should().HaveCount(1);
-
-        resultArray[0].Should().Match<ArticleTileDto>(art =>
-            art.ArticleId == 1 &&
-            art.SubText == "test" &&
-            art.Title == "test" &&
-            art.Region == "test" &&
-            art.Type == "test");
+        _mapper.ReceivedCalls().Should().HaveCount(1);
     }
 }

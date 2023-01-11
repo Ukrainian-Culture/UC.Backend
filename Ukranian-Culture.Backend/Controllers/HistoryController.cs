@@ -6,7 +6,7 @@ using UkranianCulture.Backend;
 
 namespace Ukranian_Culture.Backend.Controllers;
 
-[Route("api/{culture}/[controller]")]
+[Route("api/{culture:guid}/[controller]")]
 [ApiController]
 public class HistoryController : ControllerBase
 {
@@ -22,7 +22,7 @@ public class HistoryController : ControllerBase
     }
 
     [HttpGet("{region}")]
-    public async Task<IActionResult> GetHistoryByRegion(int culture, string region)
+    public async Task<IActionResult> GetHistoryByRegion(Guid culture, string region)
     {
         var articles = await _repositoryManager
             .Articles
@@ -34,15 +34,16 @@ public class HistoryController : ControllerBase
             return BadRequest();
         }
 
-        var articlesLocale = articles
-            .Select(art => art.Id)
-            .Select(id => _repositoryManager
-                    .ArticleLocales
-                    .GetArticlesLocaleByConditionAsync(artl => artl.Id == id && artl.CultureId == culture, ChangesType.AsNoTracking)
-                        .Result.FirstOrDefault()
-            ).ToList();
+        var articlesIds = articles.Select(art => art.Id);
+        var articlesLocale
+            = (await _repositoryManager
+                .ArticleLocales
+                .GetArticlesLocaleByConditionAsync(artL => articlesIds.Contains(artL.Id) && artL.CultureId == culture,
+                    ChangesType.AsNoTracking))
+            .ToList();
 
-        if (articlesLocale.Contains(null))
+
+        if (!articlesLocale.Any())
         {
             _logger.LogError("ArticlesLocale are absent");
             return BadRequest();

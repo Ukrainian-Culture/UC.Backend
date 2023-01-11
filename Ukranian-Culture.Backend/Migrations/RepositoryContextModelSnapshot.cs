@@ -24,14 +24,12 @@ namespace UkranianCulture.Backend.Migrations
 
             modelBuilder.Entity("Entities.Models.Article", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -53,16 +51,16 @@ namespace UkranianCulture.Backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            CategoryId = 1,
+                            Id = new Guid("5eca5808-4f44-4c4c-b481-72d2bdf24203"),
+                            CategoryId = new Guid("858feff1-770f-4090-922a-a8dd9b16e0ee"),
                             Date = new DateTime(1886, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Region = "hmelnytsk",
                             Type = "file"
                         },
                         new
                         {
-                            Id = 2,
-                            CategoryId = 1,
+                            Id = new Guid("5b32effd-2636-4cab-8ac9-3258c746aa53"),
+                            CategoryId = new Guid("858feff1-770f-4090-922a-a8dd9b16e0ee"),
                             Date = new DateTime(2001, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Region = "Kyiv",
                             Type = "file"
@@ -71,11 +69,11 @@ namespace UkranianCulture.Backend.Migrations
 
             modelBuilder.Entity("Entities.Models.ArticlesLocale", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CultureId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CultureId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -102,8 +100,8 @@ namespace UkranianCulture.Backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            CultureId = 1,
+                            Id = new Guid("5eca5808-4f44-4c4c-b481-72d2bdf24203"),
+                            CultureId = new Guid("4fd5d8c1-f34b-4824-b252-69910285e681"),
                             Content = "About Bohdan Khmelnytsky .... ",
                             ShortDescription = "About Bohdan Khmelnytsky",
                             SubText = "About Bohdan Khmelnytsky",
@@ -111,8 +109,8 @@ namespace UkranianCulture.Backend.Migrations
                         },
                         new
                         {
-                            Id = 1,
-                            CultureId = 2,
+                            Id = new Guid("5eca5808-4f44-4c4c-b481-72d2bdf24203"),
+                            CultureId = new Guid("0a315a0f-4860-4302-bb79-dec86e87d378"),
                             Content = "Про Богдана Хмельницького .... ",
                             ShortDescription = "Про Богдана Хмельницького",
                             SubText = "Про Богдана Хмельницького",
@@ -120,8 +118,8 @@ namespace UkranianCulture.Backend.Migrations
                         },
                         new
                         {
-                            Id = 2,
-                            CultureId = 1,
+                            Id = new Guid("5b32effd-2636-4cab-8ac9-3258c746aa53"),
+                            CultureId = new Guid("4fd5d8c1-f34b-4824-b252-69910285e681"),
                             Content = "About Ivan Mazepa .... ",
                             ShortDescription = "About Ivan Mazepa",
                             SubText = "About Ivan Mazepa",
@@ -129,8 +127,8 @@ namespace UkranianCulture.Backend.Migrations
                         },
                         new
                         {
-                            Id = 2,
-                            CultureId = 2,
+                            Id = new Guid("5b32effd-2636-4cab-8ac9-3258c746aa53"),
+                            CultureId = new Guid("0a315a0f-4860-4302-bb79-dec86e87d378"),
                             Content = "Про Івана Мазепу .... ",
                             ShortDescription = "Про Івана Мазепу",
                             SubText = "Про Івана Мазепу",
@@ -140,11 +138,9 @@ namespace UkranianCulture.Backend.Migrations
 
             modelBuilder.Entity("Entities.Models.Category", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -153,21 +149,21 @@ namespace UkranianCulture.Backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1
+                            Id = new Guid("858feff1-770f-4090-922a-a8dd9b16e0ee")
                         },
                         new
                         {
-                            Id = 2
+                            Id = new Guid("0e5809cd-d66e-4b1d-ac25-27a36750ebbd")
                         });
                 });
 
             modelBuilder.Entity("Entities.Models.CategoryLocale", b =>
                 {
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CultureId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CultureId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -182,37 +178,35 @@ namespace UkranianCulture.Backend.Migrations
                     b.HasData(
                         new
                         {
-                            CategoryId = 1,
-                            CultureId = 1,
+                            CategoryId = new Guid("858feff1-770f-4090-922a-a8dd9b16e0ee"),
+                            CultureId = new Guid("4fd5d8c1-f34b-4824-b252-69910285e681"),
                             Name = "People"
                         },
                         new
                         {
-                            CategoryId = 1,
-                            CultureId = 2,
+                            CategoryId = new Guid("858feff1-770f-4090-922a-a8dd9b16e0ee"),
+                            CultureId = new Guid("0a315a0f-4860-4302-bb79-dec86e87d378"),
                             Name = "Люди"
                         },
                         new
                         {
-                            CategoryId = 2,
-                            CultureId = 1,
+                            CategoryId = new Guid("0e5809cd-d66e-4b1d-ac25-27a36750ebbd"),
+                            CultureId = new Guid("4fd5d8c1-f34b-4824-b252-69910285e681"),
                             Name = "Food"
                         },
                         new
                         {
-                            CategoryId = 2,
-                            CultureId = 2,
+                            CategoryId = new Guid("0e5809cd-d66e-4b1d-ac25-27a36750ebbd"),
+                            CultureId = new Guid("0a315a0f-4860-4302-bb79-dec86e87d378"),
                             Name = "Їжа"
                         });
                 });
 
             modelBuilder.Entity("Entities.Models.Culture", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DisplayedName")
                         .IsRequired()
@@ -229,19 +223,173 @@ namespace UkranianCulture.Backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("4fd5d8c1-f34b-4824-b252-69910285e681"),
                             DisplayedName = "English",
                             Name = "en"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("0a315a0f-4860-4302-bb79-dec86e87d378"),
                             DisplayedName = "Ukrainian",
                             Name = "ua"
                         });
                 });
 
+            modelBuilder.Entity("Entities.Models.Roles", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("431f29e9-13ff-4f5f-b178-511610d5103f"),
+                            ConcurrencyStamp = "1",
+                            Name = "Admin",
+                            NormalizedName = "Admin"
+                        },
+                        new
+                        {
+                            Id = new Guid("5adbec33-97c5-4041-be6a-e0f3d3ca6f44"),
+                            ConcurrencyStamp = "2",
+                            Name = "User",
+                            NormalizedName = "User"
+                        });
+                });
+
             modelBuilder.Entity("Entities.Models.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("169a9df2-231c-45e8-9a0a-c7333f0dc9f4"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "bb591619-3a25-44ad-add3-d1c0389313a6",
+                            Email = "Vadym@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "Vadym",
+                            LastName = "Orlov",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "VADYM@GMAIL.COM",
+                            NormalizedUserName = "VADYM",
+                            PasswordHash = "6925a4905d02cc4c26872e1713a0a5f2",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "Vadym"
+                        },
+                        new
+                        {
+                            Id = new Guid("87d76511-8b74-4250-aef1-c47b8cb9308f"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "2a2f6e3b-f47b-4b07-828f-c5b5068cafab",
+                            Email = "Bohdan@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "Bohdan",
+                            LastName = "Vivchar",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "BOHDAN@GMAIL.COM",
+                            NormalizedUserName = "BOHDAN",
+                            PasswordHash = "6925a4905d02cc4c26872e1813a0a5f2",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "Bohdan"
+                        });
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -249,37 +397,99 @@ namespace UkranianCulture.Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Login")
-                        .IsRequired()
+                    b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.HasIndex("RoleId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Login = "pflfoof",
-                            Name = "Vadym",
-                            Phone = "380785774545"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Login = "maltokent",
-                            Name = "Bohdan",
-                            Phone = "2122921001"
-                        });
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Models.Article", b =>
@@ -313,6 +523,57 @@ namespace UkranianCulture.Backend.Migrations
                         .IsRequired();
 
                     b.Navigation("Culture");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+                {
+                    b.HasOne("Entities.Models.Roles", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+                {
+                    b.HasOne("Entities.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+                {
+                    b.HasOne("Entities.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+                {
+                    b.HasOne("Entities.Models.Roles", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+                {
+                    b.HasOne("Entities.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Entities.Models.Category", b =>

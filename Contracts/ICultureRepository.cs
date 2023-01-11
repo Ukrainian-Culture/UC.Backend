@@ -4,5 +4,5 @@ namespace Contracts;
 
 public interface ICultureRepository
 {
-    Task<Culture> GetCultureWithContentAsync(int cultureId, ChangesType asNoTracking);
+    Task<Culture> GetCultureWithContentAsync(Guid cultureId, ChangesType asNoTracking);
 }
