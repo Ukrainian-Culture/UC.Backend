@@ -44,18 +44,19 @@ public class ArticlesLocaleRepositoryTests
 
     [Theory]
     [MemberData(nameof(TestData))]
-    public async Task GetArticlesLocaleByConditionAsync_SholdReturnCollectionOfAllElements_WhenExpressionIsEqualToTrueAndDbIsNotEmpty(ArticlesLocale expected)
+    public async Task GetArticlesLocaleByConditionAsync_SholdReturnCollectionOfAllElements_WhenExpressionIsEqualToTrueAndDbIsNotEmpty(ArticlesLocale expected, Guid idExpected)
     {
         //Arrange
         Guid articleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
-        Guid testableCultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24111");
+        Guid firstCultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24111");
+        Guid secondCultureId = new("5b32effd-2636-4cab-8ac9-3258c746aa53");
 
         _context.ArticlesLocales.AddRange(new List<ArticlesLocale>()
             {
                 new ArticlesLocale
                 {
                     Id = articleId,
-                    CultureId = testableCultureId,
+                    CultureId = firstCultureId,
                     Title = "About Bohdan Khmelnytsky",
                     Content = "About Bohdan Khmelnytsky .... ",
                     SubText = "About Bohdan Khmelnytsky",
@@ -64,16 +65,19 @@ public class ArticlesLocaleRepositoryTests
                 new ArticlesLocale
                 {
                     Id = articleId,
-                    CultureId = new("5b32effd-2636-4cab-8ac9-3258c746aa53"),
+                    CultureId = secondCultureId,
                     Title = "Про Богдана Хмельницького",
                     Content = "Про Богдана Хмельницького .... ",
                     SubText = "Про Богдана Хмельницького",
                     ShortDescription = "Про Богдана Хмельницького"
                 }
-            }
-        );
+            });
 
-        _context.Cultures.Add(new Culture { Id = testableCultureId });
+        _context.Cultures.Add(new Culture
+        {
+            Id = idExpected
+        });
+
         await _context.SaveChangesAsync();
 
         var articleRepository = new ArticleLocalesRepository(_context);
