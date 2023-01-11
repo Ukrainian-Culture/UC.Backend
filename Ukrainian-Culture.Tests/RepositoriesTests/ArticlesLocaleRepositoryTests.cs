@@ -11,53 +11,60 @@ public class ArticlesLocaleRepositoryTests
 
     public static IEnumerable<object[]> TestData()
     {
+        Guid articleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        Guid firstCultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24111");
+        Guid secondCultureId = new("5b32effd-2636-4cab-8ac9-3258c746aa53");
+
         yield return new object[]
         {
             new ArticlesLocale
             {
-                Id = 1,
-                CultureId = 1,
+                Id = articleId,
+                CultureId = firstCultureId,
                 Title = "About Bohdan Khmelnytsky",
                 Content = "About Bohdan Khmelnytsky .... ",
                 SubText = "About Bohdan Khmelnytsky",
                 ShortDescription = "About Bohdan Khmelnytsky"
-            }, 1
+            }, firstCultureId
         };
 
         yield return new object[]
         {
             new ArticlesLocale
             {
-                Id = 1,
-                CultureId = 2,
+                Id = articleId,
+                CultureId = secondCultureId,
                 Title = "Про Богдана Хмельницького",
                 Content = "Про Богдана Хмельницького .... ",
                 SubText = "Про Богдана Хмельницького",
                 ShortDescription = "Про Богдана Хмельницького"
-            }, 2
+            }, secondCultureId
         };
     }
 
     [Theory]
     [MemberData(nameof(TestData))]
-    public async Task GetArticlesLocaleByConditionAsync_SholdReturnCollectionOfAllElements_WhenExpressionIsEqualToTrueAndDbIsNotEmpty(ArticlesLocale expected, int IdExpected)
+    public async Task GetArticlesLocaleByConditionAsync_SholdReturnCollectionOfAllElements_WhenExpressionIsEqualToTrueAndDbIsNotEmpty(ArticlesLocale expected, Guid idExpected)
     {
         //Arrange
+        Guid articleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        Guid testableCultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24111");
+
         _context.ArticlesLocales.AddRange(new List<ArticlesLocale>()
             {
-                new ()
+                new ArticlesLocale
                 {
-                    Id = 1,
-                    CultureId = 1,
+                    Id = articleId,
+                    CultureId = testableCultureId,
                     Title = "About Bohdan Khmelnytsky",
                     Content = "About Bohdan Khmelnytsky .... ",
                     SubText = "About Bohdan Khmelnytsky",
                     ShortDescription = "About Bohdan Khmelnytsky"
                 },
-                new()
+                new ArticlesLocale
                 {
-                    Id = 1,
-                    CultureId = 2,
+                    Id = articleId,
+                    CultureId = new("5b32effd-2636-4cab-8ac9-3258c746aa53"),
                     Title = "Про Богдана Хмельницького",
                     Content = "Про Богдана Хмельницького .... ",
                     SubText = "Про Богдана Хмельницького",
@@ -66,7 +73,7 @@ public class ArticlesLocaleRepositoryTests
             }
         );
 
-        _context.Cultures.Add(new Culture { Id = 1 });
+        _context.Cultures.Add(new Culture { Id = testableCultureId });
         await _context.SaveChangesAsync();
 
         var articleRepository = new ArticleLocalesRepository(_context);
@@ -82,15 +89,19 @@ public class ArticlesLocaleRepositoryTests
 
     [Theory]
     [MemberData(nameof(TestData))]
-    public async Task GetArticlesLocaleByConditionAsync_SholdReturnCollectionOfNotAllElements_WhenHasCorrectExpressionAndDbIsNotEmpty(ArticlesLocale expected, int IdExpected)
+    public async Task GetArticlesLocaleByConditionAsync_SholdReturnCollectionOfNotAllElements_WhenHasCorrectExpressionAndDbIsNotEmpty(ArticlesLocale expected, Guid idExpected)
     {
         //Arrange
+        Guid articleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        Guid firstCultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24111");
+        Guid secondCultureId = new("5b32effd-2636-4cab-8ac9-3258c746aa53");
+
         _context.ArticlesLocales.AddRange(new List<ArticlesLocale>()
             {
                 new ()
                 {
-                    Id = 1,
-                    CultureId = 1,
+                    Id = articleId,
+                    CultureId = firstCultureId,
                     Title = "About Bohdan Khmelnytsky",
                     Content = "About Bohdan Khmelnytsky .... ",
                     SubText = "About Bohdan Khmelnytsky",
@@ -98,8 +109,8 @@ public class ArticlesLocaleRepositoryTests
                 },
                 new()
                 {
-                    Id = 1,
-                    CultureId = 2,
+                    Id = articleId,
+                    CultureId = secondCultureId,
                     Title = "Про Богдана Хмельницького",
                     Content = "Про Богдана Хмельницького .... ",
                     SubText = "Про Богдана Хмельницького",
@@ -108,13 +119,13 @@ public class ArticlesLocaleRepositoryTests
             }
         );
 
-        _context.Cultures.Add(new Culture { Id = 1 });
+        _context.Cultures.Add(new Culture { Id = firstCultureId });
         await _context.SaveChangesAsync();
 
         var articleRepository = new ArticleLocalesRepository(_context);
 
         //Act
-        var article = (await articleRepository.GetArticlesLocaleByConditionAsync(art => art.CultureId == IdExpected, ChangesType.AsNoTracking))
+        var article = (await articleRepository.GetArticlesLocaleByConditionAsync(art => art.CultureId == idExpected, ChangesType.AsNoTracking))
             .ToList();
 
         //Assert
@@ -134,12 +145,16 @@ public class ArticlesLocaleRepositoryTests
     public async Task GetArticlesLocaleByConditionAsync_SholdReturnEmptyCollection_WhenHasIncorrectExpressionAndDbIsNotEmpty()
     {
         //Arrange
+        Guid articleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        Guid firstCultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24111");
+        Guid secondCultureId = new("5b32effd-2636-4cab-8ac9-3258c746aa53");
+
         _context.ArticlesLocales.AddRange(new List<ArticlesLocale>()
             {
                 new ()
                 {
-                    Id = 1,
-                    CultureId = 1,
+                    Id = articleId,
+                    CultureId = firstCultureId,
                     Title = "About Bohdan Khmelnytsky",
                     Content = "About Bohdan Khmelnytsky .... ",
                     SubText = "About Bohdan Khmelnytsky",
@@ -147,42 +162,41 @@ public class ArticlesLocaleRepositoryTests
                 },
                 new()
                 {
-                    Id = 1,
-                    CultureId = 2,
+                    Id = articleId,
+                    CultureId = secondCultureId,
                     Title = "Про Богдана Хмельницького",
                     Content = "Про Богдана Хмельницького .... ",
                     SubText = "Про Богдана Хмельницького",
                     ShortDescription = "Про Богдана Хмельницького"
                 }
-            }
-       );
+            });
 
-        _context.Cultures.Add(new Culture { Id = 1 });
+        _context.Cultures.Add(new Culture { Id = firstCultureId });
         await _context.SaveChangesAsync();
 
         var articleRepository = new ArticleLocalesRepository(_context);
 
-        var IdUnexpected = 3;
+        Guid idUnexpected = new("11111111-1111-1111-1111-111111111111");
 
         //Act
-        var articleslocale = (await articleRepository.GetArticlesLocaleByConditionAsync(art => art.CultureId == IdUnexpected, ChangesType.AsNoTracking))
+        var articleslocale = (await articleRepository.GetArticlesLocaleByConditionAsync(art => art.CultureId == idUnexpected, ChangesType.AsNoTracking))
             .ToList();
 
         //Assert
         articleslocale.Should().BeEmpty();
     }
 
-    [Theory]
-    [MemberData(nameof(TestData))]
-    public async Task GetArticlesLocaleByConditionAsync_SholdReturnEmptyCollection_WhenDbIsEmpty(ArticlesLocale expected, int IdExpected)
+    [Fact]
+    public async Task GetArticlesLocaleByConditionAsync_SholdReturnEmptyCollection_WhenDbIsEmpty()
     {
         //Arrange
-        _context.ArticlesLocales.AddRange(new List<ArticlesLocale>());
+        _context.ArticlesLocales.AddRange(Enumerable.Empty<ArticlesLocale>());
 
         var articleRepository = new ArticleLocalesRepository(_context);
 
         //Act
-        var article = (await articleRepository.GetArticlesLocaleByConditionAsync(art => art.Id == IdExpected, ChangesType.AsNoTracking))
+        Guid idExpected = new("11111111-1111-1111-1111-111111111111");
+        var article = (await articleRepository.GetArticlesLocaleByConditionAsync(art => art.Id == idExpected, ChangesType.AsNoTracking))
             .ToList();
 
         //Assert

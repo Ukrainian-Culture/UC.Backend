@@ -27,8 +27,8 @@ public class ArticlesController : ControllerBase
         return Ok(await _repositoryManager.Articles.GetAllByConditionAsync(_ => true, ChangesType.AsNoTracking));
     }
 
-    [HttpGet("{id:int}", Name = "ArticleById")]
-    public async Task<IActionResult> GetArticleById(int id)
+    [HttpGet("{id:guid}", Name = "ArticleById")]
+    public async Task<IActionResult> GetArticleById(Guid id)
     {
         if (await _repositoryManager.Articles.GetFirstByConditionAsync(art => art.Id == id, ChangesType.AsNoTracking)
             is { } article)
@@ -56,8 +56,8 @@ public class ArticlesController : ControllerBase
         return Ok(articleEntity);
     }
 
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteArticle(int id)
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeleteArticle(Guid id)
     {
         var article = await _repositoryManager.Articles
             .GetFirstByConditionAsync(article => article.Id == id, ChangesType.AsNoTracking);
@@ -73,8 +73,8 @@ public class ArticlesController : ControllerBase
         return NoContent();
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> UpdateArticle(int id, [FromBody] ArticleToUpdateDto? articleToUpdate)
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdateArticle(Guid id, [FromBody] ArticleToUpdateDto? articleToUpdate)
     {
         if (articleToUpdate is null)
         {

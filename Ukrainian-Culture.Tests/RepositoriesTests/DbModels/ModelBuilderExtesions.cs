@@ -2,12 +2,25 @@
 
 public static class ModelBuilderExtesions
 {
-    public static void CreateUserModel(this ModelBuilder model)
+    public static void CreateUserModel(this ModelBuilder modelBuilder)
     {
-        model.Entity<User>().HasKey(user => user.Id);
-        model.Entity<User>().Property(user => user.Login);
-        model.Entity<User>().Property(user => user.Name);
-        model.Entity<User>().Property(user => user.Phone);
+        modelBuilder.Entity<User>().HasKey(user => user.Id);
+        modelBuilder.Entity<User>().Property(user => user.FirstName).IsRequired();
+        modelBuilder.Entity<User>().Property(user => user.LastName).IsRequired();
+        modelBuilder.Entity<User>().Ignore(p => p.AccessFailedCount);
+        modelBuilder.Entity<User>().Ignore(p => p.ConcurrencyStamp);
+        modelBuilder.Entity<User>().Ignore(p => p.Email);
+        modelBuilder.Entity<User>().Ignore(p => p.EmailConfirmed);
+        modelBuilder.Entity<User>().Ignore(p => p.LockoutEnabled);
+        modelBuilder.Entity<User>().Ignore(p => p.LockoutEnd);
+        modelBuilder.Entity<User>().Ignore(p => p.SecurityStamp);
+        modelBuilder.Entity<User>().Ignore(p => p.PhoneNumberConfirmed);
+        modelBuilder.Entity<User>().Ignore(p => p.PhoneNumber);
+        modelBuilder.Entity<User>().Ignore(p => p.PasswordHash);
+        modelBuilder.Entity<User>().Ignore(p => p.NormalizedUserName);
+        modelBuilder.Entity<User>().Ignore(p => p.NormalizedEmail);
+        modelBuilder.Entity<User>().Ignore(p => p.UserName);
+        modelBuilder.Entity<User>().Ignore(p => p.TwoFactorEnabled);
     }
     public static void CreateArticlesLocaleModel(this ModelBuilder modelBuilder)
     {

@@ -1,6 +1,4 @@
-﻿using NSubstitute.ReturnsExtensions;
-
-namespace Ukrainian_Culture.Tests.ControllersTests;
+﻿namespace Ukrainian_Culture.Tests.ControllersTests;
 
 public class ArticleControllerTests
 {
@@ -37,7 +35,7 @@ public class ArticleControllerTests
         var controller = new ArticlesController(_repositoryManager, _mapper, _logger);
 
         //Act
-        var result = await controller.GetArticleById(1);
+        var result = await controller.GetArticleById(new Guid());
         var statusCode = (result as OkObjectResult)!.StatusCode;
 
         //Assert
@@ -55,7 +53,8 @@ public class ArticleControllerTests
         var controller = new ArticlesController(_repositoryManager, _mapper, _logger);
 
         //Act
-        var result = await controller.GetArticleById(-1);
+        var unCorrectId = new Guid();
+        var result = await controller.GetArticleById(unCorrectId);
         var statusCode = (result as NotFoundObjectResult)!.StatusCode;
 
         //Assert
@@ -102,7 +101,8 @@ public class ArticleControllerTests
         var controller = new ArticlesController(_repositoryManager, _mapper, _logger);
 
         //Act
-        var result = await controller.DeleteArticle(1);
+        var unrealId = new Guid();
+        var result = await controller.DeleteArticle(unrealId);
         var statusCode = (result as NotFoundObjectResult)!.StatusCode;
 
         //Assert
@@ -119,7 +119,8 @@ public class ArticleControllerTests
         var controller = new ArticlesController(_repositoryManager, _mapper, _logger);
 
         //Act
-        var result = await controller.DeleteArticle(1);
+        var idOfArticleWhichContain = new Guid();
+        var result = await controller.DeleteArticle(idOfArticleWhichContain);
         var statusCode = (result as NoContentResult)!.StatusCode;
 
         //Assert
@@ -134,7 +135,7 @@ public class ArticleControllerTests
         var controller = new ArticlesController(_repositoryManager, _mapper, _logger);
 
         //Act
-        var result = await controller.UpdateArticle(1, null);
+        var result = await controller.UpdateArticle(new Guid(), null);
         var statusCode = (result as BadRequestObjectResult)!.StatusCode;
 
         //Assert
@@ -152,7 +153,7 @@ public class ArticleControllerTests
         var controller = new ArticlesController(_repositoryManager, _mapper, _logger);
 
         //Act
-        const int unCorrectId = -1;
+        var unCorrectId = new Guid();
         var result = await controller.UpdateArticle(unCorrectId, new ArticleToUpdateDto());
         var statusCode = (result as NotFoundObjectResult)!.StatusCode;
 
@@ -171,7 +172,7 @@ public class ArticleControllerTests
         var controller = new ArticlesController(_repositoryManager, _mapper, _logger);
 
         //Act
-        const int unCorrectId = -1;
+        var unCorrectId = new Guid();
         var result = await controller.UpdateArticle(unCorrectId, new ArticleToUpdateDto());
         var statusCode = (result as NoContentResult)!.StatusCode;
 

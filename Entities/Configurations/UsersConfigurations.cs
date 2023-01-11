@@ -6,14 +6,14 @@ namespace Entities.Configurations;
 
 public class UsersConfigurations : IEntityTypeConfiguration<User>
 {
-    Guid firstId = new Guid("169a9df2-231c-45e8-9a0a-c7333f0dc9f4");
-    Guid SecondId = new Guid("87d76511-8b74-4250-aef1-c47b8cb9308f");
+    private readonly Guid _firstId = new("169a9df2-231c-45e8-9a0a-c7333f0dc9f4");
+    private readonly Guid _secondId = new("87d76511-8b74-4250-aef1-c47b8cb9308f");
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.HasData(
             new User
             {
-                Id = firstId,
+                Id = _firstId,
                 FirstName = "Vadym",
                 LastName="Orlov",
                 UserName="Vadym",
@@ -25,7 +25,7 @@ public class UsersConfigurations : IEntityTypeConfiguration<User>
             },
             new User
             {
-                Id =SecondId,
+                Id =_secondId,
                 FirstName = "Bohdan",
                 LastName="Vivchar",
                 UserName = "Bohdan",

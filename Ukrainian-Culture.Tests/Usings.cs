@@ -15,3 +15,4 @@ global using NSubstitute;
 global using Ukranian_Culture.Backend.Controllers;
 global using AutoMapper;
 global using Ukranian_Culture.Backend;
+global using NSubstitute.ReturnsExtensions;

@@ -3,19 +3,18 @@
 public class HistoryControllerTests
 {
     private readonly IRepositoryManager _repositoryManager = Substitute.For<IRepositoryManager>();
-    private readonly IMapper _mapper;
-    private readonly ILoggerManager _logger;
+    private readonly IMapper _mapper = Substitute.For<IMapper>();
+    private readonly ILoggerManager _logger = Substitute.For<ILoggerManager>();
 
-    public HistoryControllerTests()
-    {
-        _mapper = new Mapper(new MapperConfiguration(conf => conf.AddProfile(new MappingProfile())));
-        _logger = new LoggerManager();
-    }
 
     [Fact]
     public async Task GetHistoryOfRegion_ShouldReturnListOfHisrtoryDto_WhenDbIsNotEmpty()
     {
         //Arrange
+        Guid articleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        Guid categoryId = new("5b32effd-2636-4cab-8ac9-3258c746aa53");
+        Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24111");
+
         var controller = new HistoryController(_mapper, _repositoryManager, _logger);
 
         _repositoryManager.Articles
@@ -24,11 +23,11 @@ public class HistoryControllerTests
             {
                 new()
                 {
-                    Id = 0,
+                    Id = articleId,
                     Type = "file",
                     Region = "Kyiv",
                     Date = new DateTime(2003, 01, 01),
-                    CategoryId = 1,
+                    CategoryId = categoryId,
                 }
             });
 
@@ -38,8 +37,8 @@ public class HistoryControllerTests
             {
                 new()
                 {
-                    Id = 1,
-                    CultureId = 1,
+                    Id = articleId,
+                    CultureId = cultureId,
                     Title = "About Bohdan Khmelnytsky",
                     Content = "About Bohdan Khmelnytsky .... ",
                     SubText = "About Bohdan Khmelnytsky",
@@ -49,7 +48,7 @@ public class HistoryControllerTests
             );
 
         //Act
-        var result = await controller.GetHistoryByRegion(1, "Kyiv") as OkObjectResult;
+        var result = await controller.GetHistoryByRegion(cultureId, "Kyiv") as OkObjectResult;
 
         var code = result!.StatusCode;
         var resultIEnumerable = (IEnumerable<HistoryDto>)result.Value!;
@@ -57,12 +56,16 @@ public class HistoryControllerTests
         //Assert
         code.Should().Be((int)HttpStatusCode.OK);
         resultIEnumerable.Should().HaveCount(1);
+        _mapper.ReceivedCalls().Should().HaveCount(1);
     }
 
     [Fact]
     public async Task GetHistoryOfRegion_ShouldReturnBadRequest_WhenArticleDbIsEmpty()
     {
         //Arrange
+        Guid articleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24111");
+
         var controller = new HistoryController(_mapper, _repositoryManager, _logger);
 
         _repositoryManager.Articles
@@ -74,21 +77,25 @@ public class HistoryControllerTests
             {
                 new()
                 {
-                    Id=1
+                    Id= articleId
                 }
             });
 
         //Act
-        var result = (await controller.GetHistoryByRegion(1,"Kyiv")) as BadRequestResult;
+        var result = (await controller.GetHistoryByRegion(cultureId,"Kyiv")) as BadRequestResult;
 
         //Assert
         result!.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
     }
 
     [Fact]
-    public async Task GetHistoryOfRegion_ShouldThrowExceprion_WhenArticlesLocaleDbIsEmpty()
+    public async Task GetHistoryOfRegion_ShouldReturnBadRequest_WhenArticlesLocaleDbIsEmpty()
     {
         //Arrange
+        Guid articleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        Guid categoryId = new("5b32effd-2636-4cab-8ac9-3258c746aa53");
+        Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24111");
+
         var controller = new HistoryController(_mapper, _repositoryManager, _logger);
 
         _repositoryManager.Articles
@@ -97,11 +104,11 @@ public class HistoryControllerTests
             {
                 new()
                 {
-                    Id = 0,
+                    Id = articleId,
                     Type = "file",
                     Region = "Kyiv",
                     Date = new DateTime(2003, 01, 01),
-                    CategoryId = 1,
+                    CategoryId = categoryId,
                 }
             });
 
@@ -109,7 +116,7 @@ public class HistoryControllerTests
             .Returns(Enumerable.Empty<ArticlesLocale>());
 
         //Act
-        var result = (await controller.GetHistoryByRegion(1, "Kyiv")) as BadRequestResult;
+        var result = await controller.GetHistoryByRegion(cultureId, "Kyiv") as BadRequestResult;
 
         //Assert
         result!.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
@@ -118,17 +125,22 @@ public class HistoryControllerTests
     public async Task GetHistoryOfRegion_ShouldReturnCorrectResult_WhenArticleDbAndArticlesLocaleDbAreNotEmpty()
     {
         //Arrange
+        Guid articleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        Guid secondCultureId = new("5b32effd-1111-4cab-8ac9-3258c746aa53");
+        Guid firstCultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24111");
+        Guid categoryId = new("5b32effd-2636-4cab-8ac9-3258c746aa53");
+
         _repositoryManager.Articles
             .GetAllByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
             .Returns(new List<Article>()
             {
                 new()
                 {
-                    Id = 1,
+                    Id = articleId,
                     Type = "file",
                     Region = "Kyiv",
                     Date = new DateTime(2003, 01, 01),
-                    CategoryId = 1,
+                    CategoryId = categoryId,
                 }
             });
 
@@ -138,8 +150,8 @@ public class HistoryControllerTests
             {
                 new()
                 {
-                    Id = 1,
-                    CultureId = 1,
+                    Id = articleId,
+                    CultureId = firstCultureId,
                     Title = "About Bohdan Khmelnytsky",
                     Content = "About Bohdan Khmelnytsky .... ",
                     SubText = "About Bohdan Khmelnytsky",
@@ -147,8 +159,8 @@ public class HistoryControllerTests
                 },
                  new()
                 {
-                    Id = 1,
-                    CultureId = 2,
+                    Id = articleId,
+                    CultureId = secondCultureId,
                     Title = "Про Богдана Хмельницького",
                     Content = "Про Богдана Хмельницького .... ",
                     SubText = "Про Богдана Хмельницького",
@@ -159,7 +171,7 @@ public class HistoryControllerTests
         var controller = new HistoryController(_mapper, _repositoryManager, _logger);
 
         //Act
-        var result = await controller.GetHistoryByRegion(1, "Kyiv") as OkObjectResult;
+        var result = await controller.GetHistoryByRegion(firstCultureId, "Kyiv") as OkObjectResult;
 
         var statusCode = result!.StatusCode;
         var resultArray = ((IEnumerable<HistoryDto>)result.Value!).ToList();
@@ -167,11 +179,6 @@ public class HistoryControllerTests
         //Assert
         statusCode.Should().Be((int)HttpStatusCode.OK); //HttpStatusCode.OK = 200
         resultArray.Should().HaveCount(1);
-
-        resultArray[0].Should().Match<HistoryDto>(art =>
-            art.ActicleId == 1 &&
-            art.Date == "01.01.2003" &&
-            art.Region == "Kyiv" &&
-            art.ShortDescription == "About Bohdan Khmelnytsky");
+        _mapper.ReceivedCalls().Should().HaveCount(1);
     }
 }

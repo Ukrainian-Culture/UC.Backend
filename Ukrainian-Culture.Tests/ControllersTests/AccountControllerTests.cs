@@ -1,13 +1,6 @@
-﻿using Contracts;
-using Entities.Models;
-using FluentAssertions;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using NSubstitute;
-using System.Net;
-using Ukranian_Culture.Backend.Controllers;
+﻿using Microsoft.AspNetCore.Identity;
 
-namespace Ukrainian_Culture.Tests.ControllerTests;
+namespace Ukrainian_Culture.Tests.ControllersTests;
 
 public class AccountControllerTests
 {

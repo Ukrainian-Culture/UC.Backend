@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Ukranian_Culture.Backend.Controllers;
 namespace Ukranian_Culture.Backend.Controllers;
 
-[Route("api/{cultureId:int}/[controller]")]
+[Route("api/{cultureId:guid}/[controller]")]
 [ApiController]
 public class ArticlesTileController : ControllerBase
 {
@@ -25,7 +25,7 @@ public class ArticlesTileController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllArticlesOnLanguage(int cultureId)
+    public async Task<IActionResult> GetAllArticlesOnLanguage(Guid cultureId)
     {
 
         var culture = await GetCultureDataAsync(cultureId);
@@ -35,7 +35,7 @@ public class ArticlesTileController : ControllerBase
     }
 
     [HttpGet("{regionName}")]
-    public async Task<IActionResult> GetArticlesByRegion(int cultureId, string regionName)
+    public async Task<IActionResult> GetArticlesByRegion(Guid cultureId, string regionName)
     {
         var culture = await GetCultureDataAsync(cultureId);
         var articles = await GetArticlesByConditionAsync(article => article.Region == regionName);
@@ -43,8 +43,8 @@ public class ArticlesTileController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{categoryId:int}")]
-    public async Task<IActionResult> GetArticlesByCategory(int cultureId, int categoryId)
+    [HttpGet("{categoryId:guid}")]
+    public async Task<IActionResult> GetArticlesByCategory(Guid cultureId, Guid categoryId)
     {
         var culture = await GetCultureDataAsync(cultureId);
         var articles = await GetArticlesByConditionAsync(article => article.CategoryId == categoryId);
@@ -66,7 +66,7 @@ public class ArticlesTileController : ControllerBase
             .Articles
             .GetAllByConditionAsync(expression, ChangesType.AsNoTracking);
 
-    private async Task<Culture> GetCultureDataAsync(int cultureId)
+    private async Task<Culture> GetCultureDataAsync(Guid cultureId)
         => await _repositoryManager
             .Cultures
             .GetCultureWithContentAsync(cultureId, ChangesType.AsNoTracking);
