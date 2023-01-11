@@ -1,14 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Contracts;
-using Entities;
-using Entities.Models;
-using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using Repositories;
-using Ukrainian_Culture.Tests.DbModels;
-
-namespace Ukrainian_Culture.Tests;
+﻿namespace Ukrainian_Culture.Tests.RepositoriesTests;
 
 public class UserRepositoryTests
 {

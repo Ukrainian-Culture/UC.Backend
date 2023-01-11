@@ -1,6 +1,8 @@
-﻿using Contracts;
+using System.Linq.Expressions;
+using Contracts;
 using Entities;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repositories;
 
@@ -10,4 +12,13 @@ public class ArticleRepository : RepositoryBase<Article>, IArticleRepository
         : base(context)
     {
     }
+
+    public async Task<IEnumerable<Article>> GetAllByConditionAsync(Expression<Func<Article, bool>> expression, ChangesType trackChanges)
+        => await FindByCondition(expression, trackChanges).ToListAsync();
+    public async Task<Article?> GetFirstByConditionAsync(Expression<Func<Article, bool>> expression, ChangesType trackChanges)
+        => await FindByCondition(expression, trackChanges).FirstOrDefaultAsync();
+    public void CreateArticle(Article article) => Create(article);
+    public void UpdateArticle(Article article) => Update(article);
+    public void DeleteArticle(Article article) => Delete(article);
+
 }
