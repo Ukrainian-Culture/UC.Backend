@@ -41,5 +41,22 @@ public class MappingProfile : Profile
                 opt => opt.Ignore())
             .ForMember(art => art.Category,
                 opt => opt.Ignore());
+
+        CreateMap<ArticleLocaleToCreateDto, ArticlesLocale>();
+        CreateMap<ArticleLocaleToUpdateDto, ArticlesLocale>()
+            .ForMember(art => art.SubText,
+                opt => opt.MapFrom(artToUpd => artToUpd.SubText))
+            .ForMember(art => art.Title,
+                opt => opt.MapFrom(artToUpd => artToUpd.Title))
+            .ForMember(art => art.ShortDescription,
+                opt => opt.MapFrom(artToUpd => artToUpd.ShortDescription))
+            .ForMember(art => art.Content,
+                opt => opt.MapFrom(artToUpd => artToUpd.Content))
+            .ForMember(art => art.Id,
+                opt => opt.Ignore())
+            .ForMember(art => art.CultureId,
+                opt => opt.Ignore())
+            .ForMember(art => art.Culture,
+                opt => opt.Ignore());
     }
 }

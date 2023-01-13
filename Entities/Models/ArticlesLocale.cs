@@ -4,8 +4,8 @@ namespace Entities.Models;
 
 public class ArticlesLocale
 {
-    public Guid Id { get; init; }
-    [ForeignKey(nameof(Culture))] public Guid CultureId { get; init; }
+    public Guid Id { get; set; }
+    [ForeignKey(nameof(Culture))] public Guid CultureId { get; set; }
     public Culture Culture { get; set; } = null!;
 
     public string Title { get; init; } = null!;

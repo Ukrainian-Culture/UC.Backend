@@ -18,5 +18,6 @@ public class CultureRepository : RepositoryBase<Culture>, ICultureRepository
             .Include(cult => cult.Categories)
             .FirstAsync(cult => cult.Id == cultureId);
 
-
+    public async Task<Culture?> GetCultureAsync(Guid cultureId, ChangesType asNoTracking)
+        => await FindByCondition(cult => cult.Id == cultureId, asNoTracking).FirstOrDefaultAsync();
 }
