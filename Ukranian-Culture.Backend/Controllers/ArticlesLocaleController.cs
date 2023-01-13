@@ -23,6 +23,9 @@ public class ArticlesLocaleController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllArticlesLocales(Guid cultureId)
     {
+        if (await IsCultureExistInDb(cultureId) == false)
+            return NotFound(NotFoundCultureMessage(cultureId)); ;
+
         return Ok(await _repositoryManager.ArticleLocales
             .GetArticlesLocaleByConditionAsync(artL => artL.CultureId == cultureId, ChangesType.AsNoTracking));
     }
@@ -30,6 +33,9 @@ public class ArticlesLocaleController : ControllerBase
     [HttpGet("{id:guid}", Name = "ArticleLocaleById")]
     public async Task<IActionResult> GetArticleLocaleById(Guid id, Guid cultureId)
     {
+        if (await IsCultureExistInDb(cultureId) == false)
+            return NotFound(NotFoundCultureMessage(cultureId)); ;
+
         if (await _repositoryManager
                 .ArticleLocales
                 .GetFirstByConditionAsync(art => art.Id == id && art.CultureId == cultureId, ChangesType.AsNoTracking)
@@ -38,8 +44,9 @@ public class ArticlesLocaleController : ControllerBase
             return Ok(articleLocale);
         }
 
-        _logger.LogError($"ArticleLocale with id : \"{id}\" no contain in db");
-        return NotFound($"ArticleLocale with id : \"{id}\" no contain in db");
+        var message = NotFoundArticleLocaleMessage(id);
+        _logger.LogError(message);
+        return NotFound(message);
     }
 
     [HttpPost]
@@ -47,17 +54,13 @@ public class ArticlesLocaleController : ControllerBase
     {
         if (articleLocaleCreateDto is null)
         {
-            _logger.LogError("ArticleLocaleToCreateDto object sent from client is null.");
-            return BadRequest("ArticleLocaleToCreateDto object is null");
+            var message = BadRequestMessage<ArticleLocaleToCreateDto>();
+            _logger.LogError(message);
+            return BadRequest(message);
         }
 
-        var culture = await _repositoryManager.Cultures.GetCultureAsync(cultureId, ChangesType.AsNoTracking);
-        if (culture is null)
-        {
-            _logger.LogError($"Culture with this id: \"{cultureId}\" doesn't exist");
-            return NotFound($"Culture with this id: \"{cultureId}\" doesn't exist");
-        }
-        
+        if (await IsCultureExistInDb(cultureId) == false)
+            return NotFound(NotFoundCultureMessage(cultureId)); ;
 
         var articleEntity = _mapper.Map<ArticlesLocale>(articleLocaleCreateDto);
         _repositoryManager.ArticleLocales.CreateArticlesLocaleForCulture(cultureId, articleEntity);
@@ -69,20 +72,17 @@ public class ArticlesLocaleController : ControllerBase
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteArticleLocale(Guid id, Guid cultureId)
     {
-        var culture = await _repositoryManager.Cultures.GetCultureAsync(cultureId, ChangesType.AsNoTracking);
-        if (culture is null)
-        {
-            _logger.LogError($"Culture with this id: \"{cultureId}\" doesn't exist");
-            return NotFound($"Culture with this id: \"{cultureId}\" doesn't exist");
-        }
+        if (await IsCultureExistInDb(cultureId) == false)
+            return NotFound(NotFoundCultureMessage(cultureId)); ;
 
         var articleLocale = await _repositoryManager.ArticleLocales
             .GetFirstByConditionAsync(article => article.Id == id && article.CultureId == cultureId, ChangesType.AsNoTracking);
 
         if (articleLocale is null)
         {
-            _logger.LogInfo($"ArticleLocale with id: {id} doesn't exist in the database.");
-            return NotFound($"ArticleLocale with id : \"{id}\" no contain in db");
+            var message = NotFoundArticleLocaleMessage(id);
+            _logger.LogInfo(message);
+            return NotFound(message);
         }
 
         _repositoryManager.ArticleLocales.DeleteArticlesLocale(articleLocale);
@@ -95,28 +95,40 @@ public class ArticlesLocaleController : ControllerBase
     {
         if (articleLocaleToUpdate is null)
         {
-            _logger.LogError("articleLocaleToUpdate object sent from client is null.");
-            return BadRequest("articleLocaleToUpdate object is null");
+            var message = BadRequestMessage<ArticleToUpdateDto>();
+            _logger.LogError(message);
+            return BadRequest(message);
         }
 
-        var culture = await _repositoryManager.Cultures.GetCultureAsync(cultureId, ChangesType.AsNoTracking);
-        if (culture is null)
-        {
-            _logger.LogError($"Culture with this id: \"{cultureId}\" doesn't exist");
-            return NotFound($"Culture with this id: \"{cultureId}\" doesn't exist");
-        }
+        if (await IsCultureExistInDb(cultureId) == false)
+            return NotFound(NotFoundCultureMessage(cultureId)); ;
 
         var articleEntity = await _repositoryManager.ArticleLocales
             .GetFirstByConditionAsync(art => art.Id == id && art.CultureId == cultureId, ChangesType.Tracking);
 
         if (articleEntity is null)
         {
-            _logger.LogInfo($"ArticleLocale with id: {id} doesn't exist in the database.");
-            return NotFound($"ArticleLocale with id : \"{id}\" no contain in db");
+            var message = NotFoundArticleLocaleMessage(id);
+            _logger.LogInfo(message);
+            return NotFound(message);
         }
 
         _mapper.Map(articleLocaleToUpdate, articleEntity);
         await _repositoryManager.SaveAsync();
         return NoContent();
+    }
+
+    private string NotFoundCultureMessage(Guid cultureId) => $"Culture with this id: \"{cultureId}\" doesn't exist";
+    private string NotFoundArticleLocaleMessage(Guid id) => $"ArticleLocale with id: {id} doesn't exist in the database.";
+    private string BadRequestMessage<T>() => $"{typeof(T).Name} object sent from client is null.";
+    private async Task<bool> IsCultureExistInDb(Guid cultureId)
+    {
+        var culture = await _repositoryManager.Cultures.GetCultureAsync(cultureId, ChangesType.AsNoTracking);
+        if (culture is not null)
+            return true;
+
+        _logger.LogError($"Culture with this id: \"{cultureId}\" doesn't exist");
+        return false;
+
     }
 }
