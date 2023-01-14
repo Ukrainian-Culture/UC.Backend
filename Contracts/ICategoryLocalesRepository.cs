@@ -7,4 +7,6 @@ public interface ICategoryLocalesRepository
 {
     Task<IEnumerable<CategoryLocale>> GetAllByConditionAsync(Expression<Func<CategoryLocale, bool>> expression,
         ChangesType changesType);
+
+    Task<CategoryLocale?> GetFirstByCondition(Expression<Func<CategoryLocale, bool>> expression, ChangesType changesType);
 }

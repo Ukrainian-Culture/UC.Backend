@@ -3,6 +3,7 @@
 public class CategoryLocalesRepositoryTests
 {
     private readonly RepositoryContext _context;
+
     public CategoryLocalesRepositoryTests()
     {
         using var factory = new ConnectionFactory();
@@ -22,14 +23,15 @@ public class CategoryLocalesRepositoryTests
         //Assert
         result.Should().BeEmpty();
     }
+
     [Fact]
     public async Task GetAllByConditionAsync_SholdReturnAllCollection_WhenExpressionIsEqualToTrueAndDbIsNotEmpty()
     {
         //Arrange
         _context.CategoryLocales.AddRange(new List<CategoryLocale>()
         {
-            new(){ CategoryId = Guid.NewGuid() },
-            new(){ CategoryId = Guid.NewGuid() }
+            new() {CategoryId = Guid.NewGuid()},
+            new() {CategoryId = Guid.NewGuid()}
         });
         await _context.SaveChangesAsync();
         var categoryLocaleRepository = new CategoryLocalesRepository(_context);
@@ -54,7 +56,8 @@ public class CategoryLocalesRepositoryTests
                 CategoryId = categoryId,
                 CultureId = englishCultureId,
                 Name = "people"
-            }, englishCultureId
+            },
+            englishCultureId
         };
 
         yield return new object[]
@@ -64,7 +67,8 @@ public class CategoryLocalesRepositoryTests
                 CategoryId = categoryId,
                 CultureId = ukrainianCultureId,
                 Name = "люди"
-            }, ukrainianCultureId
+            },
+            ukrainianCultureId
         };
     }
 
@@ -110,5 +114,76 @@ public class CategoryLocalesRepositoryTests
             .Match<CategoryLocale>(category => category.CategoryId == expected.CategoryId &&
                                                category.CultureId == expected.CultureId &&
                                                category.Name == expected.Name);
+    }
+
+    public static IEnumerable<object[]> GetFirstByConditionTestData()
+    {
+        Guid englishCultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        Guid categoryId = new("5b32effd-2636-4cab-8ac9-3258c746aa53");
+
+        yield return new object[]
+        {
+            new CategoryLocale()
+            {
+                CategoryId = categoryId,
+                CultureId = englishCultureId,
+                Name = "people"
+            },
+            englishCultureId, categoryId
+        };
+
+        yield return new object[]
+        {
+            null, Guid.Empty, Guid.Empty
+        };
+    }
+
+    [Theory]
+    [MemberData(nameof(GetFirstByConditionTestData))]
+    public async Task GetFirstByCondition_ShouldReturnExpected(CategoryLocale expected, Guid cultureId, Guid id)
+    {
+        //Arrange
+        Guid englishCultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        Guid categoryId = new("5b32effd-2636-4cab-8ac9-3258c746aa53");
+
+        _context.CategoryLocales.AddRange(new List<CategoryLocale>
+            {
+                new()
+                {
+                    CategoryId = categoryId,
+                    CultureId = englishCultureId,
+                    Name = "people"
+                }
+            }
+        );
+        await _context.SaveChangesAsync();
+
+        var categoryLocalesRepository = new CategoryLocalesRepository(_context);
+
+        //Act
+        var categoryLocale
+            = await categoryLocalesRepository
+                .GetFirstByCondition(art => art.CultureId == cultureId && art.CategoryId == id,
+                    ChangesType.AsNoTracking);
+
+        //Assert
+        categoryLocale.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public async Task GetFirstByCondition_ShouldThrowException_WhenConditionIsNull()
+    {
+        //Arrange
+        var repository = new CategoryLocalesRepository(_context);
+        try
+        {
+            //Act
+            await repository.GetFirstByCondition(null, ChangesType.AsNoTracking);
+        }
+        catch (Exception e)
+        {
+            //Assert
+            e.Should().BeOfType<ArgumentNullException>();
+        }
     }
 }

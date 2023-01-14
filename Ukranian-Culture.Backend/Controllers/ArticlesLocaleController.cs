@@ -126,7 +126,7 @@ public class ArticlesLocaleController : ControllerBase
         if (culture is not null)
             return true;
 
-        _logger.LogError($"Culture with this id: \"{cultureId}\" doesn't exist");
+        _logger.LogError(_messageProvider.NotFoundMessage<Culture>(cultureId));
         return false;
     }
 }

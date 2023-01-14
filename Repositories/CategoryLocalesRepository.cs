@@ -16,4 +16,8 @@ public class CategoryLocalesRepository : RepositoryBase<CategoryLocale>, ICatego
     public async Task<IEnumerable<CategoryLocale>> GetAllByConditionAsync(Expression<Func<CategoryLocale, bool>> expression,
         ChangesType changesType)
         => await FindByCondition(expression, changesType).ToListAsync();
+
+    public async Task<CategoryLocale?> GetFirstByCondition(Expression<Func<CategoryLocale, bool>> expression,
+        ChangesType changesType)
+        => await FindByCondition(expression, changesType).FirstOrDefaultAsync();
 }
