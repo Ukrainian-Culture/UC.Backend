@@ -5,7 +5,7 @@ namespace Contracts;
 
 public interface IAccountRepository
 {
-    Task<IdentityResult> SignUpAsync(SignUpUser signUpModel, string role);
+    Task<IdentityResult> SignUpAsync(SignUpUser signUpModel);
     Task<string> LoginAsync(SignInUser signInModel);
 }
 

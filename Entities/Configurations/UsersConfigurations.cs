@@ -14,12 +14,12 @@ public class UsersConfigurations : IEntityTypeConfiguration<User>
             new User
             {
                 Id = _firstId,
-                FirstName = "Vadym",
-                LastName = "Orlov",
-                UserName = "Vadym",
-                NormalizedUserName = "VADYM",
-                NormalizedEmail = "VADYM@GMAIL.COM",
-                Email = "Vadym@gmail.com",
+                FirstName = "Admin",
+                LastName = "Admin",
+                UserName = "Admin",
+                NormalizedUserName = "ADMIN",
+                NormalizedEmail = "ADMIN@GMAIL.COM",
+                Email = "Admin@gmail.com",
                 PasswordHash = "6925a4905d02cc4c26872e1713a0a5f2"
 
             },

@@ -48,7 +48,7 @@ public class AccountRepository : IAccountRepository
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public async Task<IdentityResult> SignUpAsync(SignUpUser signUpModel, string role)
+    public async Task<IdentityResult> SignUpAsync(SignUpUser signUpModel)
     {
         var user = new User()
         {
@@ -61,7 +61,7 @@ public class AccountRepository : IAccountRepository
         var result = await _userManager.CreateAsync(user, signUpModel.Password);
         if (result.Succeeded)
         {
-            await _userManager.AddToRoleAsync(user, role);
+            await _userManager.AddToRoleAsync(user,"User");
             await _userManager.UpdateAsync(user);
         }
         return result;
