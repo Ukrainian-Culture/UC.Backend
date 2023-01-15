@@ -25,15 +25,15 @@ public class CultureController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllCultures()
     {
-        var cultures 
+        var cultures
             = await _repositoryManager
                     .Cultures
                     .GetCulturesByCondition(_ => true, ChangesType.AsNoTracking);
-        
+
         int counter = 0;
         var cultureDto = cultures.ToDictionary(_ => counter++, culture => culture.Id);
         return Ok(cultureDto);
-    } 
+    }
 
     [HttpGet("{cultureId:guid}")]
     public async Task<IActionResult> GetCulture(Guid cultureId)
