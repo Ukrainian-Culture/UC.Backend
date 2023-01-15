@@ -13,11 +13,13 @@ public class ArticlesController : ControllerBase
     private readonly IRepositoryManager _repositoryManager;
     private readonly IMapper _mapper;
     private readonly ILoggerManager _logger;
-    public ArticlesController(IRepositoryManager repositoryManager, IMapper mapper, ILoggerManager logger)
+    private readonly IErrorMessageProvider _messageProvider;
+    public ArticlesController(IRepositoryManager repositoryManager, IMapper mapper, ILoggerManager logger, IErrorMessageProvider messageProvider)
     {
         _repositoryManager = repositoryManager;
         _mapper = mapper;
         _logger = logger;
+        _messageProvider = messageProvider;
     }
 
 
@@ -36,8 +38,9 @@ public class ArticlesController : ControllerBase
             return Ok(article);
         }
 
-        _logger.LogError($"Article with id : \"{id}\" no contain in db");
-        return NotFound($"Article with id : \"{id}\" no contain in db");
+        var errorMessage = _messageProvider.NotFoundMessage<Article>(id);
+        _logger.LogError(errorMessage);
+        return NotFound(errorMessage);
     }
 
     [HttpPost]
@@ -45,8 +48,9 @@ public class ArticlesController : ControllerBase
     {
         if (articleCreateDto is null)
         {
-            _logger.LogError("articleCreateDto object sent from client is null.");
-            return BadRequest("articleCreateDto object is null");
+            var errorMessage = _messageProvider.BadRequestMessage<ArticleLocaleToCreateDto>();
+            _logger.LogError(errorMessage);
+            return BadRequest(errorMessage);
         }
 
         var articleEntity = _mapper.Map<Article>(articleCreateDto);
@@ -64,8 +68,9 @@ public class ArticlesController : ControllerBase
 
         if (article is null)
         {
-            _logger.LogInfo($"Article with id: {id} doesn't exist in the database.");
-            return NotFound($"Article with id : \"{id}\" no contain in db");
+            var errorMessage = _messageProvider.NotFoundMessage<Article>(id);
+            _logger.LogInfo(errorMessage);
+            return NotFound(errorMessage);
         }
 
         _repositoryManager.Articles.DeleteArticle(article);
@@ -78,8 +83,9 @@ public class ArticlesController : ControllerBase
     {
         if (articleToUpdate is null)
         {
-            _logger.LogError("articleToUpdate object sent from client is null.");
-            return BadRequest("articleToUpdate object is null");
+            var errorMessage = _messageProvider.BadRequestMessage<ArticleToUpdateDto>();
+            _logger.LogError(errorMessage);
+            return BadRequest(errorMessage);
         }
 
         var articleEntity = await _repositoryManager.Articles
@@ -87,8 +93,9 @@ public class ArticlesController : ControllerBase
 
         if (articleEntity is null)
         {
-            _logger.LogInfo($"Article with id: {id} doesn't exist in the database.");
-            return NotFound($"Article with id : \"{id}\" no contain in db");
+            var errorMessage = _messageProvider.NotFoundMessage<Article>(id);
+            _logger.LogInfo(errorMessage);
+            return NotFound(errorMessage);
         }
 
         _mapper.Map(articleToUpdate, articleEntity);
