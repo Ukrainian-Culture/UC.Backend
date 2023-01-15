@@ -15,7 +15,7 @@ public class ArticleControllerTests
             .GetAllByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
             .Returns(Enumerable.Empty<Article>());
 
-         var controller = new ArticlesController(_repositoryManager, _mapper, _logger, _messageProvider);
+        var controller = new ArticlesController(_repositoryManager, _mapper, _logger, _messageProvider);
         //Act
         var result = await controller.GetAllArticles() as OkObjectResult;
         var statusCode = result!.StatusCode;
@@ -33,7 +33,7 @@ public class ArticleControllerTests
             .GetFirstByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
             .Returns(new Article());
 
-         var controller = new ArticlesController(_repositoryManager, _mapper, _logger, _messageProvider);
+        var controller = new ArticlesController(_repositoryManager, _mapper, _logger, _messageProvider);
 
         //Act
         var result = await controller.GetArticleById(new Guid());
@@ -51,7 +51,7 @@ public class ArticleControllerTests
             .GetFirstByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
             .ReturnsNull();
 
-         var controller = new ArticlesController(_repositoryManager, _mapper, _logger, _messageProvider);
+        var controller = new ArticlesController(_repositoryManager, _mapper, _logger, _messageProvider);
 
         //Act
         var unCorrectId = new Guid();
@@ -67,7 +67,7 @@ public class ArticleControllerTests
     public async Task CreateArticle_SholudReturnOk_WhenArticleIsNotNull()
     {
         //Arrange
-         var controller = new ArticlesController(_repositoryManager, _mapper, _logger, _messageProvider);
+        var controller = new ArticlesController(_repositoryManager, _mapper, _logger, _messageProvider);
 
         //Act
         var result = await controller.CreateArticle(new ArticleToCreateDto());
@@ -82,7 +82,7 @@ public class ArticleControllerTests
     public async Task CreateArticle_SholudReturnBadRequestAndLogging_WhenArticleIsNull()
     {
         //Arrange
-         var controller = new ArticlesController(_repositoryManager, _mapper, _logger, _messageProvider);
+        var controller = new ArticlesController(_repositoryManager, _mapper, _logger, _messageProvider);
         //Act
         var result = await controller.CreateArticle(null);
         var statusCode = (result as BadRequestObjectResult)!.StatusCode;
@@ -99,7 +99,7 @@ public class ArticleControllerTests
         _repositoryManager.Articles
             .GetFirstByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
             .ReturnsNull();
-         var controller = new ArticlesController(_repositoryManager, _mapper, _logger, _messageProvider);
+        var controller = new ArticlesController(_repositoryManager, _mapper, _logger, _messageProvider);
 
         //Act
         var unrealId = new Guid();
@@ -117,7 +117,7 @@ public class ArticleControllerTests
         _repositoryManager.Articles
             .GetFirstByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
             .Returns(new Article());
-         var controller = new ArticlesController(_repositoryManager, _mapper, _logger, _messageProvider);
+        var controller = new ArticlesController(_repositoryManager, _mapper, _logger, _messageProvider);
 
         //Act
         var idOfArticleWhichContain = new Guid();
@@ -133,7 +133,7 @@ public class ArticleControllerTests
     public async Task UpdateArticle_ShouldReturnBadRequestAndLogging_WhenRecieveNull()
     {
         //Arrange
-         var controller = new ArticlesController(_repositoryManager, _mapper, _logger, _messageProvider);
+        var controller = new ArticlesController(_repositoryManager, _mapper, _logger, _messageProvider);
 
         //Act
         var result = await controller.UpdateArticle(new Guid(), null);
@@ -151,7 +151,7 @@ public class ArticleControllerTests
             .GetFirstByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
             .ReturnsNull();
 
-         var controller = new ArticlesController(_repositoryManager, _mapper, _logger, _messageProvider);
+        var controller = new ArticlesController(_repositoryManager, _mapper, _logger, _messageProvider);
 
         //Act
         var unCorrectId = new Guid();
@@ -170,7 +170,7 @@ public class ArticleControllerTests
             .GetFirstByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
             .Returns(new Article());
 
-         var controller = new ArticlesController(_repositoryManager, _mapper, _logger, _messageProvider);
+        var controller = new ArticlesController(_repositoryManager, _mapper, _logger, _messageProvider);
 
         //Act
         var unCorrectId = new Guid();
