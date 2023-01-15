@@ -145,7 +145,7 @@ public class CategoryLocaleControllerTests
         var result = await controller.CreateCategoryLocale(new CategoryLocaleToCreateDto(), cultureId) as NotFoundObjectResult;
         var statusCode = result!.StatusCode;
         var message = result.Value as string;
-        
+
         //Assert
         message.Should().Be("No 5eca5808-4f44-4c4c-b481-72d2bdf24203");
         statusCode.Should().Be((int)HttpStatusCode.NotFound);

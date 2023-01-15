@@ -119,7 +119,7 @@ public class ArticlesLocaleController : ControllerBase
         return NoContent();
     }
 
-   
+
     private async Task<bool> IsCultureExistInDb(Guid cultureId)
     {
         var culture = await _repositoryManager.Cultures.GetCultureAsync(cultureId, ChangesType.AsNoTracking);
