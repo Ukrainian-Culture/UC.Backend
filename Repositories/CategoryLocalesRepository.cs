@@ -17,7 +17,16 @@ public class CategoryLocalesRepository : RepositoryBase<CategoryLocale>, ICatego
         ChangesType changesType)
         => await FindByCondition(expression, changesType).ToListAsync();
 
-    public async Task<CategoryLocale?> GetFirstByCondition(Expression<Func<CategoryLocale, bool>> expression,
+    public async Task<CategoryLocale?> GetFirstByConditionAsync(Expression<Func<CategoryLocale, bool>> expression,
         ChangesType changesType)
         => await FindByCondition(expression, changesType).FirstOrDefaultAsync();
+
+    public void CreateCategoryLocaleForCulture(Guid cultureId, CategoryLocale categoryEntity)
+    {
+        categoryEntity.CultureId = cultureId;
+        categoryEntity.CategoryId = Guid.NewGuid();
+        Create(categoryEntity);
+    }
+
+    public void DeleteCategoryLocale(CategoryLocale categoryLocale) => Delete(categoryLocale);
 }

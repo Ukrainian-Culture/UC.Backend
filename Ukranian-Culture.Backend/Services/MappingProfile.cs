@@ -2,6 +2,8 @@ using AutoMapper;
 using Entities.DTOs;
 using Entities.Models;
 
+namespace Ukranian_Culture.Backend.Services;
+
 public class MappingProfile : Profile
 {
     public MappingProfile()
@@ -22,10 +24,10 @@ public class MappingProfile : Profile
                     => s.articlesLocale.Culture.Categories.First(cat => cat.CategoryId == s.article.CategoryId).Name));
 
         CreateMap<(Article article, ArticlesLocale articlesLocale), HistoryDto>()
-              .ForMember(x => x.ShortDescription, opt => opt.MapFrom(s => s.articlesLocale.ShortDescription))
-              .ForMember(x => x.Date, opt => opt.MapFrom(s => s.article.Date.ToString("MM.dd.yyyy")))
-              .ForMember(x => x.ActicleId, opt => opt.MapFrom(s => s.article.Id))
-              .ForMember(x => x.Region, opt => opt.MapFrom(s => s.article.Region));
+            .ForMember(x => x.ShortDescription, opt => opt.MapFrom(s => s.articlesLocale.ShortDescription))
+            .ForMember(x => x.Date, opt => opt.MapFrom(s => s.article.Date.ToString("MM.dd.yyyy")))
+            .ForMember(x => x.ActicleId, opt => opt.MapFrom(s => s.article.Id))
+            .ForMember(x => x.Region, opt => opt.MapFrom(s => s.article.Region));
 
         CreateMap<ArticleToCreateDto, Article>();
         CreateMap<ArticleToUpdateDto, Article>()
@@ -57,6 +59,17 @@ public class MappingProfile : Profile
             .ForMember(art => art.CultureId,
                 opt => opt.Ignore())
             .ForMember(art => art.Culture,
+                opt => opt.Ignore());
+
+        CreateMap<CategoryLocaleToCreateDto, CategoryLocale>();
+        CreateMap<CategoryLocaleToUpdateDto, CategoryLocale>()
+            .ForMember(cat => cat.Name,
+                opt => opt.MapFrom(catToUp => catToUp.Name))
+            .ForMember(cat => cat.CategoryId,
+                opt => opt.Ignore())
+            .ForMember(cat => cat.Culture,
+                opt => opt.Ignore())
+            .ForMember(cat => cat.CultureId,
                 opt => opt.Ignore());
     }
 }

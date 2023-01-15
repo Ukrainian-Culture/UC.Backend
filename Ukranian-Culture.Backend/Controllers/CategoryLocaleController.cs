@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Contracts;
+using Entities.DTOs;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,7 +41,7 @@ public class CategoryLocaleController : ControllerBase
 
         if (await _repositoryManager
                 .CategoryLocales
-                .GetFirstByCondition(catL => catL.CategoryId == id && catL.CultureId == cultureId, ChangesType.AsNoTracking)
+                .GetFirstByConditionAsync(catL => catL.CategoryId == id && catL.CultureId == cultureId, ChangesType.AsNoTracking)
             is { } categoryLocale)
         {
             return Ok(categoryLocale);
@@ -50,6 +51,76 @@ public class CategoryLocaleController : ControllerBase
         _logger.LogError(message);
         return NotFound(message);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateCategoryLocale([FromBody] CategoryLocaleToCreateDto? categoryLocaleCreateDto, Guid cultureId)
+    {
+        if (categoryLocaleCreateDto is null)
+        {
+            var message = _messageProvider.BadRequestMessage<CategoryLocaleToCreateDto>();
+            _logger.LogError(message);
+            return BadRequest(message);
+        }
+
+        if (await IsCultureExistInDb(cultureId) == false)
+            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId)); ;
+
+        var categoryEntity = _mapper.Map<CategoryLocale>(categoryLocaleCreateDto);
+        _repositoryManager.CategoryLocales.CreateCategoryLocaleForCulture(cultureId, categoryEntity);
+        await _repositoryManager.SaveAsync();
+
+        return Ok(categoryEntity);
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeleteCategoryLocale(Guid id, Guid cultureId)
+    {
+        if (await IsCultureExistInDb(cultureId) == false)
+            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId)); ;
+
+        var categoryLocale = await _repositoryManager.CategoryLocales
+            .GetFirstByConditionAsync(category => category.CategoryId == id && category.CultureId == cultureId, ChangesType.AsNoTracking);
+
+        if (categoryLocale is null)
+        {
+            var message = _messageProvider.NotFoundMessage<ArticlesLocale>(id);
+            _logger.LogInfo(message);
+            return NotFound(message);
+        }
+
+        _repositoryManager.CategoryLocales.DeleteCategoryLocale(categoryLocale);
+        await _repositoryManager.SaveAsync();
+        return NoContent();
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdateCategoryLocale(Guid id, [FromBody] CategoryLocaleToUpdateDto? categoryLocaleToUpdate, Guid cultureId)
+    {
+        if (categoryLocaleToUpdate is null)
+        {
+            var message = _messageProvider.BadRequestMessage<ArticleToUpdateDto>();
+            _logger.LogError(message);
+            return BadRequest(message);
+        }
+
+        if (await IsCultureExistInDb(cultureId) == false)
+            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId)); ;
+
+        var categoryLocaleEntity = await _repositoryManager.CategoryLocales
+            .GetFirstByConditionAsync(categoryLocale => categoryLocale.CategoryId == id && categoryLocale.CultureId == cultureId, ChangesType.Tracking);
+
+        if (categoryLocaleEntity is null)
+        {
+            var message = _messageProvider.NotFoundMessage<ArticlesLocale>(id);
+            _logger.LogInfo(message);
+            return NotFound(message);
+        }
+
+        _mapper.Map(categoryLocaleToUpdate, categoryLocaleEntity);
+        await _repositoryManager.SaveAsync();
+        return NoContent();
+    }
+
     private async Task<bool> IsCultureExistInDb(Guid cultureId)
     {
         var culture = await _repositoryManager.Cultures.GetCultureAsync(cultureId, ChangesType.AsNoTracking);

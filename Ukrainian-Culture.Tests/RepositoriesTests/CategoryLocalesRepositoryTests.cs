@@ -163,7 +163,7 @@ public class CategoryLocalesRepositoryTests
         //Act
         var categoryLocale
             = await categoryLocalesRepository
-                .GetFirstByCondition(art => art.CultureId == cultureId && art.CategoryId == id,
+                .GetFirstByConditionAsync(art => art.CultureId == cultureId && art.CategoryId == id,
                     ChangesType.AsNoTracking);
 
         //Assert
@@ -178,7 +178,7 @@ public class CategoryLocalesRepositoryTests
         try
         {
             //Act
-            await repository.GetFirstByCondition(null, ChangesType.AsNoTracking);
+            await repository.GetFirstByConditionAsync(null, ChangesType.AsNoTracking);
         }
         catch (Exception e)
         {
@@ -186,4 +186,128 @@ public class CategoryLocalesRepositoryTests
             e.Should().BeOfType<ArgumentNullException>();
         }
     }
+
+    [Fact]
+    public async Task CreateCategoryLocaleForCulture_ShouldCreateNewUserInDb_WhenCorrectData()
+    {
+        //Arrange
+        Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        var categoryLocalesRepository = new CategoryLocalesRepository(_context);
+
+        //Act
+        categoryLocalesRepository
+            .CreateCategoryLocaleForCulture(cultureId, new CategoryLocale());
+        await _context.SaveChangesAsync();
+
+        //Assert
+        _context.CategoryLocales.Should().HaveCount(1);
+    }
+    [Fact]
+    public async Task CreateCategoryLocaleForCulture_ShouldThrowException_WhenIdAlreadyExists()
+    {
+        //Arrange
+        Guid categoryId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        Guid cultureId = new("5eca5808-1111-4c4c-b481-72d2bdf24203");
+        _context.CategoryLocales.Add(new CategoryLocale
+        {
+            CategoryId = categoryId,
+            CultureId = cultureId
+        });
+        await _context.SaveChangesAsync();
+        var categoryLocalesRepository = new CategoryLocalesRepository(_context);
+
+        try
+        {
+            //Act
+            categoryLocalesRepository.CreateCategoryLocaleForCulture(cultureId, new CategoryLocale()
+            {
+                CategoryId = categoryId
+            });
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            //Assert
+            ex.Should().BeOfType<InvalidOperationException>();
+        }
+    }
+
+    [Fact]
+    public async Task DeleteCategoryLocale_ShoulDeleteEntity_WhenCateegoryContainInDb()
+    {
+        //Arrange
+        Guid categoryId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        Guid cultureId = new("5eca5808-1111-4c4c-b481-72d2bdf24203");
+        var categoryLocale = new CategoryLocale()
+        {
+            CategoryId = categoryId,
+            CultureId = cultureId
+        };
+        _context.CategoryLocales.Add(categoryLocale);
+        await _context.SaveChangesAsync();
+        var categoryLocalesRepository = new CategoryLocalesRepository(_context);
+
+        //Act
+        categoryLocalesRepository.DeleteCategoryLocale(categoryLocale);
+        await _context.SaveChangesAsync();
+
+        //Assert
+        _context.CategoryLocales.Should().BeEmpty();
+    }
+    [Fact]
+    public async Task DeleteUser_ShoulThrowException_WhenTryToDeleteUnrealUser()
+    {
+        //Arrange
+        Guid categoryId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        Guid cultureId = new("5eca5808-1111-4c4c-b481-72d2bdf24203");
+        var categoryLocale = new CategoryLocale()
+        {
+            CategoryId = categoryId,
+            CultureId = cultureId
+        };
+        await _context.SaveChangesAsync();
+        var categoryLocalesRepository = new CategoryLocalesRepository(_context);
+
+        try
+        {
+            //Act
+            var unrealCategory = new CategoryLocale()
+            {
+                CategoryId = Guid.Empty,
+                CultureId = Guid.Empty
+            };
+            categoryLocalesRepository.DeleteCategoryLocale(unrealCategory);
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            //Assert
+            ex.Should().BeOfType<DbUpdateConcurrencyException>();
+        }
+    }
+
+    [Fact]
+    public async Task DeleteUser_ShoulThrowException_WhenUserNoContainInDb()
+    {
+        //Arrange
+        var categoryLocalesRepository = new CategoryLocalesRepository(_context);
+
+        try
+        {
+            //Act
+            var category = new CategoryLocale()
+            {
+                CategoryId = Guid.Empty,
+                CultureId = Guid.Empty
+            };
+            categoryLocalesRepository.DeleteCategoryLocale(category);
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            //Assert
+            ex.Should().BeOfType<DbUpdateConcurrencyException>();
+        }
+    }
+
 }

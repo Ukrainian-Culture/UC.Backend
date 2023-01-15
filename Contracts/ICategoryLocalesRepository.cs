@@ -8,5 +8,8 @@ public interface ICategoryLocalesRepository
     Task<IEnumerable<CategoryLocale>> GetAllByConditionAsync(Expression<Func<CategoryLocale, bool>> expression,
         ChangesType changesType);
 
-    Task<CategoryLocale?> GetFirstByCondition(Expression<Func<CategoryLocale, bool>> expression, ChangesType changesType);
+    Task<CategoryLocale?> GetFirstByConditionAsync(Expression<Func<CategoryLocale, bool>> expression,
+        ChangesType changesType);
+    void CreateCategoryLocaleForCulture(Guid cultureId, CategoryLocale categoryEntity);
+    void DeleteCategoryLocale(CategoryLocale categoryLocale);
 }
