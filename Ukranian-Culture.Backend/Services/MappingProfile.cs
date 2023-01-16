@@ -28,7 +28,7 @@ public class MappingProfile : Profile
             .ForMember(x => x.Date, opt => opt.MapFrom(s => s.article.Date.ToString("MM.dd.yyyy")))
             .ForMember(x => x.ActicleId, opt => opt.MapFrom(s => s.article.Id))
             .ForMember(x => x.Region, opt => opt.MapFrom(s => s.article.Region));
-        
+
         CreateMap<Article, ArticleToGetDto>()
             .ForMember(artDto => artDto.Date,
                 opt => opt.MapFrom(art => art.Date.ToString("mm.dd.yyyy")));
@@ -46,7 +46,7 @@ public class MappingProfile : Profile
                 opt => opt.Ignore())
             .ForMember(art => art.Category,
                 opt => opt.Ignore());
-       
+
         CreateMap<ArticlesLocale, ArticlesLocaleToGetDto>()
             .ForMember(artLDto => artLDto.ArticleId,
                 opt => opt.MapFrom(artL => artL.Id));
