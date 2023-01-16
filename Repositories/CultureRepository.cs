@@ -25,4 +25,12 @@ public class CultureRepository : RepositoryBase<Culture>, ICultureRepository
     public async Task<IEnumerable<Culture>> GetCulturesByCondition(Expression<Func<Culture, bool>> func,
         ChangesType asNoTracking)
         => await FindByCondition(func, asNoTracking).ToListAsync();
+
+    public void CreateCulture(Culture cultureEntity)
+    {
+        cultureEntity.Id = Guid.NewGuid();
+        Create(cultureEntity);
+    }
+
+    public void DeleteCulture(Culture culture) => Delete(culture);
 }

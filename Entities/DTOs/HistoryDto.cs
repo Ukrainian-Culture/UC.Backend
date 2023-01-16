@@ -1,4 +1,7 @@
-﻿namespace Entities.DTOs;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Entities.Models;
+
+namespace Entities.DTOs;
 
 public class HistoryDto
 {
@@ -7,4 +10,3 @@ public class HistoryDto
     public string Date { get; set; } = null!;
     public string ShortDescription { get; set; } = null!;
 }
-
