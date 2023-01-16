@@ -27,8 +27,10 @@ public class ArticlesLocaleController : ControllerBase
         if (await IsCultureExistInDb(cultureId) == false)
             return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId)); ;
 
-        return Ok(await _repositoryManager.ArticleLocales
-            .GetArticlesLocaleByConditionAsync(artL => artL.CultureId == cultureId, ChangesType.AsNoTracking));
+        var articlesLocale = await _repositoryManager.ArticleLocales
+            .GetArticlesLocaleByConditionAsync(artL => artL.CultureId == cultureId, ChangesType.AsNoTracking);
+        var articlesLocaleDtos = _mapper.Map<IEnumerable<ArticlesLocaleToGetDto>>(articlesLocale);
+        return Ok(articlesLocaleDtos);
     }
 
     [HttpGet("{id:guid}", Name = "ArticleLocaleById")]
@@ -42,7 +44,8 @@ public class ArticlesLocaleController : ControllerBase
                 .GetFirstByConditionAsync(art => art.Id == id && art.CultureId == cultureId, ChangesType.AsNoTracking)
             is { } articleLocale)
         {
-            return Ok(articleLocale);
+            var articleLocaleDto = _mapper.Map<ArticlesLocaleToGetDto>(articleLocale);
+            return Ok(articleLocaleDto);
         }
 
         var message = _messageProvider.NotFoundMessage<ArticlesLocale>(id);

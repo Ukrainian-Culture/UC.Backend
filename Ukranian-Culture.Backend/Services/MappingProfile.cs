@@ -28,7 +28,10 @@ public class MappingProfile : Profile
             .ForMember(x => x.Date, opt => opt.MapFrom(s => s.article.Date.ToString("MM.dd.yyyy")))
             .ForMember(x => x.ActicleId, opt => opt.MapFrom(s => s.article.Id))
             .ForMember(x => x.Region, opt => opt.MapFrom(s => s.article.Region));
-
+        
+        CreateMap<Article, ArticleToGetDto>()
+            .ForMember(artDto => artDto.Date,
+                opt => opt.MapFrom(art => art.Date.ToString("mm.dd.yyyy")));
         CreateMap<ArticleToCreateDto, Article>();
         CreateMap<ArticleToUpdateDto, Article>()
             .ForMember(art => art.CategoryId,
@@ -43,7 +46,10 @@ public class MappingProfile : Profile
                 opt => opt.Ignore())
             .ForMember(art => art.Category,
                 opt => opt.Ignore());
-
+       
+        CreateMap<ArticlesLocale, ArticlesLocaleToGetDto>()
+            .ForMember(artLDto => artLDto.ArticleId,
+                opt => opt.MapFrom(artL => artL.Id));
         CreateMap<ArticleLocaleToCreateDto, ArticlesLocale>();
         CreateMap<ArticleLocaleToUpdateDto, ArticlesLocale>()
             .ForMember(art => art.SubText,
@@ -61,6 +67,7 @@ public class MappingProfile : Profile
             .ForMember(art => art.Culture,
                 opt => opt.Ignore());
 
+        CreateMap<CategoryLocale, CategoryLocaleToGetDto>();
         CreateMap<CategoryLocaleToCreateDto, CategoryLocale>();
         CreateMap<CategoryLocaleToUpdateDto, CategoryLocale>()
             .ForMember(cat => cat.Name,
@@ -70,6 +77,20 @@ public class MappingProfile : Profile
             .ForMember(cat => cat.Culture,
                 opt => opt.Ignore())
             .ForMember(cat => cat.CultureId,
+                opt => opt.Ignore());
+
+        CreateMap<Culture, CultureToGetDto>();
+        CreateMap<CultureToCreateDto, Culture>();
+        CreateMap<CultureToUpdateDto, Culture>()
+            .ForMember(cul => cul.DisplayedName,
+                opt => opt.MapFrom(culDto => culDto.DisplayedName))
+            .ForMember(cul => cul.Name,
+                opt => opt.MapFrom(culDto => culDto.Name))
+            .ForMember(cul => cul.Id,
+                opt => opt.Ignore())
+            .ForMember(cul => cul.ArticlesTranslates,
+                opt => opt.Ignore())
+            .ForMember(cul => cul.Categories,
                 opt => opt.Ignore());
     }
 }

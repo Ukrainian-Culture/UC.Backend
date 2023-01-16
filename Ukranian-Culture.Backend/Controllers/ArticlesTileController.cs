@@ -50,7 +50,7 @@ public class ArticlesTileController : ControllerBase
         catch (ArgumentNullException ex)
         {
             _logger.LogError(ex.Message);
-            return BadRequest();
+            return NotFound();
         }
     }
 
@@ -60,6 +60,20 @@ public class ArticlesTileController : ControllerBase
         try
         {
             return Ok(await TryGetArticleTileDto(cultureId, article => article.CategoryId == categoryId));
+        }
+        catch (ArgumentNullException ex)
+        {
+            _logger.LogError(ex.Message);
+            return NotFound();
+        }
+    }
+
+    [HttpGet("{regionName}/{categoryId:guid}")]
+    public async Task<IActionResult> GetArticlesTileByRegionAndCategory(string regionName, Guid categoryId, Guid cultureId)
+    {
+        try
+        {
+            return Ok(await TryGetArticleTileDto(cultureId, article => article.CategoryId == categoryId && article.Region == regionName));
         }
         catch (ArgumentNullException ex)
         {
@@ -80,15 +94,21 @@ public class ArticlesTileController : ControllerBase
     {
         var articlesLocale = culture.ArticlesTranslates.ToList();
 
-        var articleTiles
-            = (from article in articles
-               let correctArticleLocale = articlesLocale.FirstOrDefault(artL => artL.Id == article.Id)
-               let isArticleHaveCorrectCategory = culture.Categories
-                   .Select(cat => cat.CategoryId)
-                   .Contains(article.CategoryId)
-               where correctArticleLocale is not null && isArticleHaveCorrectCategory
-               select _mapper.Map<ArticleTileDto>((article, correctArticleLocale)))
-            .ToList();
+        var articleTiles = new List<ArticleTileDto>();
+        foreach (var article in articles)
+        {
+            ArticlesLocale? correctArticleLocale = articlesLocale.FirstOrDefault(artL => artL.Id == article.Id);
+            bool isArticleHaveCorrectCategory
+                = culture.Categories
+                         .Select(cat => cat.CategoryId)
+                         .Contains(article.CategoryId);
+
+            if (correctArticleLocale is not null && isArticleHaveCorrectCategory)
+            {
+                articleTiles.Add(_mapper.Map<ArticleTileDto>((article, correctArticleLocale)));
+            }
+            _logger.LogError($"article with id:\"{article.Id}\" has no translate, or {article.CategoryId} is invalid");
+        }
 
         return Task.FromResult(articleTiles);
     }

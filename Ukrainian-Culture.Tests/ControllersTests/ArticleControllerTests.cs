@@ -19,7 +19,7 @@ public class ArticleControllerTests
         //Act
         var result = await controller.GetAllArticles() as OkObjectResult;
         var statusCode = result!.StatusCode;
-        var resultContent = (IEnumerable<Article>)result.Value!;
+        var resultContent = (IEnumerable<ArticleToGetDto>)result.Value!;
         //Assert
         statusCode.Should().Be((int)HttpStatusCode.OK);
         resultContent.Should().BeEmpty();

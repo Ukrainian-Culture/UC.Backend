@@ -29,8 +29,10 @@ public class CategoryLocaleController : ControllerBase
         if (await IsCultureExistInDb(cultureId) == false)
             return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId)); ;
 
-        return Ok(await _repositoryManager.CategoryLocales
-            .GetAllByConditionAsync(catL => catL.CultureId == cultureId, ChangesType.AsNoTracking));
+        var categories = await _repositoryManager.CategoryLocales
+            .GetAllByConditionAsync(catL => catL.CultureId == cultureId, ChangesType.AsNoTracking);
+        var categoriesLocalesDtos = _mapper.Map<IEnumerable<CategoryLocaleToGetDto>>(categories);
+        return Ok(categoriesLocalesDtos);
     }
 
     [HttpGet("{id:guid}", Name = "CategoryLocaleById")]
@@ -44,7 +46,8 @@ public class CategoryLocaleController : ControllerBase
                 .GetFirstByConditionAsync(catL => catL.CategoryId == id && catL.CultureId == cultureId, ChangesType.AsNoTracking)
             is { } categoryLocale)
         {
-            return Ok(categoryLocale);
+            var categoryLocaleDto = _mapper.Map<CategoryLocaleToGetDto>(categoryLocale);
+            return Ok(categoryLocaleDto);
         }
 
         var message = _messageProvider.NotFoundMessage<CategoryLocale>(id);
@@ -52,6 +55,16 @@ public class CategoryLocaleController : ControllerBase
         return NotFound(message);
     }
 
+    [HttpGet("ids")]
+    public async Task<IActionResult> GetCategoriesIds(Guid cultureId)
+    {
+        var categories = await _repositoryManager
+            .CategoryLocales
+            .GetAllByConditionAsync(cat => cat.CultureId == cultureId, ChangesType.AsNoTracking);
+
+        Dictionary<string, Guid> categoriesIds = categories.ToDictionary(c => c.Name, c => c.CategoryId);
+        return Ok(categoriesIds);
+    }
     [HttpPost]
     public async Task<IActionResult> CreateCategoryLocale([FromBody] CategoryLocaleToCreateDto? categoryLocaleCreateDto, Guid cultureId)
     {

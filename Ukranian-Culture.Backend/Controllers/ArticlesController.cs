@@ -26,7 +26,9 @@ public class ArticlesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllArticles()
     {
-        return Ok(await _repositoryManager.Articles.GetAllByConditionAsync(_ => true, ChangesType.AsNoTracking));
+        var articles = await _repositoryManager.Articles.GetAllByConditionAsync(_ => true, ChangesType.AsNoTracking);
+        var articlesDtos = _mapper.Map<IEnumerable<ArticleToGetDto>>(articles);
+        return Ok(articlesDtos);
     }
 
     [HttpGet("{id:guid}", Name = "ArticleById")]
@@ -35,7 +37,8 @@ public class ArticlesController : ControllerBase
         if (await _repositoryManager.Articles.GetFirstByConditionAsync(art => art.Id == id, ChangesType.AsNoTracking)
             is { } article)
         {
-            return Ok(article);
+            var articleDto = _mapper.Map<ArticleToGetDto>(article);
+            return Ok(articleDto);
         }
 
         var errorMessage = _messageProvider.NotFoundMessage<Article>(id);
