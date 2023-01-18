@@ -92,5 +92,7 @@ public class MappingProfile : Profile
                 opt => opt.Ignore())
             .ForMember(cul => cul.Categories,
                 opt => opt.Ignore());
+
+        CreateMap<HistoryToCreateDto, UserHistory>();
     }
 }

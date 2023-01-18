@@ -39,8 +39,9 @@ public class RepositoryContext : IdentityDbContext<User, Roles, Guid>
             .WithOne(a => a.Culture);
         
         modelBuilder.Entity<User>()
-            .HasOne(a => a.History)
-            .WithOne(a => a.User);
+            .HasMany(a => a.History)
+            .WithOne(a => a.User)
+            .HasForeignKey(a => a.UserId);
         
         modelBuilder.ApplyConfiguration(new ArticlesConfiguration());
         modelBuilder.ApplyConfiguration(new UsersConfigurations());

@@ -8,7 +8,7 @@ namespace Repositories;
 
 public class UserHistoryRepository : RepositoryBase<UserHistory>, IUserHistoryRepository
 {
-    private const int HistoryToGetCount = 5;
+    private const int HistoryToGetCount = 10;
 
     public UserHistoryRepository(RepositoryContext context) : base(context)
     {
@@ -20,4 +20,11 @@ public class UserHistoryRepository : RepositoryBase<UserHistory>, IUserHistoryRe
             .UsersHistories
             .Where(func)
             .Take(HistoryToGetCount);
+
+    public void AddHistoryToUser(Guid userId, UserHistory userHistory)
+    {
+        userHistory.UserId = userId;
+        userHistory.Id = Guid.NewGuid();
+        Create(userHistory);
+    }
 }

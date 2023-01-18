@@ -22,8 +22,9 @@ public static class ModelBuilderExtesions
         modelBuilder.Entity<User>().Ignore(p => p.UserName);
         modelBuilder.Entity<User>().Ignore(p => p.TwoFactorEnabled);
         modelBuilder.Entity<User>()
-            .HasOne(user => user.History)
-            .WithOne(history => history.User);
+            .HasMany(a => a.History)
+            .WithOne(a => a.User)
+            .HasForeignKey(a => a.UserId);
     }
 
     public static void CreateUserHistoryModel(this ModelBuilder modelBuilder)
@@ -33,8 +34,8 @@ public static class ModelBuilderExtesions
         modelBuilder.Entity<UserHistory>().Property(uh => uh.Title);
         modelBuilder.Entity<UserHistory>()
             .HasOne(uh => uh.User)
-            .WithOne(user => user.History)
-            .HasForeignKey<UserHistory>(uh => uh.UserId);
+            .WithMany(user => user.History)
+            .HasForeignKey(uh => uh.UserId);
     }
     public static void CreateArticlesLocaleModel(this ModelBuilder modelBuilder)
     {
