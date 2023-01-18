@@ -8,5 +8,6 @@ public interface IRepositoryManager
     ICategoryLocalesRepository CategoryLocales { get; }
     ICategoryRepository Categories { get; }
     ICultureRepository Cultures { get; }
+    IUserHistoryRepository UserHistory { get; }
     Task SaveAsync();
 }
