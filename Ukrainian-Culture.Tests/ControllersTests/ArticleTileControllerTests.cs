@@ -6,7 +6,7 @@ public class ArticleTileControllerTests
 {
     private readonly IRepositoryManager _repositoryManager = Substitute.For<IRepositoryManager>();
     private readonly IMapper _mapper = Substitute.For<IMapper>();
-
+    private readonly ILoggerManager _logger = Substitute.For<ILoggerManager>();
     [Fact]
     public async Task GetAllArticlesOnLanguage_ShouldReturnListOfArticlesTileDto_WhenDbIsNotEmpty()
     {
@@ -48,7 +48,7 @@ public class ArticleTileControllerTests
                 }
             });
 
-        var controller = new ArticlesTileController(_repositoryManager, _mapper);
+        var controller = new ArticlesTileController(_repositoryManager, _mapper, _logger);
 
         //Act
         var result = await controller.GetAllArticlesOnLanguage(cultureId) as OkObjectResult;
@@ -78,7 +78,7 @@ public class ArticleTileControllerTests
                 Categories = Enumerable.Empty<CategoryLocale>().ToList()
             });
 
-        var controller = new ArticlesTileController(_repositoryManager, _mapper);
+        var controller = new ArticlesTileController(_repositoryManager, _mapper, _logger);
 
         //Act
         var result = await controller.GetAllArticlesOnLanguage(cultureId) as OkObjectResult;
@@ -96,7 +96,7 @@ public class ArticleTileControllerTests
         //Arrange
         Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24111");
 
-        var controller = new ArticlesTileController(_repositoryManager, _mapper);
+        var controller = new ArticlesTileController(_repositoryManager, _mapper, _logger);
 
         try
         {
@@ -156,7 +156,7 @@ public class ArticleTileControllerTests
                 }
             });
 
-        var controller = new ArticlesTileController(_repositoryManager, _mapper);
+        var controller = new ArticlesTileController(_repositoryManager, _mapper, _logger);
 
         //Act
         var result = await controller.GetAllArticlesOnLanguage(cultureId) as OkObjectResult;
