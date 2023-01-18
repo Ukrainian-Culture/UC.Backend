@@ -28,7 +28,7 @@ public class AccountRepository : IAccountRepository
     {
         var result = await _signInManager.PasswordSignInAsync(signInModel.FirstName, signInModel.Password, false, false);
         if (!result.Succeeded) return string.Empty;
-        
+
         var authClaims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, signInModel.FirstName),
@@ -64,7 +64,7 @@ public class AccountRepository : IAccountRepository
         var result = await _userManager.CreateAsync(user, signUpModel.Password);
         if (result.Succeeded)
         {
-            await _userManager.AddToRoleAsync(user,"User");
+            await _userManager.AddToRoleAsync(user, "User");
             await _userManager.UpdateAsync(user);
         }
         return result;
