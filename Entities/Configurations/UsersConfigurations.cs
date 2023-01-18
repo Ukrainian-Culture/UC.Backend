@@ -1,4 +1,5 @@
 ﻿using Entities.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,18 +11,19 @@ public class UsersConfigurations : IEntityTypeConfiguration<User>
     private readonly Guid _secondId = new("87d76511-8b74-4250-aef1-c47b8cb9308f");
     public void Configure(EntityTypeBuilder<User> builder)
     {
+        var hasher = new PasswordHasher<User>();
         builder.HasData(
             new User
             {
-                Id = _firstId,
+                Id =_firstId,
                 FirstName = "Admin",
                 LastName = "Admin",
                 UserName = "Admin",
+                Email = "Admin@gmail.com",
                 NormalizedUserName = "ADMIN",
                 NormalizedEmail = "ADMIN@GMAIL.COM",
-                Email = "Admin@gmail.com",
-                PasswordHash = "6925a4905d02cc4c26872e1713a0a5f2"
-
+                PasswordHash = hasher.HashPassword(null, "AdminPassword"),
+                SecurityStamp = Guid.NewGuid().ToString()
             },
             new User
             {
@@ -32,7 +34,8 @@ public class UsersConfigurations : IEntityTypeConfiguration<User>
                 NormalizedUserName = "BOHDAN",
                 NormalizedEmail = "BOHDAN@GMAIL.COM",
                 Email = "Bohdan@gmail.com",
-                PasswordHash = "6925a4905d02cc4c26872e1813a0a5f2"
+                PasswordHash = hasher.HashPassword(null, "BohdanPassword"),
+                SecurityStamp = Guid.NewGuid().ToString()
             }
         );
     }

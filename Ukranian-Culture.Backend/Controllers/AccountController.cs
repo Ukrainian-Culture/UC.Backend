@@ -15,7 +15,7 @@ public class AccountController : ControllerBase
         _accountRepository = accountRepository;
     }
 
-    [HttpPost("signup/{role}")]
+    [HttpPost("signup")]
     public async Task<IActionResult> SignUp([FromBody] SignUpUser signUpModel)
     {
         var result = await _accountRepository.SignUpAsync(signUpModel);

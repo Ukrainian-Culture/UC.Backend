@@ -2,6 +2,7 @@
 using Contracts;
 using Entities.DTOs;
 using Entities.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ukranian_Culture.Backend.Controllers;
@@ -19,7 +20,6 @@ public class ArticlesController : ControllerBase
         _mapper = mapper;
         _logger = logger;
     }
-
 
     [HttpGet]
     public async Task<IActionResult> GetAllArticles()
@@ -41,6 +41,7 @@ public class ArticlesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> CreateArticle([FromBody] ArticleToCreateDto? articleCreateDto)
     {
         if (articleCreateDto is null)
@@ -57,6 +58,7 @@ public class ArticlesController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteArticle(Guid id)
     {
         var article = await _repositoryManager.Articles
@@ -74,6 +76,7 @@ public class ArticlesController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateArticle(Guid id, [FromBody] ArticleToUpdateDto? articleToUpdate)
     {
         if (articleToUpdate is null)
