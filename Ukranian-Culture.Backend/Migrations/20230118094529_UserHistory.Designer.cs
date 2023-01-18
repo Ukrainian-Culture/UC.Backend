@@ -4,6 +4,7 @@ using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace UkranianCulture.Backend.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20230118094529_UserHistory")]
+    partial class UserHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -357,7 +360,7 @@ namespace UkranianCulture.Backend.Migrations
                         {
                             Id = new Guid("169a9df2-231c-45e8-9a0a-c7333f0dc9f4"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1299be31-1ec4-42ef-988b-261440426393",
+                            ConcurrencyStamp = "b22ade2e-1345-42eb-b436-5654e2b7a23c",
                             Email = "Vadym@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "Vadym",
@@ -374,7 +377,7 @@ namespace UkranianCulture.Backend.Migrations
                         {
                             Id = new Guid("87d76511-8b74-4250-aef1-c47b8cb9308f"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "43011e9e-51a3-4c8d-8163-f5968d48e71d",
+                            ConcurrencyStamp = "c6ed41ec-11c3-4280-b600-0aa0231a8740",
                             Email = "Bohdan@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "Bohdan",
@@ -411,22 +414,6 @@ namespace UkranianCulture.Backend.Migrations
                         .IsUnique();
 
                     b.ToTable("UsersHistories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("c5a0e131-46a0-4f37-9a9d-6e426cb94f46"),
-                            DateOfWatch = new DateTime(2023, 1, 18, 1, 1, 1, 1, DateTimeKind.Utc),
-                            Title = "About Bohdan Khmelnytsky",
-                            UserId = new Guid("169a9df2-231c-45e8-9a0a-c7333f0dc9f4")
-                        },
-                        new
-                        {
-                            Id = new Guid("9d2abe54-d8fb-45eb-94a0-65cefcbfa432"),
-                            DateOfWatch = new DateTime(2023, 1, 18, 1, 3, 1, 0, DateTimeKind.Utc),
-                            Title = "About Ivan Mazepa",
-                            UserId = new Guid("87d76511-8b74-4250-aef1-c47b8cb9308f")
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
