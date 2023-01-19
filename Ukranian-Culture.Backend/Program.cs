@@ -13,11 +13,11 @@ using NLog;
 using Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Ukranian_Culture.Backend;
 using Microsoft.Extensions.DependencyInjection;
 using NLog.Fluent;
 using Entities.Configurations;
 using Microsoft.OpenApi.Models;
+using Ukranian_Culture.Backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +26,7 @@ builder.Services.AddScoped<ILoggerManager, LoggerManager>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 builder.Services.AddMvc();
 builder.Services.AddTransient<IRepositoryManager, RepositoryManager>();
+builder.Services.AddScoped<IErrorMessageProvider, ErrorMessageProvider>();
 
 builder.Services.AddDbContext<RepositoryContext>(
     opts => opts.UseSqlServer(

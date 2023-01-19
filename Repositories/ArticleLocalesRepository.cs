@@ -16,7 +16,16 @@ public class ArticleLocalesRepository : RepositoryBase<ArticlesLocale>, IArticle
     public async Task<IEnumerable<ArticlesLocale>> GetArticlesLocaleByConditionAsync(Expression<Func<ArticlesLocale, bool>> expression, ChangesType trackChanges)
         => await FindByCondition(expression, trackChanges).ToListAsync();
 
-    public void CreateArticlesLocale(ArticlesLocale articleLocale) => Create(articleLocale);
+    public async Task<ArticlesLocale?> GetFirstByConditionAsync(Expression<Func<ArticlesLocale, bool>> func, ChangesType trackChanges)
+        => await FindByCondition(func, trackChanges).SingleOrDefaultAsync();
+
+    public void CreateArticlesLocaleForCulture(Guid cultureId, ArticlesLocale article)
+    {
+        article.CultureId = cultureId;
+        article.Id = Guid.NewGuid();
+        Create(article);
+    }
+
     public void UpdateArticlesLocale(ArticlesLocale articleLocale) => Update(articleLocale);
     public void DeleteArticlesLocale(ArticlesLocale articleLocale) => Delete(articleLocale);
 }

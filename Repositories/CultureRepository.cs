@@ -1,4 +1,5 @@
-﻿using Contracts;
+﻿using System.Linq.Expressions;
+using Contracts;
 using Entities;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
@@ -18,5 +19,18 @@ public class CultureRepository : RepositoryBase<Culture>, ICultureRepository
             .Include(cult => cult.Categories)
             .FirstAsync(cult => cult.Id == cultureId);
 
+    public async Task<Culture?> GetCultureAsync(Guid cultureId, ChangesType asNoTracking)
+        => await FindByCondition(cult => cult.Id == cultureId, asNoTracking).FirstOrDefaultAsync();
 
+    public async Task<IEnumerable<Culture>> GetCulturesByCondition(Expression<Func<Culture, bool>> func,
+        ChangesType asNoTracking)
+        => await FindByCondition(func, asNoTracking).ToListAsync();
+
+    public void CreateCulture(Culture cultureEntity)
+    {
+        cultureEntity.Id = Guid.NewGuid();
+        Create(cultureEntity);
+    }
+
+    public void DeleteCulture(Culture culture) => Delete(culture);
 }

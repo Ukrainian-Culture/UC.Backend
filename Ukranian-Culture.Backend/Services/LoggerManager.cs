@@ -2,7 +2,7 @@
 using NLog;
 using ILogger = NLog.ILogger;
 
-namespace Ukranian_Culture.Backend;
+namespace Ukranian_Culture.Backend.Services;
 
 public class LoggerManager : ILoggerManager
 {
