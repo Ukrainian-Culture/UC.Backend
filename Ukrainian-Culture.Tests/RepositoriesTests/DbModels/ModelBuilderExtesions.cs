@@ -54,7 +54,6 @@ public static class ModelBuilderExtesions
     public static void CreateCategoriesLocaleModel(this ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<CategoryLocale>().HasKey(ct => new { ct.CategoryId, ct.CultureId });
-        modelBuilder.Entity<CategoryLocale>().HasKey(culture => culture.CategoryId);
         modelBuilder.Entity<CategoryLocale>().Property(culture => culture.Name);
         modelBuilder.Entity<CategoryLocale>()
             .HasOne(culture => culture.Culture)

@@ -13,15 +13,16 @@ using NLog;
 using Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Ukranian_Culture.Backend;
 using Microsoft.Extensions.DependencyInjection;
 using Parsers;
+using Ukranian_Culture.Backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), @"\nlog.config"));
 builder.Services.AddScoped<ILoggerManager, LoggerManager>();
 builder.Services.AddScoped<IParser, Parser>();
+builder.Services.AddScoped<IErrorMessageProvider, ErrorMessageProvider>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
