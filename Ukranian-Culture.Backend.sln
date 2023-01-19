@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repositories", "Repositorie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ukrainian-Culture.Tests", "Ukrainian-Culture.Tests\Ukrainian-Culture.Tests.csproj", "{779A2BE3-A52F-4829-B072-0AD2CC1A9F49}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Parsers", "Parsers\Parsers.csproj", "{219F5EA3-7A6F-4C21-B089-EA4BCA3FF964}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{779A2BE3-A52F-4829-B072-0AD2CC1A9F49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{779A2BE3-A52F-4829-B072-0AD2CC1A9F49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{779A2BE3-A52F-4829-B072-0AD2CC1A9F49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{219F5EA3-7A6F-4C21-B089-EA4BCA3FF964}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{219F5EA3-7A6F-4C21-B089-EA4BCA3FF964}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{219F5EA3-7A6F-4C21-B089-EA4BCA3FF964}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{219F5EA3-7A6F-4C21-B089-EA4BCA3FF964}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

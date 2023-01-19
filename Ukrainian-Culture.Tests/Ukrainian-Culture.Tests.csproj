@@ -31,6 +31,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Contracts\Contracts.csproj" />
     <ProjectReference Include="..\Entities\Entities.csproj" />
+    <ProjectReference Include="..\Parsers\Parsers.csproj" />
     <ProjectReference Include="..\Repositories\Repositories.csproj" />
     <ProjectReference Include="..\Ukranian-Culture.Backend\Ukranian-Culture.Backend.csproj" />
   </ItemGroup>

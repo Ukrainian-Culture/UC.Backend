@@ -14,6 +14,7 @@ using Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Parsers;
 using NLog.Fluent;
 using Entities.Configurations;
 using Microsoft.OpenApi.Models;
@@ -23,6 +24,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), @"\nlog.config"));
 builder.Services.AddScoped<ILoggerManager, LoggerManager>();
+builder.Services.AddTransient<IParser, Parser>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 builder.Services.AddMvc();
 builder.Services.AddTransient<IRepositoryManager, RepositoryManager>();
