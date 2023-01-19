@@ -10,9 +10,8 @@ public class AccountControllerTests
     public async Task SignUp_ShouldReturnOkStatus_WhenUserDataIsCorrect()
     {
         //arrange
-        _account.SignUpAsync(Arg.Any<SignUpUser>(), "User").Returns(IdentityResult.Success);
+        _account.SignUpAsync(Arg.Any<SignUpUser>()).Returns(IdentityResult.Success);
         var controller = new AccountController(_account);
-        string role = "User";
         var user = new SignUpUser()
         {
             FirstName = "Name1",
@@ -22,7 +21,7 @@ public class AccountControllerTests
             ConfirmPassword = "TTCGCghcvhj"
         };
         //act
-        var result = await controller.SignUp(user, role) as OkObjectResult;
+        var result = await controller.SignUp(user) as OkObjectResult;
         var statusCode = result.StatusCode;
 
         //assert
@@ -33,9 +32,8 @@ public class AccountControllerTests
     public async Task SignUp_ShouldReturnNull_WhenInvalidPassword()
     {
         //arrange
-        _account.SignUpAsync(Arg.Any<SignUpUser>(), "User").Returns(IdentityResult.Failed());
+        _account.SignUpAsync(Arg.Any<SignUpUser>()).Returns(IdentityResult.Failed());
         var controller = new AccountController(_account);
-        string role = "User";
         var user = new SignUpUser()
         {
             FirstName = "Name1",
@@ -46,7 +44,7 @@ public class AccountControllerTests
         };
 
         //act
-        var result = await controller.SignUp(user, role) as OkObjectResult;
+        var result = await controller.SignUp(user) as OkObjectResult;
 
         //assert
         result.Should().BeNull();

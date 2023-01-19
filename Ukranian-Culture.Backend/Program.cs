@@ -15,34 +15,56 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Parsers;
+using NLog.Fluent;
+using Entities.Configurations;
+using Microsoft.OpenApi.Models;
 using Ukranian_Culture.Backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), @"\nlog.config"));
 builder.Services.AddScoped<ILoggerManager, LoggerManager>();
-builder.Services.AddScoped<IParser, Parser>();
+builder.Services.AddTransient<IParser, Parser>();
+builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+builder.Services.AddMvc();
+builder.Services.AddTransient<IRepositoryManager, RepositoryManager>();
 builder.Services.AddScoped<IErrorMessageProvider, ErrorMessageProvider>();
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddDbContext<RepositoryContext>(
     opts => opts.UseSqlServer(
         builder.Configuration.GetConnectionString("Db_connection")!,
-        b => b.MigrationsAssembly("Ukranian-Culture.Backend")
-    )
-);
+        b => b.MigrationsAssembly("Ukranian-Culture.Backend")));
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddCors(options =>
+builder.Services.AddSwaggerGen(c =>
 {
-    options.AddPolicy("CorsPolicy", policyBuilder =>
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        policyBuilder.AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader();
+        Description =
+            "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+            },
+            new string[]{}
+        }
     });
 });
 
@@ -54,8 +76,8 @@ builder.Services.AddIdentity<User, Roles>(opts =>
     opts.Password.RequireUppercase = false;
     opts.Password.RequireDigit = false;
 })
-   .AddEntityFrameworkStores<RepositoryContext>()
-   .AddDefaultTokenProviders();
+    .AddEntityFrameworkStores<RepositoryContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddAuthentication(option =>
 {
@@ -67,7 +89,7 @@ builder.Services.AddAuthentication(option =>
     {
         option.SaveToken = true;
         option.RequireHttpsMetadata = false;
-        option.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+        option.TokenValidationParameters = new TokenValidationParameters()
         {
             ValidateIssuer = true,
             ValidateAudience = true,
@@ -77,9 +99,20 @@ builder.Services.AddAuthentication(option =>
         };
     });
 
-builder.Services.AddTransient<IAccountRepository, AccountRepository>();
-builder.Services.AddMvc();
-builder.Services.AddTransient<IRepositoryManager, RepositoryManager>();
+
+
+builder.Services.AddAutoMapper(typeof(Program));
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policyBuilder =>
+    {
+        policyBuilder.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
 
 var app = builder.Build();
 
@@ -118,13 +151,17 @@ try
         app.UseSwagger();
         app.UseSwaggerUI();
     }
-    app.UseCors("CorsPolicy");
+
     app.UseHttpsRedirection();
-
-    app.UseAuthorization();
     app.UseAuthentication();
+    app.UseRouting();
+    app.UseAuthorization();
 
-    app.MapControllers();
+    app.UseCors("CorsPolicy");
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+    });
 }
 catch (Exception ex)
 {
