@@ -37,12 +37,12 @@ public class RepositoryContext : IdentityDbContext<User, Roles, Guid>
         modelBuilder.Entity<Culture>()
             .HasMany(cul => cul.Categories)
             .WithOne(a => a.Culture);
-        
+
         modelBuilder.Entity<User>()
             .HasMany(a => a.History)
             .WithOne(a => a.User)
             .HasForeignKey(a => a.UserId);
-        
+
         modelBuilder.ApplyConfiguration(new ArticlesConfiguration());
         modelBuilder.ApplyConfiguration(new UsersConfigurations());
         modelBuilder.ApplyConfiguration(new CategoryConfiguration());

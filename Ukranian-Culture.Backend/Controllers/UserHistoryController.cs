@@ -11,7 +11,7 @@ namespace Ukranian_Culture.Backend.Controllers;
 public class UserHistoryController : ControllerBase
 {
     // api/idUser/UserHistory/new UserHistory{Title, ArticleId, UserId}
-    
+
     private readonly IRepositoryManager _repository;
     private readonly IMapper _mapper;
     private readonly ILoggerManager _logger;
@@ -32,9 +32,9 @@ public class UserHistoryController : ControllerBase
         {
             var message = _messageProvider.NotFoundMessage<User>(userId);
             _logger.LogError(message);
-            return NotFound(message);   
+            return NotFound(message);
         }
-        
+
         var history = await _repository
             .UserHistory
             .GetAllUserHistoryByConditionAsync(his => his.UserId == userId, ChangesType.AsNoTracking);
@@ -50,15 +50,15 @@ public class UserHistoryController : ControllerBase
             _logger.LogError(message);
             return BadRequest(message);
         }
-        
+
         User? user = await _repository.Users.GetUserByIdAsync(userId, ChangesType.AsNoTracking);
         if (user is null)
         {
             var message = _messageProvider.NotFoundMessage<User>(userId);
             _logger.LogError(message);
-            return NotFound(message);   
+            return NotFound(message);
         }
-        
+
         UserHistory? articleEntity = _mapper.Map<UserHistory>(historyToCreate);
         _repository.UserHistory.AddHistoryToUser(userId, articleEntity);
         await _repository.SaveAsync();

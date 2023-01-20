@@ -8,7 +8,7 @@ public class ErrorMessageProviderTests
     public void NotFoundMessage_ShouldReturnCorrectMessage()
     {
         Guid testableId = new("a757f007-0222-470c-8aca-b6220a5da944");
-        NotFoundMessage_Helper<int>($"Int32 with id: \"a757f007-0222-470c-8aca-b6220a5da944\" doesn't exist in database",testableId);
+        NotFoundMessage_Helper<int>($"Int32 with id: \"a757f007-0222-470c-8aca-b6220a5da944\" doesn't exist in database", testableId);
         NotFoundMessage_Helper<Article>($"Article with id: \"a757f007-0222-470c-8aca-b6220a5da944\" doesn't exist in database", testableId);
         NotFoundMessage_Helper<string>($"String with id: \"a757f007-0222-470c-8aca-b6220a5da944\" doesn't exist in database", testableId);
     }

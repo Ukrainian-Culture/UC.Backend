@@ -9,5 +9,5 @@ public class UserHistoryModel : ITestableModel
         modelBuilder.CreateUserHistoryModel();
         return modelBuilder.FinalizeModel();
     }
-    
+
 }
