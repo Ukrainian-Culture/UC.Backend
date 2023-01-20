@@ -4,6 +4,7 @@ using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace UkranianCulture.Backend.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20230114215833_addAdmin")]
+    partial class addAdmin
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,7 +49,7 @@ namespace UkranianCulture.Backend.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Articles", (string)null);
+                    b.ToTable("Articles");
 
                     b.HasData(
                         new
@@ -95,7 +98,7 @@ namespace UkranianCulture.Backend.Migrations
 
                     b.HasIndex("CultureId");
 
-                    b.ToTable("ArticlesLocales", (string)null);
+                    b.ToTable("ArticlesLocales");
 
                     b.HasData(
                         new
@@ -144,7 +147,7 @@ namespace UkranianCulture.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
@@ -173,7 +176,7 @@ namespace UkranianCulture.Backend.Migrations
 
                     b.HasIndex("CultureId");
 
-                    b.ToTable("CategoryLocales", (string)null);
+                    b.ToTable("CategoryLocales");
 
                     b.HasData(
                         new
@@ -218,7 +221,7 @@ namespace UkranianCulture.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cultures", (string)null);
+                    b.ToTable("Cultures");
 
                     b.HasData(
                         new
@@ -391,45 +394,6 @@ namespace UkranianCulture.Backend.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Entities.Models.UserHistory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("DateOfWatch")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UsersHistories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("c5a0e131-46a0-4f37-9a9d-6e426cb94f46"),
-                            DateOfWatch = new DateTime(2023, 1, 18, 1, 1, 1, 1, DateTimeKind.Utc),
-                            Title = "About Bohdan Khmelnytsky",
-                            UserId = new Guid("169a9df2-231c-45e8-9a0a-c7333f0dc9f4")
-                        },
-                        new
-                        {
-                            Id = new Guid("9d2abe54-d8fb-45eb-94a0-65cefcbfa432"),
-                            DateOfWatch = new DateTime(2023, 1, 18, 1, 3, 1, 0, DateTimeKind.Utc),
-                            Title = "About Ivan Mazepa",
-                            UserId = new Guid("87d76511-8b74-4250-aef1-c47b8cb9308f")
-                        });
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
@@ -573,17 +537,6 @@ namespace UkranianCulture.Backend.Migrations
                     b.Navigation("Culture");
                 });
 
-            modelBuilder.Entity("Entities.Models.UserHistory", b =>
-                {
-                    b.HasOne("Entities.Models.User", "User")
-                        .WithMany("History")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Entities.Models.Roles", null)
@@ -645,11 +598,6 @@ namespace UkranianCulture.Backend.Migrations
                     b.Navigation("ArticlesTranslates");
 
                     b.Navigation("Categories");
-                });
-
-            modelBuilder.Entity("Entities.Models.User", b =>
-                {
-                    b.Navigation("History");
                 });
 #pragma warning restore 612, 618
         }
