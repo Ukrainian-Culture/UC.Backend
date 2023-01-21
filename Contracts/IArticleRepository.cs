@@ -14,5 +14,6 @@ public interface IArticleRepository
     void CreateArticle(Article article);
     void UpdateArticle(Article article);
     void DeleteArticle(Article article);
+    Task<int> CountAsync { get; }
 }
 

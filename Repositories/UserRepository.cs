@@ -24,4 +24,5 @@ public class UserRepository : RepositoryBase<User>, IUserRepository
     public void CreateUser(User user) => Create(user);
     public void UpdateUser(User user) => Update(user);
     public void DeleteUser(User user) => Delete(user);
+    public Task<int> CountAsync => Context.Users.CountAsync();
 }

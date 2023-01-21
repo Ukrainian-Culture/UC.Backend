@@ -9,4 +9,5 @@ public interface IUserRepository
     void CreateUser(User company);
     void UpdateUser(User company);
     void DeleteUser(User company);
+    Task<int> CountAsync { get; }
 }
