@@ -25,7 +25,7 @@ public class OnlineUsersHub : Hub
         if (!OnlineUsers.TryRemove(_onlineCount, out _))
             OnlineUsers.TryUpdate(_onlineCount, false, true);
         _onlineCount -= 1;
-        
+
         await UpdateOnlineUsers();
 
         await base.OnDisconnectedAsync(exception);
