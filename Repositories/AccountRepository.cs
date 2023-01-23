@@ -12,11 +12,6 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using SendGrid;
 using SendGrid.Helpers.Mail;
-using System;
-using System.Threading.Tasks;
-using MailKit.Net.Smtp;
-using MailKit;
-using MimeKit;
 
 namespace Repositories;
 
