@@ -48,7 +48,7 @@ public class AccountController : ControllerBase
         if (!result)
         {
             return BadRequest();
-            
+
         }
 
         return Ok(result);
