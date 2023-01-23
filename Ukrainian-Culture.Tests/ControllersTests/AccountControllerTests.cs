@@ -103,7 +103,7 @@ public class AccountControllerTests
         string code = "CfDJ8KMcWVA73Z9EpmagZUfXsP6OjqaQf8JHGuWfQ%2Brv%2FBLqADK4CvEIRJk0lx1i5t8rLXddkxN%2BQEUqooEAHqAo4a50TLPKiAbLSev4WzlEJywh39RoaDH04EfuIPfvL2IG2kQZEtSNYv5M4%2FSEbnDbzyya0s8ScLHMrg%2BOnG31wXpqGTC1rfHmsFn8gfflgknmVqcuUUiYNi3velL7vLMYf91%2B%2F7wFhQZvwljdkXpQ5g%2Fxx%2FOGZBonNraB5mFOXIy3Qw%3D%3D";
         //act
         var result = await controller.ConfirmEmail(userId, code) as OkObjectResult;
-        
+
         //assert
         result.Should().BeNull();
     }
@@ -119,7 +119,7 @@ public class AccountControllerTests
         //act
         var result = await controller.ConfirmEmail(userId, code) as OkObjectResult;
         var statusCode = result.StatusCode;
-        
+
         //assert
         statusCode.Should().Be((int)HttpStatusCode.OK);
     }

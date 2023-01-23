@@ -108,6 +108,6 @@ public class AccountRepository : IAccountRepository
         var plainTextContent = "Confirm your email address";
         var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, body);
         var response = await client.SendEmailAsync(msg);
-        
+
     }
 }
