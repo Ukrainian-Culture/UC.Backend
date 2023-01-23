@@ -19,6 +19,7 @@ using NLog.Fluent;
 using Entities.Configurations;
 using Microsoft.OpenApi.Models;
 using Ukranian_Culture.Backend.Services;
+using OnlineUsersHub = Ukranian_Culture.Backend.Services.OnlineUsersHub;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,7 @@ builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 builder.Services.AddMvc();
 builder.Services.AddTransient<IRepositoryManager, RepositoryManager>();
 builder.Services.AddScoped<IErrorMessageProvider, ErrorMessageProvider>();
+builder.Services.AddSignalR();
 
 builder.Services.AddDbContext<RepositoryContext>(
     opts => opts.UseSqlServer(
@@ -161,6 +163,7 @@ try
     app.UseEndpoints(endpoints =>
     {
         endpoints.MapControllers();
+        endpoints.MapHub<OnlineUsersHub>("/onlineUsersHub");
     });
 }
 catch (Exception ex)

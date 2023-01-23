@@ -20,5 +20,5 @@ public class ArticleRepository : RepositoryBase<Article>, IArticleRepository
     public void CreateArticle(Article article) => Create(article);
     public void UpdateArticle(Article article) => Update(article);
     public void DeleteArticle(Article article) => Delete(article);
-
+    public Task<int> CountAsync => Context.Articles.CountAsync();
 }
