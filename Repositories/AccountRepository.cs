@@ -71,7 +71,7 @@ public class AccountRepository : IAccountRepository
         if (result.Succeeded)
         {
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            await SendEmail(user.Email, user.Id, code, httpContext, url);
+            await SendEmail(user.Email, user.Id.ToString(), code, httpContext, url);
             await _userManager.AddToRoleAsync(user, "User");
             await _userManager.UpdateAsync(user);
         }
@@ -85,9 +85,9 @@ public class AccountRepository : IAccountRepository
             claims.Add(roleClaim);
         }
     }
-    public async Task<bool> ConfirmEmailAsync(Guid userId, string code)
+    public async Task<bool> ConfirmEmailAsync(string userId, string code)
     {
-        var user = await _userManager.FindByIdAsync(userId.ToString());
+        var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
         {
             return false;
@@ -95,11 +95,11 @@ public class AccountRepository : IAccountRepository
         var result = await _userManager.ConfirmEmailAsync(user, code);
         return result.Succeeded;
     }
-    static async Task SendEmail(string email, Guid userId, string code, HttpContext httpContext, IUrlHelper url)
+    static async Task SendEmail(string email, string userId, string code, HttpContext httpContext, IUrlHelper url)
     {
         var emailBody = "<a href=\"#URL#\">Click here</a>";
         var callbackUrl = httpContext.Request.Scheme + "://" + httpContext.Request.Host + url.Action("ConfirmEmail", "Account", new { userId = userId, code = code });
-        var body = emailBody.Replace("#URL#", callbackUrl);
+        var body = emailBody.Replace("#URL#", System.Text.Encodings.Web.HtmlEncoder.Default.Encode(callbackUrl));
         var apiKey = "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";
         var client = new SendGridClient(apiKey);
         var from = new EmailAddress("UkrainianCulture@mail.com", "UC");

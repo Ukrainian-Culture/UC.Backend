@@ -9,6 +9,6 @@ public interface IAccountRepository
 {
     Task<IdentityResult> SignUpAsync(SignUpUser signUpModel, HttpContext httpContext, IUrlHelper url);
     Task<string> LoginAsync(SignInUser signInModel);
-    Task<bool> ConfirmEmailAsync(Guid userId, string code);
+    Task<bool> ConfirmEmailAsync(string userId, string code);
 }
 

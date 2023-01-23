@@ -42,16 +42,15 @@ public class AccountController : ControllerBase
     }
     [Route("ConfirmEmail")]
     [HttpGet]
-    public async Task<IActionResult> ConfirmEmail(Guid userId, string code)
+    public async Task<IActionResult> ConfirmEmail(string userId, string code)
     {
         var result = await _accountRepository.ConfirmEmailAsync(userId, code);
-        if (!result)
+        if (result)
         {
-            
-            return BadRequest();
+            return Ok(result);
         }
 
-        return Ok(result);
+        return BadRequest();
     }
 
 }
