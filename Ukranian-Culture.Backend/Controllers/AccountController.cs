@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace Ukranian_Culture.Backend.Controllers;
 
@@ -18,8 +19,8 @@ public class AccountController : ControllerBase
     [HttpPost("signup")]
     public async Task<IActionResult> SignUp([FromBody] SignUpUser signUpModel)
     {
-        var result = await _accountRepository.SignUpAsync(signUpModel);
-
+        var result = await _accountRepository.SignUpAsync(signUpModel, HttpContext, Url);
+        Url.Action();
         if (result.Succeeded)
         {
             return Ok(result.Succeeded);
@@ -40,6 +41,19 @@ public class AccountController : ControllerBase
 
         return Ok(result);
     }
+    [Route("ConfirmEmail")]
+    [HttpGet]
+    public async Task<IActionResult> ConfirmEmail(string userId, string code)
+    {
+        var result = await _accountRepository.ConfirmEmailAsync(userId, code);
+        if (result)
+        {
+            return Ok();
+        }
+
+        return BadRequest();
+    }
+
 }
 
 
