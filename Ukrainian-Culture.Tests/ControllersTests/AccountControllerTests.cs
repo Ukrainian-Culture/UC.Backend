@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 
 namespace Ukrainian_Culture.Tests.ControllersTests;
 
@@ -10,7 +11,7 @@ public class AccountControllerTests
     public async Task SignUp_ShouldReturnOkStatus_WhenUserDataIsCorrect()
     {
         //arrange
-        _account.SignUpAsync(Arg.Any<SignUpUser>()).Returns(IdentityResult.Success);
+        _account.SignUpAsync(Arg.Any<SignUpUser>(), Arg.Any<HttpContext>(), Arg.Any<IUrlHelper>()).Returns(IdentityResult.Success);
         var controller = new AccountController(_account);
         var user = new SignUpUser()
         {
@@ -32,7 +33,7 @@ public class AccountControllerTests
     public async Task SignUp_ShouldReturnNull_WhenInvalidPassword()
     {
         //arrange
-        _account.SignUpAsync(Arg.Any<SignUpUser>()).Returns(IdentityResult.Failed());
+        _account.SignUpAsync(Arg.Any<SignUpUser>(), Arg.Any<HttpContext>(), Arg.Any<IUrlHelper>()).Returns(IdentityResult.Failed());
         var controller = new AccountController(_account);
         var user = new SignUpUser()
         {
@@ -89,5 +90,37 @@ public class AccountControllerTests
 
         //assert
         result.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task ConfirmEmailAsync_ShouldReturnFalse_WhenUserDoesNotExistsOrCodeIsInvalid()
+    {
+        //arrange
+        bool expected = false;
+        _account.ConfirmEmailAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(expected);
+        var controller = new AccountController(_account);
+        string userId = "123";
+        string code = "CfDJ8KMcWVA73Z9EpmagZUfXsP6OjqaQf8JHGuWfQ%2Brv%2FBLqADK4CvEIRJk0lx1i5t8rLXddkxN%2BQEUqooEAHqAo4a50TLPKiAbLSev4WzlEJywh39RoaDH04EfuIPfvL2IG2kQZEtSNYv5M4%2FSEbnDbzyya0s8ScLHMrg%2BOnG31wXpqGTC1rfHmsFn8gfflgknmVqcuUUiYNi3velL7vLMYf91%2B%2F7wFhQZvwljdkXpQ5g%2Fxx%2FOGZBonNraB5mFOXIy3Qw%3D%3D";
+        //act
+        var result = await controller.ConfirmEmail(userId, code) as OkObjectResult;
+        
+        //assert
+        result.Should().BeNull();
+    }
+    [Fact]
+    public async Task ConfirmEmailAsync_ShouldReturnTrue_WhenEmailWasConfirmed()
+    {
+        //arrange
+        bool expected = true;
+        _account.ConfirmEmailAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(expected);
+        var controller = new AccountController(_account);
+        var userId = "5ba6d703-fa9e-4771-561e-08dafcd8b602";
+        var code = "CfDJ8KMcWVA73Z9EpmagZUfXsP6OjqaQf8JHGuWfQ%2Brv%2FBLqADK4CvEIRJk0lx1i5t8rLXddkxN%2BQEUqooEAHqAo4a50TLPKiAbLSev4WzlEJywh39RoaDH04EfuIPfvL2IG2kQZEtSNYv5M4%2FSEbnDbzyya0s8ScLHMrg%2BOnG31wXpqGTC1rfHmsFn8gfflgknmVqcuUUiYNi3velL7vLMYf91%2B%2F7wFhQZvwljdkXpQ5g%2Fxx%2FOGZBonNraB5mFOXIy3Qw%3D%3D";
+        //act
+        var result = await controller.ConfirmEmail(userId, code) as OkObjectResult;
+        var statusCode = result.StatusCode;
+        
+        //assert
+        statusCode.Should().Be((int)HttpStatusCode.OK);
     }
 }
