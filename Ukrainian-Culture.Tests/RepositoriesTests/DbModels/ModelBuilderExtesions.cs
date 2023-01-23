@@ -21,6 +21,21 @@ public static class ModelBuilderExtesions
         modelBuilder.Entity<User>().Ignore(p => p.NormalizedEmail);
         modelBuilder.Entity<User>().Ignore(p => p.UserName);
         modelBuilder.Entity<User>().Ignore(p => p.TwoFactorEnabled);
+        modelBuilder.Entity<User>()
+            .HasMany(a => a.History)
+            .WithOne(a => a.User)
+            .HasForeignKey(a => a.UserId);
+    }
+
+    public static void CreateUserHistoryModel(this ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<UserHistory>().HasKey(uh => uh.Id);
+        modelBuilder.Entity<UserHistory>().Property(uh => uh.DateOfWatch);
+        modelBuilder.Entity<UserHistory>().Property(uh => uh.Title);
+        modelBuilder.Entity<UserHistory>()
+            .HasOne(uh => uh.User)
+            .WithMany(user => user.History)
+            .HasForeignKey(uh => uh.UserId);
     }
     public static void CreateArticlesLocaleModel(this ModelBuilder modelBuilder)
     {

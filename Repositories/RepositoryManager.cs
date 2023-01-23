@@ -12,6 +12,7 @@ public class RepositoryManager : IRepositoryManager
     private ICategoryLocalesRepository? _categoryLocalesRepository;
     private ICategoryRepository? _categoryRepository;
     private ICultureRepository? _cultureRepository;
+    private IUserHistoryRepository? _userHistoryRepository;
     public RepositoryManager(RepositoryContext repositoryContext)
     {
         _repositoryContext = repositoryContext;
@@ -34,6 +35,9 @@ public class RepositoryManager : IRepositoryManager
 
     public ICultureRepository Cultures
         => _cultureRepository ??= new CultureRepository(_repositoryContext);
+
+    public IUserHistoryRepository UserHistory
+        => _userHistoryRepository ??= new UserHistoryRepository(_repositoryContext);
 
     public async Task SaveAsync() => await _repositoryContext.SaveChangesAsync();
 }

@@ -2,6 +2,7 @@
 using Entities;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace Repositories;
 
@@ -16,9 +17,9 @@ public class UserRepository : RepositoryBase<User>, IUserRepository
         => await FindAll(trackChanges)
             .ToListAsync();
 
-    public async Task<User> GetUserByIdAsync(Guid id, ChangesType trackChanges)
+    public async Task<User?> GetUserByIdAsync(Guid id, ChangesType trackChanges)
         => await FindByCondition(user => user.Id == id, trackChanges)
-            .SingleAsync();
+            .SingleOrDefaultAsync();
 
 
     public void CreateUser(User user) => Create(user);

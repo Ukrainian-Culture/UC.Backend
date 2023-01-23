@@ -2,7 +2,7 @@
 
 namespace Ukranian_Culture.Backend.Services;
 
-class ErrorMessageProvider : IErrorMessageProvider
+public class ErrorMessageProvider : IErrorMessageProvider
 {
     public string NotFoundMessage<T>(Guid id)
         => $"{typeof(T).Name} with id: \"{id}\" doesn't exist in database";

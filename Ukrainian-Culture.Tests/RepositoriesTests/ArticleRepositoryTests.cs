@@ -3,6 +3,7 @@
 public class ArticleRepositoryTests
 {
     private readonly RepositoryContext _context;
+
     public ArticleRepositoryTests()
     {
         using var factory = new ConnectionFactory();
@@ -10,7 +11,7 @@ public class ArticleRepositoryTests
     }
 
     [Fact]
-    public async Task GetAllByConditionAsync_SholdReturnAllCollection_WhenExpressionIsEqualToTrueAndDbIsNotEmpty()
+    public async Task GetAllByConditionAsync_ShouldReturnAllCollection_WhenExpressionIsEqualToTrueAndDbIsNotEmpty()
     {
         //Arrange
         Guid firstArticleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
@@ -68,7 +69,8 @@ public class ArticleRepositoryTests
                 Date = new DateTime(1, 1, 1),
                 Region = "1",
                 Type = "1"
-            }, firstArticleId
+            },
+            firstArticleId
         };
 
         yield return new object[]
@@ -80,13 +82,15 @@ public class ArticleRepositoryTests
                 Date = new DateTime(2, 2, 2),
                 Region = "2",
                 Type = "2"
-            }, secondArticleId
+            },
+            secondArticleId
         };
     }
 
     [Theory]
     [MemberData(nameof(TestData))]
-    public async Task GetAllByConditionAsync_SholdReturnPartOfCollection_WhenHasCorrectExpressionAndDbIsNotEmpty(Article expected, Guid idToCompare)
+    public async Task GetAllByConditionAsync_ShouldReturnPartOfCollection_WhenHasCorrectExpressionAndDbIsNotEmpty(
+        Article expected, Guid idToCompare)
     {
         //Arrange
         Guid firstArticleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
@@ -95,7 +99,7 @@ public class ArticleRepositoryTests
 
         _context.Articles.AddRange(new List<Article>()
             {
-                new ()
+                new()
                 {
                     Id = firstArticleId,
                     CategoryId = categoryId,
@@ -121,7 +125,8 @@ public class ArticleRepositoryTests
 
         //Act
         var article
-            = (await articleRepository.GetAllByConditionAsync(art => art.Id == idToCompare, ChangesType.AsNoTracking)).ToList();
+            = (await articleRepository.GetAllByConditionAsync(art => art.Id == idToCompare, ChangesType.AsNoTracking))
+            .ToList();
 
         //Assert
         article.Should().HaveCount(1);
@@ -134,7 +139,7 @@ public class ArticleRepositoryTests
     }
 
     [Fact]
-    public async Task GetAllByConditionAsync_SholdReturnEmptyCollection_WhenDbIsEmpty()
+    public async Task GetAllByConditionAsync_ShouldReturnEmptyCollection_WhenDbIsEmpty()
     {
         //Arrange
         var articleRepository = new ArticleRepository(_context);
@@ -148,7 +153,7 @@ public class ArticleRepositoryTests
     }
 
     [Fact]
-    public async Task GetAllByConditionAsync_SholdReturnEmptyCollection_WhenExpressionIsEqualToFalseAndDbIsNotEmpty()
+    public async Task GetAllByConditionAsync_ShouldReturnEmptyCollection_WhenExpressionIsEqualToFalseAndDbIsNotEmpty()
     {
         //Arrange
         Guid firstArticleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
@@ -190,7 +195,7 @@ public class ArticleRepositoryTests
     }
 
     [Fact]
-    public async Task GetAllByConditionAsync_SholdReturnEmptyCollection_WhenExpressionIsUncorrectAndDbIsNotEmpty()
+    public async Task GetAllByConditionAsync_ShouldReturnEmptyCollection_WhenExpressionIsUncorrectAndDbIsNotEmpty()
     {
         //Arrange
         Guid firstArticleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
@@ -217,10 +222,125 @@ public class ArticleRepositoryTests
         //Act
         Guid nonExistedId = new("5b32effd-1111-4cab-8ac9-3258c746aa53");
         var article
-            = (await articleRepository.GetAllByConditionAsync(art => art.Id == nonExistedId, ChangesType.AsNoTracking)).ToList();
+            = (await articleRepository.GetAllByConditionAsync(art => art.Id == nonExistedId, ChangesType.AsNoTracking))
+            .ToList();
 
         //Assert
         article.Should().BeEmpty();
+    }
 
+    [Fact]
+    public async Task CreateArticle_ShouldCreateNewArticleInDb_WhenCorrectData()
+    {
+        //Arrange
+        ArticleRepository repository = new(_context);
+
+        //Act
+        repository.CreateArticle(new Article()
+        {
+            Id = new Guid("52afd786-d121-4f3c-a033-c77650d48d41")
+        });
+        await _context.SaveChangesAsync();
+
+        //Assert
+        _context.Articles.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public async Task CreateArticle_ShouldThrowException_WhenIdAlreadyExists()
+    {
+        //Arrange
+        Guid id = new("83bfe807-a48a-42a6-b874-89cde5297cf9");
+        _context.Articles.Add(new Article() { Id = id });
+        await _context.SaveChangesAsync();
+
+        var repository = new ArticleRepository(_context);
+
+        try
+        {
+            //Act
+            repository.CreateArticle(new Article
+            {
+                Id = id
+            });
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            //Assert
+            ex.Should().BeOfType<InvalidOperationException>();
+        }
+    }
+
+    [Fact]
+    public async Task DeleteArticle_ShouldDeleteArticle_WhenEntityContainInDb()
+    {
+        //Arrange
+        Guid id = new("18e1b9a8-9516-4492-9991-5eba76d8d749");
+        var article = new Article
+        {
+            Id = id
+        };
+        _context.Articles.Add(article);
+        await _context.SaveChangesAsync();
+        _context.Articles.Should().HaveCount(1);
+
+        var repository = new ArticleRepository(_context);
+
+        //Act
+        repository.DeleteArticle(article);
+        await _context.SaveChangesAsync();
+
+        //Assert
+        _context.Articles.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task DeleteArticle_ShouldThrowException_WhenTryToDeleteUnrealEntity()
+    {
+        //Arrange
+        Guid id = new("18e1b9a8-9516-4492-9991-5eba76d8d749");
+        _context.Articles.Add(new Article { Id = id });
+        await _context.SaveChangesAsync();
+        var repository = new ArticleRepository(_context);
+
+        try
+        {
+            //Act
+            var unexpectedArticle = new Article
+            {
+                Id = new Guid("cecbdaf6-bf0e-4b91-99ff-e779f417e119")
+            };
+            repository.DeleteArticle(unexpectedArticle);
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            //Assert
+            ex.Should().BeOfType<DbUpdateConcurrencyException>();
+        }
+    }
+
+    [Fact]
+    public async Task DeleteUser_ShoulThrowException_WhenUserNoContainInDb()
+    {
+        //Arrange
+        var repository = new ArticleRepository(_context);
+
+        try
+        {
+            //Act
+            var article = new Article
+            {
+                Id = new Guid("3dad2287-60c0-4cfe-be8a-7d8d6c491d3f"),
+            };
+            repository.DeleteArticle(article);
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            //Assert
+            ex.Should().BeOfType<DbUpdateConcurrencyException>();
+        }
     }
 }

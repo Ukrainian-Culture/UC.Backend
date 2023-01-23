@@ -1,6 +1,6 @@
 ﻿namespace Ukrainian_Culture.Tests.RepositoriesTests.DbModels;
 
-public class UserModel : ITestableModel
+public class UserHistoryModel : ITestableModel
 {
     public IModel GetModel()
     {
@@ -9,4 +9,5 @@ public class UserModel : ITestableModel
         modelBuilder.CreateUserHistoryModel();
         return modelBuilder.FinalizeModel();
     }
+
 }
