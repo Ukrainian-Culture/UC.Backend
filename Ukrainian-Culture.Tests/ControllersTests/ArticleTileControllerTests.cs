@@ -217,12 +217,12 @@ public class ArticleTileControllerTests
                 Category = "first"
             });
         var controller = new ArticlesTileController(_repositoryManager, _mapper, _logger);
-        
+
         //Act
         var result = await controller.GetArticlesTileForEveryCategory(cultureId) as OkObjectResult;
         var statusCode = result!.StatusCode;
         var value = (Dictionary<string, List<ArticleTileDto>>)result.Value!;
-        
+
         //Assert
         value.Should().HaveCount(1);
         value["first"].First().ArticleId.Should().Be(articleId);
