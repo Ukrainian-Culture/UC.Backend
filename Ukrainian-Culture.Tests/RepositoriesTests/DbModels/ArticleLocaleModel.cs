@@ -9,7 +9,6 @@ public class ArticlesLocaleModel : ITestableModel
 
         modelBuilder.CreateArticlesLocaleModel();
         modelBuilder.CreateCultureModel();
-        modelBuilder.CreateCategoriesLocaleModel();
 
         return modelBuilder.FinalizeModel();
     }

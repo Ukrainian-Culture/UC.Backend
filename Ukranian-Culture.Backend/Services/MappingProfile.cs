@@ -17,11 +17,9 @@ public class MappingProfile : Profile
                 opt => opt.MapFrom(s => s.articlesLocale.SubText))
             .ForMember(artT => artT.Title,
                 opt => opt.MapFrom(s => s.articlesLocale.Title))
-            .ForMember(artT => artT.Type,
-                opt => opt.MapFrom(s => s.article.Type))
             .ForMember(artT => artT.Category,
                 opt => opt.MapFrom(s
-                    => s.articlesLocale.Culture.Categories.First(cat => cat.CategoryId == s.article.CategoryId).Name));
+                    => s.article.Category.Name));
 
         CreateMap<(Article article, ArticlesLocale articlesLocale), HistoryDto>()
             .ForMember(x => x.ShortDescription, opt => opt.MapFrom(s => s.articlesLocale.ShortDescription))
@@ -40,8 +38,6 @@ public class MappingProfile : Profile
                 opt => opt.MapFrom(artToUpd => artToUpd.Region))
             .ForMember(art => art.Date,
                 opt => opt.MapFrom(artToUpd => artToUpd.Date))
-            .ForMember(art => art.Type,
-                opt => opt.MapFrom(artToUpd => artToUpd.Type))
             .ForMember(art => art.Id,
                 opt => opt.Ignore())
             .ForMember(art => art.Category,
@@ -67,17 +63,7 @@ public class MappingProfile : Profile
             .ForMember(art => art.Culture,
                 opt => opt.Ignore());
 
-        CreateMap<CategoryLocale, CategoryLocaleToGetDto>();
-        CreateMap<CategoryLocaleToCreateDto, CategoryLocale>();
-        CreateMap<CategoryLocaleToUpdateDto, CategoryLocale>()
-            .ForMember(cat => cat.Name,
-                opt => opt.MapFrom(catToUp => catToUp.Name))
-            .ForMember(cat => cat.CategoryId,
-                opt => opt.Ignore())
-            .ForMember(cat => cat.Culture,
-                opt => opt.Ignore())
-            .ForMember(cat => cat.CultureId,
-                opt => opt.Ignore());
+        CreateMap<Category, CategoryToGetDto>();
 
         CreateMap<Culture, CultureToGetDto>();
         CreateMap<CultureToCreateDto, Culture>();
@@ -89,8 +75,6 @@ public class MappingProfile : Profile
             .ForMember(cul => cul.Id,
                 opt => opt.Ignore())
             .ForMember(cul => cul.ArticlesTranslates,
-                opt => opt.Ignore())
-            .ForMember(cul => cul.Categories,
                 opt => opt.Ignore());
 
         CreateMap<HistoryToCreateDto, UserHistory>();
