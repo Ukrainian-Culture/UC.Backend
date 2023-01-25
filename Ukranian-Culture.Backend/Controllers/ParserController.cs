@@ -45,7 +45,7 @@ public class ParserController : ControllerBase
     public async Task<IActionResult> GetAmountOfUnescoHeritage()
     {
         var node = await _parser
-            .GetNodeByUrl(@"https://vue.gov.ua/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%B2%D1%81%D0%B5%D1%81%D0%B2%D1%96%D1%82%D0%BD%D1%8C%D0%BE%D1%97_%D1%81%D0%BF%D0%B0%D0%B4%D1%89%D0%B8%D0%BD%D0%B8_%D0%AE%D0%9D%D0%95%D0%A1%D0%9A%D0%9E", "//div[@class='mw-parser-output']/ol");
+            .GetNodeByUrl(@"https://uk.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%BE%D0%B1%27%D1%94%D0%BA%D1%82%D1%96%D0%B2_%D0%A1%D0%B2%D1%96%D1%82%D0%BE%D0%B2%D0%BE%D1%97_%D1%81%D0%BF%D0%B0%D0%B4%D1%89%D0%B8%D0%BD%D0%B8_%D0%AE%D0%9D%D0%95%D0%A1%D0%9A%D0%9E_%D0%B2_%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%96", "//table[@class='wikitable'][1]/tbody");
 
         if (node == null)
         {
@@ -55,11 +55,13 @@ public class ParserController : ControllerBase
 
         var result = node
             .First()
+            .LastChild
             .ChildNodes
-            .Where((_, i) => i % 2 == 0)
-            .Count();
+            .Skip(1)
+            .First()
+            .InnerText;
 
-        return Ok(result);
+        return Ok(Convert.ToInt32(result));
     }
 
     [HttpGet("~/GetPopulationOfRegions")]
