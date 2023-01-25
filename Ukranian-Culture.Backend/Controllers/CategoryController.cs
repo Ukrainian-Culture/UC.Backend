@@ -34,7 +34,7 @@ public class CategoryController : ControllerBase
     public async Task<IActionResult> GetCategoriesIds()
     {
         var categories = await _repositoryManager
-            .Categories.GetAllByConditionAsync(_ => true , ChangesType.AsNoTracking);
+            .Categories.GetAllByConditionAsync(_ => true, ChangesType.AsNoTracking);
 
         Dictionary<string, Guid> categoriesIds = categories.ToDictionary(c => c.Name, c => c.Id);
         return Ok(categoriesIds);

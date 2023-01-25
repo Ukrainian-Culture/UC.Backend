@@ -107,7 +107,7 @@ public class ArticleRepositoryTests
                     Id = secondArticleId,
                     CategoryId = categoryId,
                     Date = new DateTime(2, 2, 2),
-                    Region = "2"                    
+                    Region = "2"
                 }
             }
         );
@@ -167,7 +167,7 @@ public class ArticleRepositoryTests
                     Id = secondArticleId,
                     CategoryId = categoryId,
                     Date = new DateTime(2, 2, 2),
-                    Region = "2"                    
+                    Region = "2"
                 }
             }
         );
@@ -199,7 +199,7 @@ public class ArticleRepositoryTests
                     Id = firstArticleId,
                     CategoryId = categoryId,
                     Date = new DateTime(1, 1, 1),
-                    Region = "1"                   
+                    Region = "1"
                 }
             }
         );

@@ -17,7 +17,7 @@ public class RepositoryContext : IdentityDbContext<User, Roles, Guid>
     }
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<Article> Articles { get; set; } = null!;
-    public DbSet<Category> Categories { get; set; } = null!;    
+    public DbSet<Category> Categories { get; set; } = null!;
     public DbSet<ArticlesLocale> ArticlesLocales { get; set; } = null!;
     public DbSet<Culture> Cultures { get; set; } = null!;
     public DbSet<UserHistory> UsersHistories { get; set; } = null!;
