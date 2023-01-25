@@ -60,20 +60,6 @@ public static class ModelBuilderExtesions
             .HasMany(cul => cul.ArticlesTranslates)
             .WithOne(a => a.Culture)
             .HasForeignKey(cul => cul.CultureId);
-
-        modelBuilder.Entity<Culture>()
-            .HasMany(cul => cul.Categories)
-            .WithOne(a => a.Culture)
-            .HasForeignKey(cul => cul.CultureId);
-    }
-    public static void CreateCategoriesLocaleModel(this ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<CategoryLocale>().HasKey(ct => new { ct.CategoryId, ct.CultureId });
-        modelBuilder.Entity<CategoryLocale>().Property(culture => culture.Name);
-        modelBuilder.Entity<CategoryLocale>()
-            .HasOne(culture => culture.Culture)
-            .WithMany(cul => cul.Categories)
-            .HasForeignKey(cul => cul.CultureId);
     }
     public static void CreateArtilesModel(this ModelBuilder modelBuilder)
     {
@@ -85,12 +71,12 @@ public static class ModelBuilderExtesions
 
         modelBuilder.Entity<Article>().Property(article => article.Date);
         modelBuilder.Entity<Article>().Property(article => article.Region);
-        modelBuilder.Entity<Article>().Property(article => article.Type);
         modelBuilder.Entity<Article>().Property(article => article.CategoryId);
     }
     public static void CreateCategoryModel(this ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>().HasKey(category => category.Id);
+        modelBuilder.Entity<Category>().Property(category => category.Name);
         modelBuilder.Entity<Category>()
             .HasMany(cat => cat.Articles)
             .WithOne(art => art.Category);

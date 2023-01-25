@@ -6,7 +6,6 @@ namespace Entities.DTOs;
 public class ArticleTileDto
 {
     public Guid ArticleId { get; init; }
-    public string Type { get; init; } = null!;
     public string Region { get; init; } = null!;
     public string SubText { get; set; } = null!;
     public string Title { get; set; } = null!;

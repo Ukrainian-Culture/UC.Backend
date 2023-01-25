@@ -24,12 +24,6 @@ public class CultureRepositoryTests
             DisplayedName = "English"
         });
 
-        _context.CategoryLocales.Add(new CategoryLocale()
-        {
-            CategoryId = categoryId,
-            CultureId = cultureId
-        });
-
         _context.ArticlesLocales.Add(new ArticlesLocale()
         {
             Id = articleId,
@@ -42,7 +36,6 @@ public class CultureRepositoryTests
         var result = await cultureRepository.GetCultureWithContentAsync(cultureId, ChangesType.AsNoTracking);
         //Assert
         result.ArticlesTranslates.Should().HaveCount(1);
-        result.Categories.Should().HaveCount(1);
         result.Name.Should().Be("en");
     }
 
@@ -60,12 +53,6 @@ public class CultureRepositoryTests
             DisplayedName = "English"
         });
 
-        _context.CategoryLocales.Add(new CategoryLocale()
-        {
-            CategoryId = categoryId,
-            CultureId = cultureId,
-        });
-
         await _context.SaveChangesAsync();
         var cultureRepository = new CultureRepository(_context);
         //Act
@@ -73,7 +60,6 @@ public class CultureRepositoryTests
         var result = await cultureRepository.GetCultureWithContentAsync(cultureId, ChangesType.AsNoTracking);
         //Assert
         result.ArticlesTranslates.Should().BeEmpty();
-        result.Categories.Should().HaveCount(1);
         result.Name.Should().Be("en");
     }
     [Fact]
@@ -103,7 +89,6 @@ public class CultureRepositoryTests
         var result = await cultureRepository.GetCultureWithContentAsync(cultureId, ChangesType.AsNoTracking);
         //Assert
         result.ArticlesTranslates.Should().HaveCount(1);
-        result.Categories.Should().BeEmpty();
         result.Name.Should().Be("en");
     }
 

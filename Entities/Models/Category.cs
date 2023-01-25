@@ -5,5 +5,6 @@ namespace Entities.Models;
 public class Category
 {
     public Guid Id { get; init; }
+    public string Name { get; init; }
     public ICollection<Article> Articles { get; init; } = null!;
 }

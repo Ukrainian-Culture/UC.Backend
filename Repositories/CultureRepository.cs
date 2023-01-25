@@ -16,7 +16,6 @@ public class CultureRepository : RepositoryBase<Culture>, ICultureRepository
     public async Task<Culture> GetCultureWithContentAsync(Guid cultureId, ChangesType asNoTracking)
     => await Context.Cultures.AsNoTracking()
             .Include(cult => cult.ArticlesTranslates)
-            .Include(cult => cult.Categories)
             .FirstAsync(cult => cult.Id == cultureId);
 
     public async Task<Culture?> GetCultureAsync(Guid cultureId, ChangesType asNoTracking)

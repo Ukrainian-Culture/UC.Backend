@@ -1,7 +1,7 @@
 ﻿namespace Entities.DTOs;
 
-public class CategoryLocaleToGetDto
+public class CategoryToGetDto
 {
-    public Guid CategoryId { get; set; }
+    public Guid Id { get; set; }
     public string Name { get; set; } = null!;
 }

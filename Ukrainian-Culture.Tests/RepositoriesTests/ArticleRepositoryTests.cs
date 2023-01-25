@@ -25,16 +25,14 @@ public class ArticleRepositoryTests
                     Id = firstArticleId,
                     CategoryId = categoryId,
                     Date = new DateTime(1, 1, 1),
-                    Region = "1",
-                    Type = "1"
+                    Region = "1"
                 },
                 new()
                 {
                     Id = secondArticleId,
                     CategoryId = categoryId,
                     Date = new DateTime(2, 2, 2),
-                    Region = "2",
-                    Type = "2"
+                    Region = "2"
                 }
             }
         );
@@ -67,8 +65,7 @@ public class ArticleRepositoryTests
                 Id = firstArticleId,
                 CategoryId = categoryId,
                 Date = new DateTime(1, 1, 1),
-                Region = "1",
-                Type = "1"
+                Region = "1"
             },
             firstArticleId
         };
@@ -80,8 +77,7 @@ public class ArticleRepositoryTests
                 Id = secondArticleId,
                 CategoryId = categoryId,
                 Date = new DateTime(2, 2, 2),
-                Region = "2",
-                Type = "2"
+                Region = "2"
             },
             secondArticleId
         };
@@ -104,16 +100,14 @@ public class ArticleRepositoryTests
                     Id = firstArticleId,
                     CategoryId = categoryId,
                     Date = new DateTime(1, 1, 1),
-                    Region = "1",
-                    Type = "1"
+                    Region = "1"
                 },
                 new()
                 {
                     Id = secondArticleId,
                     CategoryId = categoryId,
                     Date = new DateTime(2, 2, 2),
-                    Region = "2",
-                    Type = "2"
+                    Region = "2"                    
                 }
             }
         );
@@ -134,8 +128,7 @@ public class ArticleRepositoryTests
         article[0].Should()
             .Match<Article>(art => art.Id == expected.Id &&
                                    art.CategoryId == expected.CategoryId &&
-                                   art.Region == expected.Region &&
-                                   art.Type == expected.Type);
+                                   art.Region == expected.Region);
     }
 
     [Fact]
@@ -167,16 +160,14 @@ public class ArticleRepositoryTests
                     Id = firstArticleId,
                     CategoryId = categoryId,
                     Date = new DateTime(1, 1, 1),
-                    Region = "1",
-                    Type = "1"
+                    Region = "1"
                 },
                 new()
                 {
                     Id = secondArticleId,
                     CategoryId = categoryId,
                     Date = new DateTime(2, 2, 2),
-                    Region = "2",
-                    Type = "2"
+                    Region = "2"                    
                 }
             }
         );
@@ -208,8 +199,7 @@ public class ArticleRepositoryTests
                     Id = firstArticleId,
                     CategoryId = categoryId,
                     Date = new DateTime(1, 1, 1),
-                    Region = "1",
-                    Type = "1"
+                    Region = "1"                   
                 }
             }
         );

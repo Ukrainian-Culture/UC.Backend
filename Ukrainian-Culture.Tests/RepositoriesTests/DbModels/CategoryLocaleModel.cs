@@ -7,7 +7,6 @@ public class CategoryLocaleModel : ITestableModel
     {
         var modelBuilder = new ModelBuilder();
 
-        modelBuilder.CreateCategoriesLocaleModel();
         modelBuilder.CreateCultureModel();
         modelBuilder.CreateArticlesLocaleModel();
 
