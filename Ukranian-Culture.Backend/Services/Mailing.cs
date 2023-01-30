@@ -92,7 +92,7 @@ public class Mailing : RepositoryBase<User>, IMailing
 
         mailData.Bcc = Context.Users.Select(user => user.Email).ToList();
         foreach (string mailAddress in mailData.Bcc.Where(x => !string.IsNullOrWhiteSpace(x)))
-         mail.Bcc.Add(MailboxAddress.Parse(mailAddress.Trim()));
+            mail.Bcc.Add(MailboxAddress.Parse(mailAddress.Trim()));
     }
-    
+
 }
