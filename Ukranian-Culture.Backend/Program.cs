@@ -65,7 +65,7 @@ builder.Services.AddSwaggerGen(c =>
                     Id = "Bearer"
                 },
             },
-            new string[]{}
+            Array.Empty<string>()
         }
     });
 });
@@ -140,12 +140,6 @@ app.UseExceptionHandler(appError =>
 
 var logger = LogManager.GetCurrentClassLogger();
 
-var services = (IServiceScopeFactory)app.Services.GetService(typeof(IServiceScopeFactory))!;
-using (var db = services.CreateScope().ServiceProvider.GetService<RepositoryContext>())
-{
-    db!.Database.Migrate();
-}
-
 try
 {
     if (app.Environment.IsDevelopment())
@@ -163,7 +157,7 @@ try
     app.UseEndpoints(endpoints =>
     {
         endpoints.MapControllers();
-        endpoints.MapHub<OnlineUsersHub>("/onlineUsersHub");
+        endpoints.MapHub<OnlineUsersHub>("/onlineUsersHuber");
     });
 }
 catch (Exception ex)
