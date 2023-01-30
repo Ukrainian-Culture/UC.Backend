@@ -5,7 +5,6 @@ namespace Entities.Models;
 public class Article
 {
     public Guid Id { get; init; }
-    public string Type { get; init; } = null!;
     public string Region { get; init; } = null!;
     public DateTime Date { get; set; }
 

@@ -6,7 +6,6 @@ public class CultureModel : ITestableModel
     {
         var modelBuilder = new ModelBuilder();
         modelBuilder.CreateArticlesLocaleModel();
-        modelBuilder.CreateCategoriesLocaleModel();
         modelBuilder.CreateCultureModel();
         return modelBuilder.FinalizeModel();
     }

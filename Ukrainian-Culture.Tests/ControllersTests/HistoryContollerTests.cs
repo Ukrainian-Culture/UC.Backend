@@ -24,7 +24,6 @@ public class HistoryControllerTests
                 new()
                 {
                     Id = articleId,
-                    Type = "file",
                     Region = "Kyiv",
                     Date = new DateTime(2003, 01, 01),
                     CategoryId = categoryId,
@@ -105,7 +104,6 @@ public class HistoryControllerTests
                 new()
                 {
                     Id = articleId,
-                    Type = "file",
                     Region = "Kyiv",
                     Date = new DateTime(2003, 01, 01),
                     CategoryId = categoryId,
@@ -137,10 +135,9 @@ public class HistoryControllerTests
                 new()
                 {
                     Id = articleId,
-                    Type = "file",
                     Region = "Kyiv",
                     Date = new DateTime(2003, 01, 01),
-                    CategoryId = categoryId,
+                    CategoryId = categoryId
                 }
             });
 

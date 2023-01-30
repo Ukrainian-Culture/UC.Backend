@@ -27,25 +27,16 @@ public class ArticleTileControllerTests
                 }
             });
 
-        _repositoryManager.Cultures.GetCultureWithContentAsync(cultureId, ChangesType.AsNoTracking)
-            .Returns(new Culture()
+        _repositoryManager
+            .ArticleLocales
+            .GetArticlesLocaleByConditionAsync(Arg.Any<Expression<Func<ArticlesLocale, bool>>>(),
+                Arg.Any<ChangesType>())
+            .Returns(new List<ArticlesLocale>
             {
-                Id = cultureId,
-                ArticlesTranslates = new List<ArticlesLocale>()
+                new()
                 {
-                    new()
-                    {
-                        Id = articleId,
-                        CultureId = cultureId,
-                    }
-                },
-                Categories = new List<CategoryLocale>()
-                {
-                    new()
-                    {
-                        CategoryId = categoryId,
-                        CultureId = cultureId,
-                    }
+                    Id = articleId,
+                    CultureId = cultureId
                 }
             });
 
@@ -71,13 +62,11 @@ public class ArticleTileControllerTests
             .GetAllByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
             .Returns(Enumerable.Empty<Article>());
 
-        _repositoryManager.Cultures.GetCultureWithContentAsync(Arg.Any<Guid>(), Arg.Any<ChangesType>())
-            .Returns(new Culture()
-            {
-                Id = cultureId,
-                ArticlesTranslates = Enumerable.Empty<ArticlesLocale>().ToList(),
-                Categories = Enumerable.Empty<CategoryLocale>().ToList()
-            });
+        _repositoryManager
+            .ArticleLocales
+            .GetArticlesLocaleByConditionAsync(Arg.Any<Expression<Func<ArticlesLocale, bool>>>(),
+                Arg.Any<ChangesType>())
+            .Returns(Enumerable.Empty<ArticlesLocale>());
 
         var controller = new ArticlesTileController(_repositoryManager, _mapper, _logger);
 
@@ -126,34 +115,20 @@ public class ArticleTileControllerTests
                 new()
                 {
                     Id = articleId,
-                    CategoryId = categoryId,
-                    Region = "test",
-                    Type = "test"
+                    CategoryId = categoryId
                 }
             });
 
-        _repositoryManager.Cultures.GetCultureWithContentAsync(cultureId, ChangesType.AsNoTracking)
-            .Returns(new Culture()
+        _repositoryManager
+            .ArticleLocales
+            .GetArticlesLocaleByConditionAsync(Arg.Any<Expression<Func<ArticlesLocale, bool>>>(),
+                Arg.Any<ChangesType>())
+            .Returns(new List<ArticlesLocale>
             {
-                Id = cultureId,
-                ArticlesTranslates = new List<ArticlesLocale>()
+                new()
                 {
-                    new()
-                    {
-                        Id = articleId,
-                        CultureId = cultureId,
-                        SubText = "test",
-                        Title = "test"
-                    }
-                },
-                Categories = new List<CategoryLocale>()
-                {
-                    new()
-                    {
-                        CategoryId = categoryId,
-                        CultureId = cultureId,
-                        Name = "test"
-                    }
+                    Id = articleId,
+                    CultureId = cultureId
                 }
             });
 
@@ -188,26 +163,16 @@ public class ArticleTileControllerTests
                     CategoryId = categoryId,
                 }
             });
-
-        _repositoryManager.Cultures.GetCultureWithContentAsync(cultureId, ChangesType.AsNoTracking)
-            .Returns(new Culture
+        _repositoryManager
+            .ArticleLocales
+            .GetArticlesLocaleByConditionAsync(Arg.Any<Expression<Func<ArticlesLocale, bool>>>(),
+                Arg.Any<ChangesType>())
+            .Returns(new List<ArticlesLocale>()
             {
-                Id = cultureId,
-                ArticlesTranslates = new List<ArticlesLocale>
+                new()
                 {
-                    new()
-                    {
-                        Id = articleId,
-                        CultureId = cultureId,
-                    }
-                },
-                Categories = new List<CategoryLocale>
-                {
-                    new()
-                    {
-                        CategoryId = categoryId,
-                        CultureId = cultureId,
-                    }
+                    Id = articleId,
+                    CultureId = cultureId
                 }
             });
         _mapper.Map<ArticleTileDto>(Arg.Any<(Article, ArticlesLocale)>())
