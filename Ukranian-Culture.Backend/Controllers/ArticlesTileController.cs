@@ -1,15 +1,10 @@
 ﻿using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
-using System.Security.Principal;
 using AutoMapper;
 using Contracts;
 using Entities.DTOs;
 using Entities.Models;
-using Microsoft.AspNetCore.Http;
+using Entities.SearchEngines;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Ukranian_Culture.Backend.Controllers;
 
 namespace Ukranian_Culture.Backend.Controllers;
 
@@ -96,7 +91,17 @@ public class ArticlesTileController : ControllerBase
 
         return Ok(tileDictionary);
     }
-
+    
+    [HttpGet("/search/{stringTerm}")]
+    public async Task<IActionResult> Search(Guid cultureId, string stringTerm)
+    {
+        ArticleTileSearchEngine engine = new();
+        var articles = await TryGetArticleTileDto(cultureId, _ => true);
+        
+        engine.AddArticlesTileToIndex(articles);
+        var result = engine.Search(stringTerm);
+        return Ok(result);
+    }
     private async Task<IEnumerable<ArticleTileDto>> TryGetArticleTileDto(Guid cultureId,
         Expression<Func<Article, bool>> conditionToFindArticles)
     {
