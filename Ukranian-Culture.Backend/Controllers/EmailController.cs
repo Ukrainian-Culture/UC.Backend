@@ -17,7 +17,7 @@ namespace Ukranian_Culture.Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   // [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
     public class EmailController : ControllerBase
     {
         private readonly IMailing _mail;
