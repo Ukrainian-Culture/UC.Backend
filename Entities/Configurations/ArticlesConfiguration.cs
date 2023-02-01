@@ -15,7 +15,6 @@ public class ArticlesConfiguration : IEntityTypeConfiguration<Article>
             new Article
             {
                 Id = FirstId,
-                Type = "file",
                 Region = "hmelnytsk",
                 CategoryId = _categoryConfig.FirstId,
                 Date = new DateTime(1886, 2, 1)
@@ -23,7 +22,6 @@ public class ArticlesConfiguration : IEntityTypeConfiguration<Article>
             new Article
             {
                 Id = SecondId,
-                Type = "file",
                 Region = "Kyiv",
                 CategoryId = _categoryConfig.FirstId,
                 Date = new DateTime(2001, 01, 01)

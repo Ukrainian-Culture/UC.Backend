@@ -15,7 +15,7 @@ public class UsersConfigurations : IEntityTypeConfiguration<User>
         builder.HasData(
             new User
             {
-                Id =_firstId,
+                Id = _firstId,
                 FirstName = "Admin",
                 LastName = "Admin",
                 UserName = "Admin",

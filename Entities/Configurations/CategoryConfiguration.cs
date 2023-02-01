@@ -14,10 +14,12 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
             new Category
             {
                 Id = FirstId,
+                Name = "Music"
             },
             new Category
             {
                 Id = SecondId,
+                Name = "People"
             });
     }
 }

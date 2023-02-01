@@ -12,15 +12,26 @@ using Microsoft.IdentityModel.Tokens;
 using NLog;
 using Repositories;
 using Ukranian_Culture.Backend;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Parsers;
+using NLog.Fluent;
+using Entities.Configurations;
 using Microsoft.OpenApi.Models;
+using Ukranian_Culture.Backend.Services;
+using OnlineUsersHub = Ukranian_Culture.Backend.Services.OnlineUsersHub;
 
 var builder = WebApplication.CreateBuilder(args);
 
 LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), @"\nlog.config"));
 builder.Services.AddScoped<ILoggerManager, LoggerManager>();
+builder.Services.AddTransient<IParser, Parser>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 builder.Services.AddMvc();
 builder.Services.AddTransient<IRepositoryManager, RepositoryManager>();
+builder.Services.AddScoped<IErrorMessageProvider, ErrorMessageProvider>();
+builder.Services.AddSignalR();
 
 builder.Services.AddDbContext<RepositoryContext>(
     opts => opts.UseSqlServer(
@@ -55,7 +66,7 @@ builder.Services.AddSwaggerGen(c =>
                     Id = "Bearer"
                 },
             },
-            new string[]{}
+            Array.Empty<string>()
         }
     });
 });
@@ -113,6 +124,8 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader();
     });
 });
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
+builder.Services.AddTransient<IMailing, Mailing>();
 
 var app = builder.Build();
 
@@ -138,12 +151,6 @@ app.UseExceptionHandler(appError =>
 
 var logger = LogManager.GetCurrentClassLogger();
 
-var services = (IServiceScopeFactory)app.Services.GetService(typeof(IServiceScopeFactory))!;
-using (var db = services.CreateScope().ServiceProvider.GetService<RepositoryContext>())
-{
-    db!.Database.Migrate();
-}
-
 try
 {
     if (app.Environment.IsDevelopment())
@@ -162,6 +169,7 @@ try
     app.UseEndpoints(endpoints =>
     {
         endpoints.MapControllers();
+        endpoints.MapHub<OnlineUsersHub>("/onlineUsersHuber");
     });
 }
 catch (Exception ex)

@@ -21,6 +21,21 @@ public static class ModelBuilderExtesions
         modelBuilder.Entity<User>().Ignore(p => p.NormalizedEmail);
         modelBuilder.Entity<User>().Ignore(p => p.UserName);
         modelBuilder.Entity<User>().Ignore(p => p.TwoFactorEnabled);
+        modelBuilder.Entity<User>()
+            .HasMany(a => a.History)
+            .WithOne(a => a.User)
+            .HasForeignKey(a => a.UserId);
+    }
+
+    public static void CreateUserHistoryModel(this ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<UserHistory>().HasKey(uh => uh.Id);
+        modelBuilder.Entity<UserHistory>().Property(uh => uh.DateOfWatch);
+        modelBuilder.Entity<UserHistory>().Property(uh => uh.Title);
+        modelBuilder.Entity<UserHistory>()
+            .HasOne(uh => uh.User)
+            .WithMany(user => user.History)
+            .HasForeignKey(uh => uh.UserId);
     }
     public static void CreateArticlesLocaleModel(this ModelBuilder modelBuilder)
     {
@@ -45,21 +60,6 @@ public static class ModelBuilderExtesions
             .HasMany(cul => cul.ArticlesTranslates)
             .WithOne(a => a.Culture)
             .HasForeignKey(cul => cul.CultureId);
-
-        modelBuilder.Entity<Culture>()
-            .HasMany(cul => cul.Categories)
-            .WithOne(a => a.Culture)
-            .HasForeignKey(cul => cul.CultureId);
-    }
-    public static void CreateCategoriesLocaleModel(this ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<CategoryLocale>().HasKey(ct => new { ct.CategoryId, ct.CultureId });
-        modelBuilder.Entity<CategoryLocale>().HasKey(culture => culture.CategoryId);
-        modelBuilder.Entity<CategoryLocale>().Property(culture => culture.Name);
-        modelBuilder.Entity<CategoryLocale>()
-            .HasOne(culture => culture.Culture)
-            .WithMany(cul => cul.Categories)
-            .HasForeignKey(cul => cul.CultureId);
     }
     public static void CreateArtilesModel(this ModelBuilder modelBuilder)
     {
@@ -71,12 +71,12 @@ public static class ModelBuilderExtesions
 
         modelBuilder.Entity<Article>().Property(article => article.Date);
         modelBuilder.Entity<Article>().Property(article => article.Region);
-        modelBuilder.Entity<Article>().Property(article => article.Type);
         modelBuilder.Entity<Article>().Property(article => article.CategoryId);
     }
     public static void CreateCategoryModel(this ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>().HasKey(category => category.Id);
+        modelBuilder.Entity<Category>().Property(category => category.Name);
         modelBuilder.Entity<Category>()
             .HasMany(cat => cat.Articles)
             .WithOne(art => art.Category);
