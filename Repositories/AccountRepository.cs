@@ -61,7 +61,7 @@ public class AccountRepository :IAccountRepository
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public async Task<IdentityResult> SignUpAsync(SignUpUser signUpModel, HttpContext httpContext, IUrlHelper url)
+    public async Task<IdentityResult> SignUpAsync(SignUpUser signUpModel)
     {
         var user = new User()
         {
@@ -75,8 +75,6 @@ public class AccountRepository :IAccountRepository
         var result = await _userManager.CreateAsync(user,signUpModel.Password);
         if (result.Succeeded)
         {
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            await SendEmail(user.Email, user.Id, code, httpContext, url);
             await _userManager.AddToRoleAsync(user, "User");
             await _userManager.UpdateAsync(user);
         }
@@ -156,28 +154,5 @@ public class AccountRepository :IAccountRepository
             return result;
         }
         return IdentityResult.Failed();
-    public async Task<bool> ConfirmEmailAsync(Guid userId, string code)
-    {
-        var user = await _userManager.FindByIdAsync(userId.ToString());
-        if (user == null)
-        {
-            return false;
-        }
-        var result = await _userManager.ConfirmEmailAsync(user, code);
-        return result.Succeeded;
-    }
-    static async Task SendEmail(string email, Guid userId, string code, HttpContext httpContext, IUrlHelper url)
-    {
-        var emailBody = "<a href=\"#URL#\">Click here</a>";
-        var callbackUrl = httpContext.Request.Scheme + "://" + httpContext.Request.Host + url.Action("ConfirmEmail", "Account", new { userId = userId, code = code });
-        var body = emailBody.Replace("#URL#", callbackUrl);
-        var apiKey = "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";
-        var client = new SendGridClient(apiKey);
-        var from = new EmailAddress("UkrainianCulture@mail.com", "UC");
-        var subject = "Confrim your email";
-        var to = new EmailAddress(email, "New User");
-        var plainTextContent = "Confirm your email address";
-        var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, body);
-        var response = await client.SendEmailAsync(msg);
     }
 }
