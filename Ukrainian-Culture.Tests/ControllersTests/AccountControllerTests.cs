@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-
+﻿
 namespace Ukrainian_Culture.Tests.ControllersTests;
 
 public class AccountControllerTests
@@ -89,5 +88,202 @@ public class AccountControllerTests
 
         //assert
         result.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task ChangePassword_ShouldReturnStatusOk_WhenChangePasswordDtoCorrect()
+    {
+        //arrange
+        _account.ChangePasswordAsync(Arg.Any<ChangePasswordDto>()).Returns(IdentityResult.Success);
+        var controller = new AccountController(_account);
+        var user = new ChangePasswordDto()
+        {
+            Email = "Volodya22@gmail.com",
+            CurrentPassword="12345678",
+            NewPassword="87654321",
+            ConfirmPassword="87654321"
+        };
+
+        //act
+        var result = await controller.ChangePassword(user) as OkObjectResult;
+        var statusCode = result.StatusCode;
+
+        //assert
+        statusCode.Should().Be((int)HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task ChangePassword_ShouldReturnNotFound_WhenUserNotFound()
+    {
+        //arrange
+        _account.ChangePasswordAsync(Arg.Any<ChangePasswordDto>()).Returns(IdentityResult.Failed());
+        var controller = new AccountController(_account);
+        var user = new ChangePasswordDto()
+        {
+            Email = "",
+            CurrentPassword = "12345678",
+            NewPassword = "87654321",
+            ConfirmPassword = "87654321"
+        };
+
+        //act
+        var result = await controller.ChangePassword(user);
+        var statusCode = (result as NotFoundResult)!.StatusCode;
+
+        //assert
+        statusCode.Should().Be((int)HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task ChangeFirstName_ShouldReturnOkStatus_WhenUserAreValid()
+    {
+        //arrange
+        _account.ChangeFirstNameAsync(Arg.Any<ChangeFirstNameDto>()).Returns(IdentityResult.Success);
+        var controller = new AccountController(_account);
+        var user = new ChangeFirstNameDto ()
+        {
+            Email = "Volodya22@gmail.com",
+            NewFirstName="Vova"
+        };
+
+        //act
+        var result = await controller.ChangeFirstName(user) as OkObjectResult;
+        var statusCode = result.StatusCode;
+
+        //assert
+        statusCode.Should().Be((int)HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task ChangeFirstName_ShouldReturnNotFound_WhenEmailEmpty()
+    {
+        //arrange
+        _account.ChangeFirstNameAsync(Arg.Any<ChangeFirstNameDto>()).Returns(IdentityResult.Failed());
+        var controller = new AccountController(_account);
+        var user = new ChangeFirstNameDto()
+        {
+            Email = "",
+            NewFirstName = "Vova"
+        };
+
+        //act
+        var result = await controller.ChangeFirstName(user);
+        var statusCode = (result as NotFoundResult)!.StatusCode;
+
+
+        //assert
+        statusCode.Should().Be((int)HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task ChangeLastName_ShouldReturnOkStatus_WhenChangeLastNameDtoValid()
+    {
+        //arrange
+        _account.ChangeLastNameAsync(Arg.Any<ChangeLastNameDto>()).Returns(IdentityResult.Success);
+        var controller = new AccountController(_account);
+        var user = new ChangeLastNameDto()
+        {
+            Email = "Name1@gmail.com",
+            NewLastName="Surname2"
+        };
+
+        //act
+        var result = await controller.ChangeLastName(user) as OkObjectResult;
+        var statusCode = result.StatusCode;
+
+        //assert
+        statusCode.Should().Be((int)HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task ChangeLastName_ShouldReturnNotFound_WhenChangeLastNameDtoInValid()
+    {
+        //arrange
+        _account.ChangeLastNameAsync(Arg.Any<ChangeLastNameDto>()).Returns(IdentityResult.Failed());
+        var controller = new AccountController(_account);
+        var user = new ChangeLastNameDto()
+        {
+            Email = "Name1@gmail.com",
+            NewLastName = "Surname2"
+        };
+
+        //act
+        var result = await controller.ChangeLastName(user);
+        var statusCode = (result as NotFoundResult)!.StatusCode;
+
+        //assert
+        statusCode.Should().Be((int)HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task ChangeEmail_ShouldReturnOkStatus_WhenChangeEmailDtoValid()
+    {
+        //arrange
+        _account.ChangeEmailAsync(Arg.Any<ChangeEmailDto>()).Returns(IdentityResult.Success);
+        var controller = new AccountController(_account);
+        var user = new ChangeEmailDto()
+        {
+            CurrentEmail="user@gmail.com",
+            NewEmail="user1@gmail.com"
+        };
+
+        //act
+        var result = await controller.ChangeEmail(user) as OkObjectResult;
+        var statusCode = result.StatusCode;
+
+        //assert
+        statusCode.Should().Be((int)HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task ChangeEmail_ShouldReturnNotFound_WhenChangeEmailDtoInValid()
+    {
+        //arrange
+        _account.ChangeEmailAsync(Arg.Any<ChangeEmailDto>()).Returns(IdentityResult.Failed());
+        var controller = new AccountController(_account);
+        var user = new ChangeEmailDto()
+        {
+            CurrentEmail = "usergmail.com",
+            NewEmail = "user1@gmail.com"
+        };
+
+        //act
+        var result = await controller.ChangeEmail(user);
+        var statusCode = (result as NotFoundResult)!.StatusCode;
+
+        //assert
+        statusCode.Should().Be((int)HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task DeleteAccount_ShouldReturnNotFound_WhenUserDoesntExist()
+    {
+        //arrange
+        var id = new Guid();
+        _account.DeleteAccountAsync(id).Returns(IdentityResult.Failed());
+        var controller = new AccountController(_account);
+
+        //act
+        var result = await controller.DeleteAccount(id);
+        var statusCode = (result as NotFoundResult)!.StatusCode;
+
+        //assert
+        statusCode.Should().Be((int)HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task DeleteAccount_ShouldReturnOkStatus_WhenIdValid()
+    {
+        //arrange
+        var id = new Guid();
+        _account.DeleteAccountAsync(id).Returns(IdentityResult.Success);
+        var controller = new AccountController(_account);
+
+        //act
+        var result = await controller.DeleteAccount(id) as OkObjectResult;
+        var statusCode = result.StatusCode;
+
+        //assert
+        statusCode.Should().Be((int)HttpStatusCode.OK);
     }
 }

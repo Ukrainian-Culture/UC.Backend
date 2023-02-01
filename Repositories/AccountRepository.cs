@@ -1,7 +1,7 @@
 ﻿using Contracts;
+using Entities.DTOs;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Repositories;
 
-public class AccountRepository : IAccountRepository
+public class AccountRepository :IAccountRepository
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
@@ -26,7 +26,12 @@ public class AccountRepository : IAccountRepository
     }
     public async Task<string> LoginAsync(SignInUser signInModel)
     {
-        var result = await _signInManager.PasswordSignInAsync(signInModel.FirstName, signInModel.Password, false, false);
+        var userByEmail = await _userManager.FindByEmailAsync(signInModel.Email);
+        if (userByEmail == null || signInModel.FirstName!=userByEmail.FirstName)
+        {
+            return string.Empty;
+        }
+        var result = await _signInManager.PasswordSignInAsync(userByEmail.FirstName, signInModel.Password, false, false);
         if (!result.Succeeded) return string.Empty;
         
         var authClaims = new List<Claim>
@@ -58,10 +63,11 @@ public class AccountRepository : IAccountRepository
             FirstName = signUpModel.FirstName,
             LastName = signUpModel.LastName,
             Email = signUpModel.Email,
-            UserName = signUpModel.FirstName
+            UserName = signUpModel.FirstName,
+            EmailConfirmed = false
         };
 
-        var result = await _userManager.CreateAsync(user, signUpModel.Password);
+        var result = await _userManager.CreateAsync(user,signUpModel.Password);
         if (result.Succeeded)
         {
             await _userManager.AddToRoleAsync(user,"User");
@@ -76,5 +82,71 @@ public class AccountRepository : IAccountRepository
             var roleClaim = new Claim(ClaimTypes.Role, role);
             claims.Add(roleClaim);
         }
+    }
+
+    public async Task<IdentityResult> ChangePasswordAsync(ChangePasswordDto changePasswordDto)
+    {
+        var user = await _userManager.FindByEmailAsync(changePasswordDto.Email);
+        if (user == null)
+        {
+            var resultFailed = IdentityResult.Failed();
+            return resultFailed;
+        }
+        var result = await _userManager.ChangePasswordAsync(user, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
+        return result;
+    }
+
+    public async Task<IdentityResult> ChangeEmailAsync(ChangeEmailDto changeEmailDto)
+    {
+        var user = await _userManager.FindByEmailAsync(changeEmailDto.CurrentEmail);
+        if (user != null)
+        {
+            var token = await _userManager.GenerateChangeEmailTokenAsync(user, changeEmailDto.NewEmail);
+            var result = await _userManager.ChangeEmailAsync(user, changeEmailDto.NewEmail, token);
+            return result;
+        }
+        return IdentityResult.Failed();
+    }
+
+    public async Task<IdentityResult> ChangeFirstNameAsync(ChangeFirstNameDto changeFirstNameDto)
+    {
+        var user = await _userManager.FindByEmailAsync(changeFirstNameDto.Email);
+        if(user == null)
+        {
+            var resultFailed=IdentityResult.Failed();
+            return resultFailed;
+        }
+        user.FirstName = changeFirstNameDto.NewFirstName;
+        user.UserName = changeFirstNameDto.NewFirstName;
+        var result = await _userManager.UpdateAsync(user);
+        return result;
+    }
+
+    public async Task<IdentityResult> ChangeLastNameAsync(ChangeLastNameDto changeLastNameDto)
+    {
+        var user = await _userManager.FindByEmailAsync(changeLastNameDto.Email);
+        if (user != null)
+        {
+            user.LastName = changeLastNameDto.NewLastName;
+            var result = await _userManager.UpdateAsync(user);
+            return result;
+        }
+        return IdentityResult.Failed();
+    }
+
+    public Task Logout()
+    {
+        return _signInManager.SignOutAsync();
+    }
+
+    public async Task<IdentityResult> DeleteAccountAsync(Guid id)
+    {
+        var user = _userManager.Users.Where(x => x.Id == id).FirstOrDefault();
+        if (user != null)
+        {
+            var result = await _userManager.DeleteAsync(user);
+            return result;
+        }
+        return IdentityResult.Failed();
     }
 }
