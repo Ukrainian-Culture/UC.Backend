@@ -102,9 +102,9 @@ public class AccountControllerTests
         var user = new ChangePasswordDto()
         {
             Email = "Volodya22@gmail.com",
-            CurrentPassword="12345678",
-            NewPassword="87654321",
-            ConfirmPassword="87654321"
+            CurrentPassword = "12345678",
+            NewPassword = "87654321",
+            ConfirmPassword = "87654321"
         };
 
         //act
@@ -143,10 +143,10 @@ public class AccountControllerTests
         //arrange
         _account.ChangeFirstNameAsync(Arg.Any<ChangeFirstNameDto>()).Returns(IdentityResult.Success);
         var controller = new AccountController(_account);
-        var user = new ChangeFirstNameDto ()
+        var user = new ChangeFirstNameDto()
         {
             Email = "Volodya22@gmail.com",
-            NewFirstName="Vova"
+            NewFirstName = "Vova"
         };
 
         //act
@@ -187,7 +187,7 @@ public class AccountControllerTests
         var user = new ChangeLastNameDto()
         {
             Email = "Name1@gmail.com",
-            NewLastName="Surname2"
+            NewLastName = "Surname2"
         };
 
         //act
@@ -226,8 +226,8 @@ public class AccountControllerTests
         var controller = new AccountController(_account);
         var user = new ChangeEmailDto()
         {
-            CurrentEmail="user@gmail.com",
-            NewEmail="user1@gmail.com"
+            CurrentEmail = "user@gmail.com",
+            NewEmail = "user1@gmail.com"
         };
 
         //act
@@ -237,7 +237,6 @@ public class AccountControllerTests
         //assert
         statusCode.Should().Be((int)HttpStatusCode.OK);
     }
-
 
     [Fact]
     public async Task ChangeEmail_ShouldReturnNotFound_WhenChangeEmailDtoInValid()

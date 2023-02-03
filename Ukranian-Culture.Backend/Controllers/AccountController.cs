@@ -68,7 +68,7 @@ public class AccountController : ControllerBase
         if (!result.Succeeded)
         {
             return NotFound();
-        }    
+        }
 
         return Ok(result);
     }
@@ -113,7 +113,7 @@ public class AccountController : ControllerBase
     [Authorize]
     public async Task<IActionResult> DeleteAccount(Guid id)
     {
-        var result=await _accountRepository.DeleteAccountAsync(id);
+        var result = await _accountRepository.DeleteAccountAsync(id);
         if (!result.Succeeded) return NotFound();
         return Ok(result);
     }

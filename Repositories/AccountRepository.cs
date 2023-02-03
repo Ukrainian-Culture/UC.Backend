@@ -15,7 +15,7 @@ using SendGrid.Helpers.Mail;
 
 namespace Repositories;
 
-public class AccountRepository :IAccountRepository
+public class AccountRepository : IAccountRepository
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
@@ -32,7 +32,7 @@ public class AccountRepository :IAccountRepository
     public async Task<string> LoginAsync(SignInUser signInModel)
     {
         var userByEmail = await _userManager.FindByEmailAsync(signInModel.Email);
-        if (userByEmail == null || signInModel.FirstName!=userByEmail.FirstName)
+        if (userByEmail == null || signInModel.FirstName != userByEmail.FirstName)
         {
             return string.Empty;
         }
@@ -72,7 +72,7 @@ public class AccountRepository :IAccountRepository
             EmailConfirmed = false
         };
 
-        var result = await _userManager.CreateAsync(user,signUpModel.Password);
+        var result = await _userManager.CreateAsync(user, signUpModel.Password);
         if (result.Succeeded)
         {
             await _userManager.AddToRoleAsync(user, "User");
@@ -117,9 +117,9 @@ public class AccountRepository :IAccountRepository
     public async Task<IdentityResult> ChangeFirstNameAsync(ChangeFirstNameDto changeFirstNameDto)
     {
         var user = await _userManager.FindByEmailAsync(changeFirstNameDto.Email);
-        if(user == null)
+        if (user == null)
         {
-            var resultFailed=IdentityResult.Failed();
+            var resultFailed = IdentityResult.Failed();
             return resultFailed;
         }
         user.FirstName = changeFirstNameDto.NewFirstName;
@@ -154,6 +154,6 @@ public class AccountRepository :IAccountRepository
             return result;
         }
         return IdentityResult.Failed();
-    
+
     }
 }

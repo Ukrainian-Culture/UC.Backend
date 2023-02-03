@@ -2,7 +2,7 @@
 
 public class AccountRepositoryTests
 {
-    private readonly IAccountRepository _accountRepository=Substitute.For<IAccountRepository>();
+    private readonly IAccountRepository _accountRepository = Substitute.For<IAccountRepository>();
 
     [Fact]
     public async Task SignUpAsync_ShouldReturnSuccess_WhenUserAreValid()
@@ -44,7 +44,7 @@ public class AccountRepositoryTests
         };
 
         //Act
-        var result =await _accountRepository.SignUpAsync(user);
+        var result = await _accountRepository.SignUpAsync(user);
 
         //Asert
         result.Equals(expected);
@@ -67,7 +67,7 @@ public class AccountRepositoryTests
         };
 
         //Act
-        var result =await _accountRepository.SignUpAsync(user);
+        var result = await _accountRepository.SignUpAsync(user);
 
         //Asert
         result.Equals(expected);
@@ -90,7 +90,7 @@ public class AccountRepositoryTests
         };
 
         //Act
-        var result =await _accountRepository.SignUpAsync(user);
+        var result = await _accountRepository.SignUpAsync(user);
 
         //Asert
         result.Equals(expected);
@@ -156,7 +156,7 @@ public class AccountRepositoryTests
         };
 
         //Act
-        var result =await _accountRepository.LoginAsync(user);
+        var result = await _accountRepository.LoginAsync(user);
 
         //Asert
         result.Equals(expected);
@@ -177,7 +177,7 @@ public class AccountRepositoryTests
         };
 
         //Act
-        var result =await _accountRepository.LoginAsync(user);
+        var result = await _accountRepository.LoginAsync(user);
 
         //Asert
         result.Equals(expected);
@@ -198,7 +198,7 @@ public class AccountRepositoryTests
         };
 
         //Act
-        var result =await _accountRepository.LoginAsync(user);
+        var result = await _accountRepository.LoginAsync(user);
 
         //Asert
         result.Equals(expected);
@@ -219,7 +219,7 @@ public class AccountRepositoryTests
         };
 
         //Act
-        var result =await _accountRepository.LoginAsync(user);
+        var result = await _accountRepository.LoginAsync(user);
 
         //Asert
         result.Equals(expected);
@@ -240,7 +240,7 @@ public class AccountRepositoryTests
         };
 
         //Act
-        var result =await _accountRepository.ChangeEmailAsync(email);
+        var result = await _accountRepository.ChangeEmailAsync(email);
 
         //Asert
         result.Equals(expected);
@@ -260,7 +260,7 @@ public class AccountRepositoryTests
         };
 
         //Act
-        var result =await _accountRepository.ChangeEmailAsync(email);
+        var result = await _accountRepository.ChangeEmailAsync(email);
 
         //Asert
         result.Equals(expected);
@@ -317,7 +317,7 @@ public class AccountRepositoryTests
 
         var userChangeData = new ChangeFirstNameDto
         {
-            NewFirstName="Kate",
+            NewFirstName = "Kate",
             Email = "abc@gmail.com"
         };
 
@@ -342,7 +342,7 @@ public class AccountRepositoryTests
         };
 
         //Act
-        var result =await _accountRepository.ChangeFirstNameAsync(userChangeData);
+        var result = await _accountRepository.ChangeFirstNameAsync(userChangeData);
 
         //Asert
         result.Equals(expected);
@@ -357,9 +357,9 @@ public class AccountRepositoryTests
 
         var userChangeData = new ChangePasswordDto
         {
-            CurrentPassword="12345678",
-            NewPassword="87654321",
-            ConfirmPassword="87654321",
+            CurrentPassword = "12345678",
+            NewPassword = "87654321",
+            ConfirmPassword = "87654321",
             Email = "abc@gmail.com"
         };
 
@@ -416,7 +416,7 @@ public class AccountRepositoryTests
         var Id = new Guid("5eca5808-4f44-4c4c-b481-72d2bdf24203");
 
         //Act
-        var result =await _accountRepository.DeleteAccountAsync(Id);
+        var result = await _accountRepository.DeleteAccountAsync(Id);
 
         //Asert
         result.Equals(expected);
