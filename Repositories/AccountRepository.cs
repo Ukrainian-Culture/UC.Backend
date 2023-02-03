@@ -1,7 +1,7 @@
 using Contracts;
+using Entities.DTOs;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,7 +15,7 @@ using SendGrid.Helpers.Mail;
 
 namespace Repositories;
 
-public class AccountRepository : IAccountRepository
+public class AccountRepository :IAccountRepository
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
@@ -31,7 +31,12 @@ public class AccountRepository : IAccountRepository
     }
     public async Task<string> LoginAsync(SignInUser signInModel)
     {
-        var result = await _signInManager.PasswordSignInAsync(signInModel.FirstName, signInModel.Password, false, false);
+        var userByEmail = await _userManager.FindByEmailAsync(signInModel.Email);
+        if (userByEmail == null || signInModel.FirstName!=userByEmail.FirstName)
+        {
+            return string.Empty;
+        }
+        var result = await _signInManager.PasswordSignInAsync(userByEmail.FirstName, signInModel.Password, false, false);
         if (!result.Succeeded) return string.Empty;
 
         var authClaims = new List<Claim>
@@ -67,7 +72,7 @@ public class AccountRepository : IAccountRepository
             EmailConfirmed = false
         };
 
-        var result = await _userManager.CreateAsync(user, signUpModel.Password);
+        var result = await _userManager.CreateAsync(user,signUpModel.Password);
         if (result.Succeeded)
         {
             await _userManager.AddToRoleAsync(user, "User");
@@ -83,7 +88,8 @@ public class AccountRepository : IAccountRepository
             claims.Add(roleClaim);
         }
     }
-    
+
+
     public async Task<IdentityResult> ChangePasswordAsync(ChangePasswordDto changePasswordDto)
     {
         var user = await _userManager.FindByEmailAsync(changePasswordDto.Email);
@@ -148,6 +154,6 @@ public class AccountRepository : IAccountRepository
             return result;
         }
         return IdentityResult.Failed();
-
+    
     }
 }

@@ -1,3 +1,4 @@
+﻿using Azure;
 using Contracts;
 using Entities.DTOs;
 using Entities.Models;
@@ -43,6 +44,7 @@ public class AccountController : ControllerBase
         return Ok(result);
     }
 
+
     [HttpPatch("changePassword")]
     [Authorize]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
@@ -66,12 +68,57 @@ public class AccountController : ControllerBase
         if (!result.Succeeded)
         {
             return NotFound();
+        }    
+
+        return Ok(result);
+    }
+
+    [HttpPatch("changeFirstName")]
+    [Authorize]
+    public async Task<IActionResult> ChangeFirstName([FromBody] ChangeFirstNameDto changeFirstNameDto)
+    {
+        var result = await _accountRepository.ChangeFirstNameAsync(changeFirstNameDto);
+
+        if (!result.Succeeded)
+        {
+            return NotFound();
         }
 
         return Ok(result);
     }
 
+    [HttpPatch("changeLastName")]
+    [Authorize]
+    public async Task<IActionResult> ChangeLastName([FromBody] ChangeLastNameDto changeLastNameDto)
+    {
+        var result = await _accountRepository.ChangeLastNameAsync(changeLastNameDto);
+
+        if (!result.Succeeded)
+        {
+            return NotFound();
+        }
+
+        return Ok(result);
+    }
+
+    [HttpPost("logout")]
+    [Authorize]
+    public async Task<IActionResult> Logout()
+    {
+        await _accountRepository.Logout();
+        return Ok();
+    }
+
+    [HttpDelete("deleteAccount/{id}")]
+    [Authorize]
+    public async Task<IActionResult> DeleteAccount(Guid id)
+    {
+        var result=await _accountRepository.DeleteAccountAsync(id);
+        if (!result.Succeeded) return NotFound();
+        return Ok(result);
+    }
 }
+
 
 
 
