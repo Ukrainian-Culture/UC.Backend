@@ -16,6 +16,3 @@ global using Ukranian_Culture.Backend.Controllers;
 global using AutoMapper;
 global using Ukranian_Culture.Backend;
 global using NSubstitute.ReturnsExtensions;
-global using Microsoft.AspNetCore.Http;
-global using Microsoft.AspNetCore.Identity;
-global using Microsoft.Extensions.Configuration;

@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 
 using Microsoft.AspNetCore.Http;
 
@@ -93,7 +95,6 @@ public class AccountControllerTests
     }
 
     [Fact]
-
     public async Task ChangePassword_ShouldReturnStatusOk_WhenChangePasswordDtoCorrect()
     {
         //arrange
@@ -237,9 +238,7 @@ public class AccountControllerTests
         //assert
         statusCode.Should().Be((int)HttpStatusCode.OK);
     }
-
     
-
     [Fact]
     public async Task ChangeEmail_ShouldReturnNotFound_WhenChangeEmailDtoInValid()
     {
