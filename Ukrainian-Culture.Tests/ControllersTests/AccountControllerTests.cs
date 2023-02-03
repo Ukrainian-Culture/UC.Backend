@@ -226,8 +226,8 @@ public class AccountControllerTests
         var controller = new AccountController(_account);
         var user = new ChangeEmailDto()
         {
-            CurrentEmail = "user@gmail.com",
-            NewEmail = "user1@gmail.com"
+            CurrentEmail="user@gmail.com",
+            NewEmail="user1@gmail.com"
         };
 
         //act
@@ -238,7 +238,6 @@ public class AccountControllerTests
         statusCode.Should().Be((int)HttpStatusCode.OK);
     }
 
-    
 
     [Fact]
     public async Task ChangeEmail_ShouldReturnNotFound_WhenChangeEmailDtoInValid()
@@ -259,6 +258,8 @@ public class AccountControllerTests
         //assert
         statusCode.Should().Be((int)HttpStatusCode.NotFound);
     }
+
+
 
     [Fact]
     public async Task DeleteAccount_ShouldReturnNotFound_WhenUserDoesntExist()

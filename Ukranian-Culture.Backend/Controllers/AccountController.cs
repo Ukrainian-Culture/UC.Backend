@@ -1,4 +1,5 @@
-﻿using Contracts;
+﻿using Azure;
+using Contracts;
 using Entities.DTOs;
 using Entities.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -43,6 +44,7 @@ public class AccountController : ControllerBase
         return Ok(result);
     }
 
+
     [HttpPatch("changePassword")]
     [Authorize]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
@@ -66,7 +68,7 @@ public class AccountController : ControllerBase
         if (!result.Succeeded)
         {
             return NotFound();
-        }
+        }    
 
         return Ok(result);
     }
