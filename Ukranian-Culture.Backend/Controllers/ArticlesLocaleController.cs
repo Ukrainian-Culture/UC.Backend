@@ -147,7 +147,7 @@ public class ArticlesLocaleController : ControllerBase
             is { } articleLocale)
         {
             var document = new PdfDocument();
-            PdfGenerator.AddPdfPages(document, articleLocale.Content,PageSize.A4,20,null,null,null);
+            PdfGenerator.AddPdfPages(document, articleLocale.Content, PageSize.A4, 20, null, null, null);
             byte[]? response = null;
             MemoryStream ms = new MemoryStream();
             document.Save(ms);
