@@ -92,7 +92,7 @@ public class ParserController : ControllerBase
 
         var result = population_with_regions
             .Where(elem => elem.Key != "Київська" && elem.Key != "м.Київ")
-            .Append(new KeyValuePair<string, int>("Київська",KyivRegionPopulation))
+            .Append(new KeyValuePair<string, int>("Київська", KyivRegionPopulation))
             .OrderByDescending(elem => elem.Value)
             .Take(5);
 
