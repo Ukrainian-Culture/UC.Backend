@@ -16,8 +16,6 @@ public class UsersConfigurations : IEntityTypeConfiguration<User>
             new User
             {
                 Id = _firstId,
-                FirstName = "Admin",
-                LastName = "Admin",
                 UserName = "Admin",
                 Email = "Admin@gmail.com",
                 NormalizedUserName = "ADMIN",
@@ -28,8 +26,6 @@ public class UsersConfigurations : IEntityTypeConfiguration<User>
             new User
             {
                 Id = _secondId,
-                FirstName = "Bohdan",
-                LastName = "Vivchar",
                 UserName = "Bohdan",
                 NormalizedUserName = "BOHDAN",
                 NormalizedEmail = "BOHDAN@GMAIL.COM",

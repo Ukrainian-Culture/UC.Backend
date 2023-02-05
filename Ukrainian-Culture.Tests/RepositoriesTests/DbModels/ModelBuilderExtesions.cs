@@ -5,8 +5,6 @@ public static class ModelBuilderExtesions
     public static void CreateUserModel(this ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>().HasKey(user => user.Id);
-        modelBuilder.Entity<User>().Property(user => user.FirstName).IsRequired();
-        modelBuilder.Entity<User>().Property(user => user.LastName).IsRequired();
         modelBuilder.Entity<User>().Ignore(p => p.AccessFailedCount);
         modelBuilder.Entity<User>().Ignore(p => p.ConcurrencyStamp);
         modelBuilder.Entity<User>().Ignore(p => p.Email);

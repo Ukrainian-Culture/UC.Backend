@@ -4,11 +4,6 @@ namespace Entities.Models;
 
 public class SignUpUser
 {
-    [Required]
-    public string FirstName { get; set; } = null!;
-
-    [Required]
-    public string LastName { get; set; } = null!;
 
     [Required]
     [EmailAddress]

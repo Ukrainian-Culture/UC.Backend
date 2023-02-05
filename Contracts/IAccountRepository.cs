@@ -11,8 +11,8 @@ public interface IAccountRepository
     Task<string> LoginAsync(SignInUser signInModel);
     Task<IdentityResult> ChangePasswordAsync(ChangePasswordDto changePasswordDto);
     Task<IdentityResult> ChangeEmailAsync(ChangeEmailDto changeEmailDto);
-    Task<IdentityResult> ChangeFirstNameAsync(ChangeFirstNameDto changeFirstNameDto);
-    Task<IdentityResult> ChangeLastNameAsync(ChangeLastNameDto changeLastNameDto);
+    //Task<IdentityResult> ChangeFirstNameAsync(ChangeFirstNameDto changeFirstNameDto);
+    //Task<IdentityResult> ChangeLastNameAsync(ChangeLastNameDto changeLastNameDto);
     Task Logout();
     Task<IdentityResult> DeleteAccountAsync(Guid id);
 }

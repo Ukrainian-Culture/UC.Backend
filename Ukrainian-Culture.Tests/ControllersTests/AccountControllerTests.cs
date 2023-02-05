@@ -15,8 +15,6 @@ public class AccountControllerTests
         var controller = new AccountController(_account);
         var user = new SignUpUser()
         {
-            FirstName = "Name1",
-            LastName = "Surname1",
             Email = "Name1@gmail.com",
             Password = "TTCGCghcvhj",
             ConfirmPassword = "TTCGCghcvhj"
@@ -37,8 +35,6 @@ public class AccountControllerTests
         var controller = new AccountController(_account);
         var user = new SignUpUser()
         {
-            FirstName = "Name1",
-            LastName = "Surname1",
             Email = "Name1@gmail.com",
             Password = "TTCGCghcvhj",
             ConfirmPassword = "TTCGC"
@@ -60,7 +56,6 @@ public class AccountControllerTests
         var controller = new AccountController(_account);
         var user = new SignInUser()
         {
-            FirstName = "Volodya22",
             Email = "Volodya22@gmail.com",
             Password = "TTCGCghcvhj"
         };
@@ -80,7 +75,6 @@ public class AccountControllerTests
         var controller = new AccountController(_account);
         var user = new SignInUser()
         {
-            FirstName = "Volodya22",
             Email = "Volodya22@gmail.com",
             Password = "T"
         };
@@ -138,87 +132,6 @@ public class AccountControllerTests
     }
 
     [Fact]
-    public async Task ChangeFirstName_ShouldReturnOkStatus_WhenUserAreValid()
-    {
-        //arrange
-        _account.ChangeFirstNameAsync(Arg.Any<ChangeFirstNameDto>()).Returns(IdentityResult.Success);
-        var controller = new AccountController(_account);
-        var user = new ChangeFirstNameDto()
-        {
-            Email = "Volodya22@gmail.com",
-            NewFirstName = "Vova"
-        };
-
-        //act
-        var result = await controller.ChangeFirstName(user) as OkObjectResult;
-        var statusCode = result.StatusCode;
-
-        //assert
-        statusCode.Should().Be((int)HttpStatusCode.OK);
-    }
-
-    [Fact]
-    public async Task ChangeFirstName_ShouldReturnNotFound_WhenEmailEmpty()
-    {
-        //arrange
-        _account.ChangeFirstNameAsync(Arg.Any<ChangeFirstNameDto>()).Returns(IdentityResult.Failed());
-        var controller = new AccountController(_account);
-        var user = new ChangeFirstNameDto()
-        {
-            Email = "",
-            NewFirstName = "Vova"
-        };
-
-        //act
-        var result = await controller.ChangeFirstName(user);
-        var statusCode = (result as NotFoundResult)!.StatusCode;
-
-
-        //assert
-        statusCode.Should().Be((int)HttpStatusCode.NotFound);
-    }
-
-    [Fact]
-    public async Task ChangeLastName_ShouldReturnOkStatus_WhenChangeLastNameDtoValid()
-    {
-        //arrange
-        _account.ChangeLastNameAsync(Arg.Any<ChangeLastNameDto>()).Returns(IdentityResult.Success);
-        var controller = new AccountController(_account);
-        var user = new ChangeLastNameDto()
-        {
-            Email = "Name1@gmail.com",
-            NewLastName = "Surname2"
-        };
-
-        //act
-        var result = await controller.ChangeLastName(user) as OkObjectResult;
-        var statusCode = result.StatusCode;
-
-        //assert
-        statusCode.Should().Be((int)HttpStatusCode.OK);
-    }
-
-    [Fact]
-    public async Task ChangeLastName_ShouldReturnNotFound_WhenChangeLastNameDtoInValid()
-    {
-        //arrange
-        _account.ChangeLastNameAsync(Arg.Any<ChangeLastNameDto>()).Returns(IdentityResult.Failed());
-        var controller = new AccountController(_account);
-        var user = new ChangeLastNameDto()
-        {
-            Email = "Name1@gmail.com",
-            NewLastName = "Surname2"
-        };
-
-        //act
-        var result = await controller.ChangeLastName(user);
-        var statusCode = (result as NotFoundResult)!.StatusCode;
-
-        //assert
-        statusCode.Should().Be((int)HttpStatusCode.NotFound);
-    }
-
-    [Fact]
     public async Task ChangeEmail_ShouldReturnOkStatus_WhenChangeEmailDtoValid()
     {
         //arrange
@@ -257,8 +170,6 @@ public class AccountControllerTests
         //assert
         statusCode.Should().Be((int)HttpStatusCode.NotFound);
     }
-
-
 
     [Fact]
     public async Task DeleteAccount_ShouldReturnNotFound_WhenUserDoesntExist()

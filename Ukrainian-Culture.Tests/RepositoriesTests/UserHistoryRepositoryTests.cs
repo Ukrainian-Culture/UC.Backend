@@ -152,9 +152,7 @@ public class UserHistoryRepositoryTests
         var userId = new Guid("a706959a-6eef-4ea5-ba6c-79844446f950");
         await _context.Users.AddAsync(new User
         {
-            Id = userId,
-            FirstName = "1",
-            LastName = "2"
+            Id = userId
         });
         await _context.SaveChangesAsync();
         var repository = new UserHistoryRepository(_context);

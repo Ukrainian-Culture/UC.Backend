@@ -73,33 +73,33 @@ public class AccountController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPatch("changeFirstName")]
-    [Authorize]
-    public async Task<IActionResult> ChangeFirstName([FromBody] ChangeFirstNameDto changeFirstNameDto)
-    {
-        var result = await _accountRepository.ChangeFirstNameAsync(changeFirstNameDto);
+    //[HttpPatch("changeFirstName")]
+    //[Authorize]
+    //public async Task<IActionResult> ChangeFirstName([FromBody] ChangeFirstNameDto changeFirstNameDto)
+    //{
+    //    var result = await _accountRepository.ChangeFirstNameAsync(changeFirstNameDto);
 
-        if (!result.Succeeded)
-        {
-            return NotFound();
-        }
+    //    if (!result.Succeeded)
+    //    {
+    //        return NotFound();
+    //    }
 
-        return Ok(result);
-    }
+    //    return Ok(result);
+    //}
 
-    [HttpPatch("changeLastName")]
-    [Authorize]
-    public async Task<IActionResult> ChangeLastName([FromBody] ChangeLastNameDto changeLastNameDto)
-    {
-        var result = await _accountRepository.ChangeLastNameAsync(changeLastNameDto);
+    //[HttpPatch("changeLastName")]
+    //[Authorize]
+    //public async Task<IActionResult> ChangeLastName([FromBody] ChangeLastNameDto changeLastNameDto)
+    //{
+    //    var result = await _accountRepository.ChangeLastNameAsync(changeLastNameDto);
 
-        if (!result.Succeeded)
-        {
-            return NotFound();
-        }
+    //    if (!result.Succeeded)
+    //    {
+    //        return NotFound();
+    //    }
 
-        return Ok(result);
-    }
+    //    return Ok(result);
+    //}
 
     [HttpPost("logout")]
     [Authorize]
