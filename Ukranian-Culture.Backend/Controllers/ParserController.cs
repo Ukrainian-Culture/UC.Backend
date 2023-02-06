@@ -79,14 +79,20 @@ public class ParserController : ControllerBase
             return BadRequest();
         }
 
-        var result = node
+        var population_with_regions = node
             .Where((_, i) => i % 2 == 0)
             .Select(elem => elem.Replace("<span class='idx-inline-400'>&nbsp;обл.</span>", ""))
             .ToList()
             .Zip(node
                     .Where((_, i) => i % 2 == 1)
                     .Select(elem => Convert.ToInt32(elem.Replace(",", "") + "00"))
-                    .ToList(), (x, y) => new KeyValuePair<string, int>(x, y))
+                    .ToList(), (x, y) => new KeyValuePair<string, int>(x, y));
+
+        var KyivRegionPopulation = population_with_regions.Where(elem => elem.Key == "Київська" || elem.Key == "м.Київ").Sum(elem => elem.Value);
+
+        var result = population_with_regions
+            .Where(elem => elem.Key != "Київська" && elem.Key != "м.Київ")
+            .Append(new KeyValuePair<string, int>("Київська", KyivRegionPopulation))
             .OrderByDescending(elem => elem.Value)
             .Take(5);
 

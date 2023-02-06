@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
 using Repositories;
+using Ukranian_Culture.Backend;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -79,9 +80,13 @@ builder.Services.AddIdentity<User, Roles>(opts =>
     opts.Password.RequireLowercase = false;
     opts.Password.RequireUppercase = false;
     opts.Password.RequireDigit = false;
+    opts.User.RequireUniqueEmail = true;
 })
     .AddEntityFrameworkStores<RepositoryContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
+   opt.TokenLifespan = TimeSpan.FromHours(2));
 
 builder.Services.AddAuthentication(option =>
 {
@@ -103,7 +108,11 @@ builder.Services.AddAuthentication(option =>
         };
     });
 
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(60);
 
+});
 
 builder.Services.AddAutoMapper(typeof(Program));
 
@@ -155,6 +164,7 @@ try
     app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseRouting();
+    app.UseSession();
     app.UseAuthorization();
 
     app.UseCors("CorsPolicy");
