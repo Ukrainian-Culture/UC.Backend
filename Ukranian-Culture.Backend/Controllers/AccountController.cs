@@ -18,9 +18,16 @@ public class AccountController : ControllerBase
         _accountRepository = accountRepository;
     }
 
-    [HttpPost("signup")]
-    public async Task<IActionResult> SignUp([FromBody] SignUpUser signUpModel)
+    [HttpPost("signup/{email}/{password}/{confirmPassword}")]
+    public async Task<IActionResult> SignUp(string email, string password, string confirmPassword)
     {
+        var signUpModel = new SignUpUser
+        {
+            Email = email,
+            Password = password,
+            ConfirmPassword = confirmPassword
+        };
+
         var result = await _accountRepository.SignUpAsync(signUpModel);
 
         if (result.Succeeded)
@@ -31,9 +38,14 @@ public class AccountController : ControllerBase
         return Unauthorized();
     }
 
-    [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] SignInUser signInModel)
+    [HttpPost("login/{email}/{password}")]
+    public async Task<IActionResult> Login(string email, string password)
     {
+        var signInModel = new SignInUser
+        {
+            Email = email,
+            Password = password
+        };
         var result = await _accountRepository.LoginAsync(signInModel);
 
         if (string.IsNullOrWhiteSpace(result))
@@ -45,10 +57,17 @@ public class AccountController : ControllerBase
     }
 
 
-    [HttpPatch("changePassword")]
+    [HttpPatch("changePassword/{email}/{currentPassword}/{newPassword}/{confirmPassword}")]
     [Authorize]
-    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
+    public async Task<IActionResult> ChangePassword(string email, string currentPassword, string newPassword, string confirmPassword)
     {
+        var changePasswordDto = new ChangePasswordDto
+        {
+            Email = email,
+            CurrentPassword = currentPassword,
+            NewPassword = newPassword,
+            ConfirmPassword = confirmPassword
+        };
         var result = await _accountRepository.ChangePasswordAsync(changePasswordDto);
 
         if (!result.Succeeded)
@@ -59,39 +78,16 @@ public class AccountController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPatch("changeEmail")]
+    [HttpPatch("changeEmail/{currentEmail}/{newEmail}")]
     [Authorize]
-    public async Task<IActionResult> ChangeEmail([FromBody] ChangeEmailDto changeEmailDto)
+    public async Task<IActionResult> ChangeEmail(string currentEmail, string newEmail)
     {
+        var changeEmailDto = new ChangeEmailDto
+        {
+            CurrentEmail = currentEmail,
+            NewEmail = newEmail
+        };
         var result = await _accountRepository.ChangeEmailAsync(changeEmailDto);
-
-        if (!result.Succeeded)
-        {
-            return NotFound();
-        }
-
-        return Ok(result);
-    }
-
-    [HttpPatch("changeFirstName")]
-    [Authorize]
-    public async Task<IActionResult> ChangeFirstName([FromBody] ChangeFirstNameDto changeFirstNameDto)
-    {
-        var result = await _accountRepository.ChangeFirstNameAsync(changeFirstNameDto);
-
-        if (!result.Succeeded)
-        {
-            return NotFound();
-        }
-
-        return Ok(result);
-    }
-
-    [HttpPatch("changeLastName")]
-    [Authorize]
-    public async Task<IActionResult> ChangeLastName([FromBody] ChangeLastNameDto changeLastNameDto)
-    {
-        var result = await _accountRepository.ChangeLastNameAsync(changeLastNameDto);
 
         if (!result.Succeeded)
         {
@@ -109,7 +105,7 @@ public class AccountController : ControllerBase
         return Ok();
     }
 
-    [HttpDelete("deleteAccount/{id}")]
+    [HttpDelete("deleteAccount/{id:guid}")]
     [Authorize]
     public async Task<IActionResult> DeleteAccount(Guid id)
     {

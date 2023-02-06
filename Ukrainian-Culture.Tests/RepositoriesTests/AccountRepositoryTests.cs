@@ -13,54 +13,6 @@ public class AccountRepositoryTests
 
         var user = new SignUpUser
         {
-            FirstName = "Kate",
-            LastName = "Danylchenko",
-            Email = "abc@gmail.com",
-            Password = "345rt6ty6",
-            ConfirmPassword = "345rt6ty6"
-        };
-
-        //Act
-        var result = await _accountRepository.SignUpAsync(user);
-
-        //Asert
-        result.Equals(expected);
-    }
-
-    [Fact]
-    public async Task SignUpAsync_ShouldReturnFailed_WhenUserFirstNameAreEmpty()
-    {
-        //Arrange
-        var expected = IdentityResult.Failed();
-        _accountRepository.SignUpAsync(Arg.Any<SignUpUser>()).Returns(expected);
-
-        var user = new SignUpUser
-        {
-            FirstName = "",
-            LastName = "Danylchenko",
-            Email = "abc@gmail.com",
-            Password = "345rt6ty6",
-            ConfirmPassword = "345rt6ty6"
-        };
-
-        //Act
-        var result = await _accountRepository.SignUpAsync(user);
-
-        //Asert
-        result.Equals(expected);
-    }
-
-    [Fact]
-    public async Task SignUpAsync_ShouldReturnFailed_WhenUserLastNameAreEmpty()
-    {
-        //Arrange
-        var expected = IdentityResult.Failed();
-        _accountRepository.SignUpAsync(Arg.Any<SignUpUser>()).Returns(expected);
-
-        var user = new SignUpUser
-        {
-            FirstName = "Kate",
-            LastName = "",
             Email = "abc@gmail.com",
             Password = "345rt6ty6",
             ConfirmPassword = "345rt6ty6"
@@ -82,34 +34,9 @@ public class AccountRepositoryTests
 
         var user = new SignUpUser
         {
-            FirstName = "Kate",
-            LastName = "Danylchenko",
             Email = "abc.com",
             Password = "345rt6ty6",
             ConfirmPassword = "345rt6ty6"
-        };
-
-        //Act
-        var result = await _accountRepository.SignUpAsync(user);
-
-        //Asert
-        result.Equals(expected);
-    }
-
-    [Fact]
-    public async Task SignUpAsync_ShouldReturnFailed_WhenPasswordAreInvalid()
-    {
-        //Arrange
-        var expected = IdentityResult.Failed();
-        _accountRepository.SignUpAsync(Arg.Any<SignUpUser>()).Returns(expected);
-
-        var user = new SignUpUser
-        {
-            FirstName = "Kate",
-            LastName = "Danylchenko",
-            Email = "abc@gmail.com",
-            Password = "3",
-            ConfirmPassword = "3"
         };
 
         //Act
@@ -127,11 +54,9 @@ public class AccountRepositoryTests
         _accountRepository.SignUpAsync(Arg.Any<SignUpUser>()).Returns(expected);
         var user = new SignUpUser
         {
-            FirstName = "Kate",
-            LastName = "Danylchenko",
             Email = "abc@gmail.com",
-            Password = "12345678",
-            ConfirmPassword = "3"
+            Password = "3",
+            ConfirmPassword = "12345678"
         };
 
         //Act
@@ -150,7 +75,6 @@ public class AccountRepositoryTests
 
         var user = new SignInUser()
         {
-            FirstName = "Volodya22",
             Email = "Volodya22@gmail.com",
             Password = "TTCGCghcvhj"
         };
@@ -162,26 +86,6 @@ public class AccountRepositoryTests
         result.Equals(expected);
     }
 
-    [Fact]
-    public async Task LoginAsync_ShouldReturnEmptyStringToken_WhenUserFirstNameEmpty()
-    {
-        //Arrange
-        string expected = "";
-        _accountRepository.LoginAsync(Arg.Any<SignInUser>()).Returns(expected);
-
-        var user = new SignInUser()
-        {
-            FirstName = "",
-            Email = "Volodya22@gmail.com",
-            Password = "TTCGCghcvhj"
-        };
-
-        //Act
-        var result = await _accountRepository.LoginAsync(user);
-
-        //Asert
-        result.Equals(expected);
-    }
 
     [Fact]
     public async Task LoginAsync_ShouldReturnEmptyStringToken_WhenEmailAreInvalid()
@@ -192,7 +96,6 @@ public class AccountRepositoryTests
 
         var user = new SignInUser()
         {
-            FirstName = "Volodya22",
             Email = "Volodya22gmail.com",
             Password = "TTCGCghcvhj"
         };
@@ -213,7 +116,6 @@ public class AccountRepositoryTests
 
         var user = new SignInUser()
         {
-            FirstName = "Volodya22",
             Email = "Volodya22@gmail.com",
             Password = "456 7"
         };
@@ -261,88 +163,6 @@ public class AccountRepositoryTests
 
         //Act
         var result = await _accountRepository.ChangeEmailAsync(email);
-
-        //Asert
-        result.Equals(expected);
-    }
-
-    [Fact]
-    public async Task ChangeLastNameAsync_ShouldReturnSuccess_WhenChangeLastNameDtoValid()
-    {
-        //Arrange
-        var expected = IdentityResult.Success;
-        _accountRepository.ChangeLastNameAsync(Arg.Any<ChangeLastNameDto>()).Returns(expected);
-
-        var userChangeData = new ChangeLastNameDto
-        {
-            NewLastName = "Danylchenko1",
-            Email = "abc@gmail.com"
-        };
-
-        //Act
-        var result = await _accountRepository.ChangeLastNameAsync(userChangeData);
-
-        //Asert
-        result.Equals(expected);
-    }
-
-    [Fact]
-    public async Task ChangeLastNameAsync_ShouldReturnSFailed_WhenChangeLastNameDtoInValid()
-    {
-        //Arrange
-        var expected = IdentityResult.Failed();
-
-        _accountRepository.ChangeLastNameAsync(Arg.Any<ChangeLastNameDto>()).Returns(expected);
-
-        var userChangeData = new ChangeLastNameDto
-        {
-            NewLastName = "Danylchenko1",
-            Email = "abcgmail.com"
-        };
-
-        //Act
-        var result = await _accountRepository.ChangeLastNameAsync(userChangeData);
-
-        //Asert
-        result.Equals(expected);
-    }
-
-    [Fact]
-
-    public async Task ChangeFirstNameAsync_ShouldReturnSuccess_WhenChangeFirstNameDtoValid()
-    {
-        //Arrange
-        var expected = IdentityResult.Success;
-        _accountRepository.ChangeFirstNameAsync(Arg.Any<ChangeFirstNameDto>()).Returns(expected);
-
-        var userChangeData = new ChangeFirstNameDto
-        {
-            NewFirstName = "Kate",
-            Email = "abc@gmail.com"
-        };
-
-        //Act
-        var result = await _accountRepository.ChangeFirstNameAsync(userChangeData);
-
-        //Asert
-        result.Equals(expected);
-    }
-
-    [Fact]
-    public async Task ChangeFirstNameAsync_ShouldReturnFailed_WhenChangeFirstNameDtoInValid()
-    {
-        //Arrange
-        var expected = IdentityResult.Failed();
-        _accountRepository.ChangeFirstNameAsync(Arg.Any<ChangeFirstNameDto>()).Returns(expected);
-
-        var userChangeData = new ChangeFirstNameDto
-        {
-            NewFirstName = "",
-            Email = "abc@gmail.com"
-        };
-
-        //Act
-        var result = await _accountRepository.ChangeFirstNameAsync(userChangeData);
 
         //Asert
         result.Equals(expected);

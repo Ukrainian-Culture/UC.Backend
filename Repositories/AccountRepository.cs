@@ -32,16 +32,15 @@ public class AccountRepository : IAccountRepository
     public async Task<string> LoginAsync(SignInUser signInModel)
     {
         var userByEmail = await _userManager.FindByEmailAsync(signInModel.Email);
-        if (userByEmail == null || signInModel.FirstName != userByEmail.FirstName)
+        if (userByEmail == null)
         {
             return string.Empty;
         }
-        var result = await _signInManager.PasswordSignInAsync(userByEmail.FirstName, signInModel.Password, false, false);
+        var result = await _signInManager.PasswordSignInAsync(userByEmail.UserName, signInModel.Password, false, false);
         if (!result.Succeeded) return string.Empty;
 
         var authClaims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, signInModel.FirstName),
             new Claim(ClaimTypes.Email,signInModel.Email),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
@@ -63,12 +62,12 @@ public class AccountRepository : IAccountRepository
 
     public async Task<IdentityResult> SignUpAsync(SignUpUser signUpModel)
     {
+        string userName = signUpModel.Email.Substring(0, signUpModel.Email.IndexOf("@"));
+
         var user = new User()
         {
-            FirstName = signUpModel.FirstName,
-            LastName = signUpModel.LastName,
             Email = signUpModel.Email,
-            UserName = signUpModel.FirstName,
+            UserName = userName,
             EmailConfirmed = false
         };
 
@@ -105,39 +104,16 @@ public class AccountRepository : IAccountRepository
     public async Task<IdentityResult> ChangeEmailAsync(ChangeEmailDto changeEmailDto)
     {
         var user = await _userManager.FindByEmailAsync(changeEmailDto.CurrentEmail);
-        if (user != null)
-        {
-            var token = await _userManager.GenerateChangeEmailTokenAsync(user, changeEmailDto.NewEmail);
-            var result = await _userManager.ChangeEmailAsync(user, changeEmailDto.NewEmail, token);
-            return result;
-        }
-        return IdentityResult.Failed();
-    }
-
-    public async Task<IdentityResult> ChangeFirstNameAsync(ChangeFirstNameDto changeFirstNameDto)
-    {
-        var user = await _userManager.FindByEmailAsync(changeFirstNameDto.Email);
         if (user == null)
         {
-            var resultFailed = IdentityResult.Failed();
-            return resultFailed;
+            return IdentityResult.Failed();
         }
-        user.FirstName = changeFirstNameDto.NewFirstName;
-        user.UserName = changeFirstNameDto.NewFirstName;
-        var result = await _userManager.UpdateAsync(user);
+        var token = await _userManager.GenerateChangeEmailTokenAsync(user, changeEmailDto.NewEmail);
+        var result = await _userManager.ChangeEmailAsync(user, changeEmailDto.NewEmail, token);
+        string userName = user.Email.Substring(0, user.Email.IndexOf("@"));
+        user.UserName = userName;
+        await _userManager.UpdateAsync(user);
         return result;
-    }
-
-    public async Task<IdentityResult> ChangeLastNameAsync(ChangeLastNameDto changeLastNameDto)
-    {
-        var user = await _userManager.FindByEmailAsync(changeLastNameDto.Email);
-        if (user != null)
-        {
-            user.LastName = changeLastNameDto.NewLastName;
-            var result = await _userManager.UpdateAsync(user);
-            return result;
-        }
-        return IdentityResult.Failed();
     }
 
     public Task Logout()
