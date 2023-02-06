@@ -101,4 +101,35 @@ public class ArticleTileSearchEngineTests
         result.Should().HaveCount(1);
         result.Should().BeEquivalentTo(expectedList);
     }
+
+    [Fact]
+    public void Search_ShouldReturnEmptyList_WhenQueryIsUncorrect()
+    {
+        //Arrange
+        var articlesTile = new List<ArticleTileDto>
+        {
+            new()
+            {
+                ArticleId = new Guid("ffdaaf68-1111-4342-bb10-24e2019d045d"),
+                Category = "1",
+                Region = "1",
+                Title = "1",
+                SubText = "1"
+            },
+            new()
+            {
+                ArticleId = new Guid("ffdaaf68-1111-4342-bb10-24e2019d045d"),
+                Category = "2",
+                Region = "2",
+                Title = "2",
+                SubText = "2"
+            },
+        };
+        var engine = new ArticleTileSearchEngine();
+        //Act
+        engine.AddArticlesTileToIndex(articlesTile);
+        var result = engine.Search("3dfsdf");
+        //Assert
+        result.Should().BeEmpty();
+    }
 }
