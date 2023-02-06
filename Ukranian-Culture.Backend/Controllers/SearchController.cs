@@ -20,7 +20,7 @@ public class SearchController : ControllerBase
     {
         ArticleTileSearchEngine engine = new();
         var articles = await _articleTilesService.TryGetArticleTileDto(cultureId, _ => true);
-        
+
         engine.AddArticlesTileToIndex(articles);
         var result = engine.Search(stringTerm);
         return Ok(result);

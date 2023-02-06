@@ -74,7 +74,7 @@ public class EmailControllerTests
         //arrange
         bool expected = true;
         _mail.SendWithAttachmentsAsync(Arg.Any<MailDataWithAttachments>(), Arg.Any<CancellationToken>()).Returns(expected);
-        IFormFileCollection formFiles=null!;
+        IFormFileCollection formFiles = null!;
         var controller = new EmailController(_mail);
         var maildata = new MailDataWithAttachments()
         {
