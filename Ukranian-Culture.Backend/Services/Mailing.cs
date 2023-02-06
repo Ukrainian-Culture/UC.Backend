@@ -1,4 +1,4 @@
-﻿using Contracts;
+using Contracts;
 using Entities;
 using Entities.Configurations;
 using Entities.Models;

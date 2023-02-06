@@ -1,15 +1,9 @@
 ﻿using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
-using System.Security.Principal;
 using AutoMapper;
 using Contracts;
 using Entities.DTOs;
 using Entities.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Ukranian_Culture.Backend.Controllers;
 
 namespace Ukranian_Culture.Backend.Controllers;
 
@@ -17,125 +11,40 @@ namespace Ukranian_Culture.Backend.Controllers;
 [ApiController]
 public class ArticlesTileController : ControllerBase
 {
-    private readonly IRepositoryManager _repositoryManager;
-    private readonly IMapper _mapper;
-    private readonly ILoggerManager _logger;
+    private readonly IArticleTileService _articleTilesService;
 
-    public ArticlesTileController(IRepositoryManager repositoryManager, IMapper mapper, ILoggerManager logger)
+    public ArticlesTileController(IArticleTileService articleTilesService)
     {
-        _repositoryManager = repositoryManager;
-        _mapper = mapper;
-        _logger = logger;
+        _articleTilesService = articleTilesService;
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllArticlesOnLanguage(Guid cultureId)
-    {
-        try
-        {
-            return Ok(await TryGetArticleTileDto(cultureId, _ => true));
-        }
-        catch (ArgumentNullException ex)
-        {
-            _logger.LogError(ex.Message);
-            return NotFound();
-        }
-    }
+    public async Task<IActionResult> GetAllArticlesOnLanguage(Guid cultureId) =>
+        Ok(await _articleTilesService.TryGetArticleTileDto(cultureId, _ => true));
 
     [HttpGet("{regionName}")]
-    public async Task<IActionResult> GetArticlesByRegion(Guid cultureId, string regionName)
-    {
-        try
-        {
-            return Ok(await TryGetArticleTileDto(cultureId, article => article.Region == regionName));
-        }
-        catch (ArgumentNullException ex)
-        {
-            _logger.LogError(ex.Message);
-            return NotFound();
-        }
-    }
+    public async Task<IActionResult> GetArticlesByRegion(Guid cultureId, string regionName) =>
+        Ok(await _articleTilesService.TryGetArticleTileDto(cultureId, article => article.Region == regionName));
 
     [HttpGet("{categoryId:Guid}")]
-    public async Task<IActionResult> GetArticlesByCategory(Guid cultureId, Guid categoryId)
-    {
-        try
-        {
-            return Ok(await TryGetArticleTileDto(cultureId, article => article.CategoryId == categoryId));
-        }
-        catch (ArgumentNullException ex)
-        {
-            _logger.LogError(ex.Message);
-            return NotFound();
-        }
-    }
+    public async Task<IActionResult> GetArticlesByCategory(Guid cultureId, Guid categoryId) =>
+        Ok(await _articleTilesService.TryGetArticleTileDto(cultureId,
+            article => article.CategoryId == categoryId));
 
     [HttpGet("{regionName}/{categoryId:guid}")]
     public async Task<IActionResult> GetArticlesTileByRegionAndCategory(string regionName, Guid categoryId,
-        Guid cultureId)
-    {
-        try
-        {
-            return Ok(await TryGetArticleTileDto(cultureId,
-                article => article.CategoryId == categoryId && article.Region == regionName));
-        }
-        catch (ArgumentNullException ex)
-        {
-            _logger.LogError(ex.Message);
-            return NotFound();
-        }
-    }
+        Guid cultureId) =>
+        Ok(await _articleTilesService.TryGetArticleTileDto(cultureId,
+            article => article.CategoryId == categoryId && article.Region == regionName));
 
     [HttpGet("categoriesMap")]
     public async Task<IActionResult> GetArticlesTileForEveryCategory(Guid cultureId)
     {
-        var articlesTiles = await TryGetArticleTileDto(cultureId, _ => true);
+        var articlesTiles = await _articleTilesService.TryGetArticleTileDto(cultureId, _ => true);
         var tileDictionary = articlesTiles
             .GroupBy(articleTile => articleTile.Category)
             .ToDictionary(group => group.Key, group => group.ToList());
 
         return Ok(tileDictionary);
     }
-
-    private async Task<IEnumerable<ArticleTileDto>> TryGetArticleTileDto(Guid cultureId,
-        Expression<Func<Article, bool>> conditionToFindArticles)
-    {
-        var articlesLocales = await GetArticlesLocaleByCondition(artL => artL.CultureId == cultureId);
-        var articles = await GetArticlesByConditionAsync(conditionToFindArticles);
-        var result = await CreateArticleTileDtos(articlesLocales, articles);
-        return result;
-    }
-
-
-    private Task<List<ArticleTileDto>> CreateArticleTileDtos(IEnumerable<ArticlesLocale> articlesLocale,
-        IEnumerable<Article> articles)
-    {
-        var articleTiles = new List<ArticleTileDto>();
-        foreach (var article in articles)
-        {
-            ArticlesLocale? correctArticleLocale = articlesLocale
-                .FirstOrDefault(artL => artL.Id == article.Id);
-            if (correctArticleLocale is not null)
-            {
-                articleTiles.Add(_mapper.Map<ArticleTileDto>((article, correctArticleLocale)));
-                continue;
-            }
-
-            _logger.LogError($"article with id:\"{article.Id}\" has no translate, or {article.CategoryId} is invalid");
-        }
-
-        return Task.FromResult(articleTiles);
-    }
-
-
-    private async Task<IEnumerable<Article>> GetArticlesByConditionAsync(Expression<Func<Article, bool>> expression)
-        => await _repositoryManager
-            .Articles
-            .GetAllByConditionAsync(expression, ChangesType.AsNoTracking);
-
-    private async Task<IEnumerable<ArticlesLocale>> GetArticlesLocaleByCondition(
-        Expression<Func<ArticlesLocale, bool>> func)
-        => await _repositoryManager
-            .ArticleLocales
-            .GetArticlesLocaleByConditionAsync(func, ChangesType.AsNoTracking);
 }
