@@ -19,10 +19,11 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("signup/{email}/{password}/{confirmPassword}")]
-    public async Task<IActionResult> SignUp(string email,string password,string confirmPassword)
+    public async Task<IActionResult> SignUp(string email, string password, string confirmPassword)
     {
-        var signUpModel = new SignUpUser {
-            Email = email,  
+        var signUpModel = new SignUpUser
+        {
+            Email = email,
             Password = password,
             ConfirmPassword = confirmPassword
         };
@@ -38,7 +39,7 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("login/{email}/{password}")]
-    public async Task<IActionResult> Login(string email,string password)
+    public async Task<IActionResult> Login(string email, string password)
     {
         var signInModel = new SignInUser
         {
@@ -58,7 +59,7 @@ public class AccountController : ControllerBase
 
     [HttpPatch("changePassword/{email}/{currentPassword}/{newPassword}/{confirmPassword}")]
     [Authorize]
-    public async Task<IActionResult> ChangePassword(string email,string currentPassword,string newPassword,string confirmPassword)
+    public async Task<IActionResult> ChangePassword(string email, string currentPassword, string newPassword, string confirmPassword)
     {
         var changePasswordDto = new ChangePasswordDto
         {
@@ -79,7 +80,7 @@ public class AccountController : ControllerBase
 
     [HttpPatch("changeEmail/{currentEmail}/{newEmail}")]
     [Authorize]
-    public async Task<IActionResult> ChangeEmail(string currentEmail,string newEmail)
+    public async Task<IActionResult> ChangeEmail(string currentEmail, string newEmail)
     {
         var changeEmailDto = new ChangeEmailDto
         {
