@@ -13,14 +13,12 @@ public class AccountControllerTests
         //arrange
         _account.SignUpAsync(Arg.Any<SignUpUser>()).Returns(IdentityResult.Success);
         var controller = new AccountController(_account);
-        var user = new SignUpUser()
-        {
-            Email = "Name1@gmail.com",
+        string Email = "Name1@gmail.com",
             Password = "TTCGCghcvhj",
-            ConfirmPassword = "TTCGCghcvhj"
-        };
+            ConfirmPassword = "TTCGCghcvhj";
+        
         //act
-        var result = await controller.SignUp(user) as OkObjectResult;
+        var result = await controller.SignUp(Email,Password,ConfirmPassword) as OkObjectResult;
         var statusCode = result.StatusCode;
 
         //assert
@@ -33,15 +31,12 @@ public class AccountControllerTests
         //arrange
         _account.SignUpAsync(Arg.Any<SignUpUser>()).Returns(IdentityResult.Failed());
         var controller = new AccountController(_account);
-        var user = new SignUpUser()
-        {
-            Email = "Name1@gmail.com",
-            Password = "TTCGCghcvhj",
-            ConfirmPassword = "TTCGC"
-        };
+        string Email = "Name1@gmail.com",
+            Password = "TTC",
+            ConfirmPassword = "TTCGCghcvhj";
 
         //act
-        var result = await controller.SignUp(user) as OkObjectResult;
+        var result = await controller.SignUp(Email, Password, ConfirmPassword) as OkObjectResult;
 
         //assert
         result.Should().BeNull();
@@ -54,14 +49,11 @@ public class AccountControllerTests
         string expected = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiVm9sb2R5YTIyQGdtYWlsLmNvbSIsImp0aSI6IjgwZGJiN2E0LWE0MzktNGZiYi1iNWYxLTA4ODdiMTY1ODBlNSIsImV4cCI6MTY3MzM1ODEwOSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzNDEiLCJhdWQiOiJVc2VyIn0.7g5ajeanSgyojTqBmQ6PqcUhjzx0V2zp3xGcec_4vbg";
         _account.LoginAsync(Arg.Any<SignInUser>()).Returns(expected);
         var controller = new AccountController(_account);
-        var user = new SignInUser()
-        {
-            Email = "Volodya22@gmail.com",
-            Password = "TTCGCghcvhj"
-        };
+        string Email = "Volodya22@gmail.com", 
+            Password = "TTCGCghcvhj";
 
         //act
-        var result = await controller.Login(user) as OkObjectResult;
+        var result = await controller.Login(Email,Password) as OkObjectResult;
 
         //assert
         result.Equals(expected);
@@ -73,36 +65,29 @@ public class AccountControllerTests
         string expected = "";
         _account.LoginAsync(Arg.Any<SignInUser>()).Returns(expected);
         var controller = new AccountController(_account);
-        var user = new SignInUser()
-        {
-            Email = "Volodya22@gmail.com",
-            Password = "T"
-        };
+        string Email = "Volodya22@gmail.com",
+            Password = "TTC";
 
         //act
-        var result = await controller.Login(user) as OkObjectResult;
+        var result = await controller.Login(Email, Password) as OkObjectResult;
 
         //assert
         result.Should().BeNull();
     }
 
     [Fact]
-
     public async Task ChangePassword_ShouldReturnStatusOk_WhenChangePasswordDtoCorrect()
     {
         //arrange
         _account.ChangePasswordAsync(Arg.Any<ChangePasswordDto>()).Returns(IdentityResult.Success);
         var controller = new AccountController(_account);
-        var user = new ChangePasswordDto()
-        {
-            Email = "Volodya22@gmail.com",
+        string Email = "Volodya22@gmail.com",
             CurrentPassword = "12345678",
             NewPassword = "87654321",
-            ConfirmPassword = "87654321"
-        };
+            ConfirmPassword = "87654321";
 
         //act
-        var result = await controller.ChangePassword(user) as OkObjectResult;
+        var result = await controller.ChangePassword(Email,CurrentPassword,NewPassword,ConfirmPassword) as OkObjectResult;
         var statusCode = result.StatusCode;
 
         //assert
@@ -115,16 +100,13 @@ public class AccountControllerTests
         //arrange
         _account.ChangePasswordAsync(Arg.Any<ChangePasswordDto>()).Returns(IdentityResult.Failed());
         var controller = new AccountController(_account);
-        var user = new ChangePasswordDto()
-        {
-            Email = "",
+        string Email = "",
             CurrentPassword = "12345678",
             NewPassword = "87654321",
-            ConfirmPassword = "87654321"
-        };
+            ConfirmPassword = "87654321";
 
         //act
-        var result = await controller.ChangePassword(user);
+        var result = await controller.ChangePassword(Email, CurrentPassword, NewPassword, ConfirmPassword);
         var statusCode = (result as NotFoundResult)!.StatusCode;
 
         //assert
@@ -137,14 +119,11 @@ public class AccountControllerTests
         //arrange
         _account.ChangeEmailAsync(Arg.Any<ChangeEmailDto>()).Returns(IdentityResult.Success);
         var controller = new AccountController(_account);
-        var user = new ChangeEmailDto()
-        {
-            CurrentEmail = "user@gmail.com",
-            NewEmail = "user1@gmail.com"
-        };
+        string CurrentEmail = "user@gmail.com",
+            NewEmail = "user1@gmail.com";
 
         //act
-        var result = await controller.ChangeEmail(user) as OkObjectResult;
+        var result = await controller.ChangeEmail(CurrentEmail,NewEmail) as OkObjectResult;
         var statusCode = result.StatusCode;
 
         //assert
@@ -157,14 +136,12 @@ public class AccountControllerTests
         //arrange
         _account.ChangeEmailAsync(Arg.Any<ChangeEmailDto>()).Returns(IdentityResult.Failed());
         var controller = new AccountController(_account);
-        var user = new ChangeEmailDto()
-        {
-            CurrentEmail = "usergmail.com",
-            NewEmail = "user1@gmail.com"
-        };
+        string CurrentEmail = "usergmail.com",
+            NewEmail = "user1@gmail.com";
+        
 
         //act
-        var result = await controller.ChangeEmail(user);
+        var result = await controller.ChangeEmail(CurrentEmail,NewEmail);
         var statusCode = (result as NotFoundResult)!.StatusCode;
 
         //assert

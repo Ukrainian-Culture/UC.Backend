@@ -116,32 +116,6 @@ public class AccountRepository : IAccountRepository
         return result;
     }
 
-    //public async Task<IdentityResult> ChangeFirstNameAsync(ChangeFirstNameDto changeFirstNameDto)
-    //{
-    //    var user = await _userManager.FindByEmailAsync(changeFirstNameDto.Email);
-    //    if (user == null)
-    //    {
-    //        var resultFailed = IdentityResult.Failed();
-    //        return resultFailed;
-    //    }
-    //    user.FirstName = changeFirstNameDto.NewFirstName;
-    //    user.UserName = changeFirstNameDto.NewFirstName;
-    //    var result = await _userManager.UpdateAsync(user);
-    //    return result;
-    //}
-
-    //public async Task<IdentityResult> ChangeLastNameAsync(ChangeLastNameDto changeLastNameDto)
-    //{
-    //    var user = await _userManager.FindByEmailAsync(changeLastNameDto.Email);
-    //    if (user != null)
-    //    {
-    //        user.LastName = changeLastNameDto.NewLastName;
-    //        var result = await _userManager.UpdateAsync(user);
-    //        return result;
-    //    }
-    //    return IdentityResult.Failed();
-    //}
-
     public Task Logout()
     {
         return _signInManager.SignOutAsync();
