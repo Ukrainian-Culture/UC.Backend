@@ -19,7 +19,7 @@ public class UserRepositoryTests
         {
             new()
             {
-                Id = firstId,
+                Id = firstId
             },
             new()
             {
@@ -168,7 +168,7 @@ public class UserRepositoryTests
         var user = new User
         {
             Id = firstId,
-            UserName = "Test",
+            UserName = "Test"
         };
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
