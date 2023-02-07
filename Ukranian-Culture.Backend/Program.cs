@@ -85,9 +85,6 @@ builder.Services.AddIdentity<User, Roles>(opts =>
     .AddEntityFrameworkStores<RepositoryContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
-   opt.TokenLifespan = TimeSpan.FromHours(2));
-
 builder.Services.AddAuthentication(option =>
 {
     option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -102,17 +99,15 @@ builder.Services.AddAuthentication(option =>
         {
             ValidateIssuer = true,
             ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey=true,
+            ClockSkew = TimeSpan.Zero,
             ValidAudience = builder.Configuration["JWT:ValidAudience"],
             ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
         };
     });
 
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(60);
-
-});
 
 builder.Services.AddAutoMapper(typeof(Program));
 
@@ -164,7 +159,6 @@ try
     app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseRouting();
-    app.UseSession();
     app.UseAuthorization();
 
     app.UseCors("CorsPolicy");
