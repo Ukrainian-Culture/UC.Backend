@@ -44,7 +44,7 @@ public class AccountRepository : IAccountRepository
             new Claim(ClaimTypes.Name,userByEmail.UserName),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
-       
+
         var roles = await _userManager.GetRolesAsync(userByEmail);
         AddRolesToClaims(authClaims, roles);
 
@@ -62,7 +62,7 @@ public class AccountRepository : IAccountRepository
         {
             AccessToken = token,
             RefreshToken = refreshToken
-        }; 
+        };
     }
 
     public async Task<IdentityResult> SignUpAsync(SignUpUser signUpModel)

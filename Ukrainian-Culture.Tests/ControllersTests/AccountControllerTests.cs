@@ -17,7 +17,7 @@ public class AccountControllerTests
             Password = "TTCGCghcvhj",
             ConfirmPassword = "TTCGCghcvhj"
         };
-    
+
         //act
         var result = await controller.SignUp(user) as OkObjectResult;
         var statusCode = result.StatusCode;
@@ -94,9 +94,9 @@ public class AccountControllerTests
         var user = new ChangePasswordDto
         {
             Email = "Name1@gmail.com",
-            CurrentPassword="12345678",
-            NewPassword="123456789",
-            ConfirmPassword="123456789"
+            CurrentPassword = "12345678",
+            NewPassword = "123456789",
+            ConfirmPassword = "123456789"
         };
 
         //act
@@ -137,8 +137,8 @@ public class AccountControllerTests
         var controller = new AccountController(_account);
         var user = new ChangeEmailDto
         {
-            CurrentEmail="vadim@gmail.com",
-            NewEmail="vova@gmail.com"
+            CurrentEmail = "vadim@gmail.com",
+            NewEmail = "vova@gmail.com"
         };
 
         //act

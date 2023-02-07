@@ -61,7 +61,7 @@ public class AccountController : ControllerBase
 
     [HttpPatch("changeEmail")]
     [Authorize]
-    public async Task<IActionResult> ChangeEmail([FromBody]ChangeEmailDto changeEmailDto)
+    public async Task<IActionResult> ChangeEmail([FromBody] ChangeEmailDto changeEmailDto)
     {
         var result = await _accountRepository.ChangeEmailAsync(changeEmailDto);
 
@@ -99,25 +99,25 @@ public class AccountController : ControllerBase
             return BadRequest();
         }
         var result = await _accountRepository.RefreshToken(tokenModel);
-        if(result is null) { return BadRequest(); }
+        if (result is null) { return BadRequest(); }
         return Ok(result);
     }
-    
+
     [HttpPost("revoke/{email}")]
     public async Task<IActionResult> Revoke(string email)
     {
-        if(string.IsNullOrWhiteSpace(email))
+        if (string.IsNullOrWhiteSpace(email))
         {
             return BadRequest();
         }
-        var result=await _accountRepository.Revoke(email);
-        if(!result.Succeeded)
+        var result = await _accountRepository.Revoke(email);
+        if (!result.Succeeded)
         {
             return BadRequest();
         }
         return Ok(result);
     }
-    
+
     [HttpPost("revokeAll")]
     public async Task<IActionResult> RevokeAll()
     {
