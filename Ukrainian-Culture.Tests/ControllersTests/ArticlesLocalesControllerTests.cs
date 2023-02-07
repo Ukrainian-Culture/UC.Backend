@@ -291,4 +291,67 @@ public class ArticlesLocalesControllerTests
         _mapper.ReceivedCalls().Should().HaveCount(1);
         _repositoryManager.ArticleLocales.ReceivedCalls().Should().HaveCount(1);
     }
+    [Fact]
+    public async Task GetArticleLocalePDFById_SholudReturnNotFoundAndLoggingResult_WhenCultureDontExistInDB()
+    {
+        //Arrange
+        Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        _repositoryManager.Cultures.GetCultureAsync(cultureId, Arg.Any<ChangesType>())
+            .ReturnsNull();
+
+        var controller = new ArticlesLocaleController(_repositoryManager, _mapper, _logger, _messageProvider);
+
+        //Act
+        var result = await controller.GetArticleLocalePDFById(new Guid(), cultureId) as NotFoundObjectResult;
+        var statusCode = result!.StatusCode;
+
+        //Assert
+        statusCode.Should().Be((int)HttpStatusCode.NotFound);
+        _logger.ReceivedCalls().Should().HaveCount(1);
+    }
+    [Fact]
+    public async Task GetArticleLocalePDFById_SholudReturnNotFoundAndLoggingResult_WhenRecievesUncorrectId()
+    {
+        //Arrange
+        Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        _repositoryManager.Cultures.GetCultureAsync(cultureId, Arg.Any<ChangesType>())
+            .Returns(new Culture());
+
+        _repositoryManager.ArticleLocales
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<ArticlesLocale, bool>>>(), Arg.Any<ChangesType>())
+            .ReturnsNull();
+
+        var controller = new ArticlesLocaleController(_repositoryManager, _mapper, _logger, _messageProvider);
+
+        //Act
+        var unCorrectId = new Guid();
+        var result = await controller.GetArticleLocalePDFById(unCorrectId, cultureId) as NotFoundObjectResult;
+        var statusCode = result!.StatusCode;
+
+        //Assert
+        statusCode.Should().Be((int)HttpStatusCode.NotFound);
+        _logger.ReceivedCalls().Should().HaveCount(1);
+    }
+
+    [Fact]
+    public async Task GetArticleLocalePDFById_SholudReturnFileResult_WhenRecievesCorrectIdAndCultureExist()
+    {
+        //Arrange
+        Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        _repositoryManager.Cultures.GetCultureAsync(cultureId, Arg.Any<ChangesType>())
+            .Returns(new Culture());
+
+        _repositoryManager.ArticleLocales
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<ArticlesLocale, bool>>>(), Arg.Any<ChangesType>())
+            .Returns(new ArticlesLocale());
+
+        var controller = new ArticlesLocaleController(_repositoryManager, _mapper, _logger, _messageProvider);
+
+        //Act
+        var result = await controller.GetArticleLocaleById(new Guid(), cultureId) as OkObjectResult;
+        var statusCode = result!.StatusCode;
+        //Assert
+        statusCode.Should().Be((int)HttpStatusCode.OK);
+    }
+
 }

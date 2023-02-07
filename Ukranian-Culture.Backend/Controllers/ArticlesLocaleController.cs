@@ -3,6 +3,9 @@ using Contracts;
 using Entities.DTOs;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
+using PdfSharpCore;
+using PdfSharpCore.Pdf;
+using VetCV.HtmlRendererCore.PdfSharpCore;
 
 namespace Ukranian_Culture.Backend.Controllers;
 
@@ -131,5 +134,30 @@ public class ArticlesLocaleController : ControllerBase
 
         _logger.LogError(_messageProvider.NotFoundMessage<Culture>(cultureId));
         return false;
+    }
+    [HttpGet("ArticleLocalePDFById")]
+    public async Task<IActionResult> GetArticleLocalePDFById(Guid id, Guid cultureId)
+    {
+        if (await IsCultureExistInDb(cultureId) == false)
+            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId)); ;
+
+        if (await _repositoryManager
+                .ArticleLocales
+                .GetFirstByConditionAsync(art => art.Id == id && art.CultureId == cultureId, ChangesType.AsNoTracking)
+            is { } articleLocale)
+        {
+            var document = new PdfDocument();
+            PdfGenerator.AddPdfPages(document, articleLocale.Content, PageSize.A4, 20, null, null, null);
+            byte[]? response = null;
+            MemoryStream ms = new MemoryStream();
+            document.Save(ms);
+            response = ms.ToArray();
+            string filename = articleLocale.Title + ".pdf";
+            return File(response, "application/pdf", filename);
+        }
+
+        var message = _messageProvider.NotFoundMessage<ArticlesLocale>(id);
+        _logger.LogError(message);
+        return NotFound(message);
     }
 }
