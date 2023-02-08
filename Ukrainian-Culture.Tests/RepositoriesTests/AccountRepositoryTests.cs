@@ -1,4 +1,5 @@
-﻿namespace Ukrainian_Culture.Tests.RepositoriesTests;
+﻿
+namespace Ukrainian_Culture.Tests.RepositoriesTests;
 
 public class AccountRepositoryTests
 {
@@ -67,10 +68,10 @@ public class AccountRepositoryTests
     }
 
     [Fact]
-    public async Task LoginAsync_ShouldReturnTokenString_WhenUserAreValid()
+    public async Task LoginAsync_ShouldReturnTokenModel_WhenUserAreValid()
     {
         //Arrange
-        string expected = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiVm9sb2R5YTIyQGdtYWlsLmNvbSIsImp0aSI6IjgwZGJiN2E0LWE0MzktNGZiYi1iNWYxLTA4ODdiMTY1ODBlNSIsImV4cCI6MTY3MzM1ODEwOSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzNDEiLCJhdWQiOiJVc2VyIn0.7g5ajeanSgyojTqBmQ6PqcUhjzx0V2zp3xGcec_4vbg";
+        var expected = new TokenModel();
         _accountRepository.LoginAsync(Arg.Any<SignInUser>()).Returns(expected);
 
         var user = new SignInUser()
@@ -83,20 +84,19 @@ public class AccountRepositoryTests
         var result = await _accountRepository.LoginAsync(user);
 
         //Asert
-        result.Equals(expected);
+        Assert.Equal(result, expected);
     }
 
 
     [Fact]
-    public async Task LoginAsync_ShouldReturnEmptyStringToken_WhenEmailAreInvalid()
+    public async Task LoginAsync_ShouldReturnNull_WhenEmailAreInvalid()
     {
         //Arrange
-        string expected = "";
-        _accountRepository.LoginAsync(Arg.Any<SignInUser>()).Returns(expected);
+        _accountRepository.LoginAsync(Arg.Any<SignInUser>()).ReturnsNull();
 
         var user = new SignInUser()
         {
-            Email = "Volodya22gmail.com",
+            Email = "2gmail.com",
             Password = "TTCGCghcvhj"
         };
 
@@ -104,29 +104,8 @@ public class AccountRepositoryTests
         var result = await _accountRepository.LoginAsync(user);
 
         //Asert
-        result.Equals(expected);
+        result.Should().BeNull();
     }
-
-    [Fact]
-    public async Task LoginAsync_ShouldReturnEmptyStringToken_WhenPasswordAreInvalid()
-    {
-        //Arrange
-        string expected = "";
-        _accountRepository.LoginAsync(Arg.Any<SignInUser>()).Returns(expected);
-
-        var user = new SignInUser()
-        {
-            Email = "Volodya22@gmail.com",
-            Password = "456 7"
-        };
-
-        //Act
-        var result = await _accountRepository.LoginAsync(user);
-
-        //Asert
-        result.Equals(expected);
-    }
-
 
     [Fact]
     public async Task ChangeEmailAsync_ShouldReturnSuccess_WhenChangeEmailDtoValid()
