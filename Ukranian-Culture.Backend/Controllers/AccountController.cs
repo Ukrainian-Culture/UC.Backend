@@ -124,6 +124,18 @@ public class AccountController : ControllerBase
         await _accountRepository.RevokeAll();
         return Ok();
     }
+    
+    [HttpGet("ConfirmEmail")]
+    public async Task<IActionResult> ConfirmEmail(string email, string token)
+    {
+        var result = await _accountRepository.ConfirmEmailAsync(email, token);
+        if (!result.Succeeded)
+        {
+            return NotFound();
+
+        }
+        return Ok("Your email was confirmed");
+    }
 }
 
 
