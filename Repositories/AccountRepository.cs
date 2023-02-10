@@ -81,6 +81,10 @@ public class AccountRepository : IAccountRepository
         {
             await _userManager.AddToRoleAsync(user, "User");
             await _userManager.UpdateAsync(user);
+            var token =  Convert.ToBase64String(Encoding.UTF8.GetBytes(await _userManager.GenerateEmailConfirmationTokenAsync(user)));
+            var url = $"https://ucbackend.azurewebsites.net/api/account/ConfirmEmail?email={user.Email}&token={token}";
+            var body = "Click the link below to confirm your email.<br>" + url;
+            await SendEmailAsync(user.Email, "Confirm email", "", body);
         }
         return result;
     }
@@ -221,5 +225,24 @@ public class AccountRepository : IAccountRepository
             throw new SecurityTokenException("Invalid token");
 
         return principal;
+    }
+    public async Task<IdentityResult> ConfirmEmailAsync(string email, string token)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            return IdentityResult.Failed();
+        }
+        var result = await _userManager.ConfirmEmailAsync(user, Encoding.UTF8.GetString(Convert.FromBase64String(token)));
+        return result;
+    }
+    public async Task SendEmailAsync(string toEmail, string subject, string plainTextContent,string content)
+    {
+        var apiKey = "APIKey";
+        var client = new SendGridClient(apiKey);
+        var from = new EmailAddress("ukrainianculture938@gmail.com", "UC");
+        var to = new EmailAddress(toEmail, "New User");
+        var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, content);
+        var response = await client.SendEmailAsync(msg);
     }
 }

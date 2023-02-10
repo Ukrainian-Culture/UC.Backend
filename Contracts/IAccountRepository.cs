@@ -16,5 +16,6 @@ public interface IAccountRepository
     Task<TokenModel> RefreshToken(TokenModel tokenModel);
     Task<IdentityResult> Revoke(string email);
     Task RevokeAll();
+    Task<IdentityResult> ConfirmEmailAsync(string email, string token);
 }
 
