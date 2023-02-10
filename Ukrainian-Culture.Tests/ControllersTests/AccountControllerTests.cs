@@ -206,7 +206,7 @@ public class AccountControllerTests
     public async Task ConfirmEmail_ShouldReturnOkStatus_WhenEmailWasConfirmed()
     {
         //arrange
-        _account.ConfirmEmailAsync(Arg.Any<string>(),Arg.Any<string>()).Returns(IdentityResult.Success);
+        _account.ConfirmEmailAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(IdentityResult.Success);
         var controller = new AccountController(_account);
         var email = "vavsye38sd@happy2023year.com";
         var token = "Q2ZESjhIKzduanVwQjF4T3IvM0VzT3FwaWNYaDErZEpubkdZY3BCRTN5WlBWWTVkSTZJZ1Ayelo0QzViOHhlTlNCZFVVbjE0Q0k0WDN6ZEg1U3kzekhEbTd4SFcvdHhxRXErZEdzY1JtTXJVTW5jaG4zZ1JsUGM2a3RNaEt0dXRxa2kvbEs1TFJ1ekJTN3hadzI5dDBGOTR0aG9HZlBuSjFpZE4rTTVzeHdGaXlkN0xLMkJ5TGp6Nno3d3g0L1A2TmMrYnRmeWlQSnFNYzNoL29XcVh0ZndmSnF3OFlFbldSa3lWeUZjMmIvSmF4eDlBSy81UURzU1VHcno3L3pGUit4eVZrdz09";
@@ -223,7 +223,7 @@ public class AccountControllerTests
     public async Task ConfirmEmail_ShouldReturnNotFound_WhenEmailIsInvalid()
     {
         //arrange
-        _account.ConfirmEmailAsync(Arg.Any<string>(),Arg.Any<string>()).Returns(IdentityResult.Failed());
+        _account.ConfirmEmailAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(IdentityResult.Failed());
         var controller = new AccountController(_account);
         var email = "---@happy2023year.com";
         var token = "Q2ZESjhIKzduanVwQjF4T3IvM0VzT3FwaWNYaDErZEpubkdZY3BCRTN5WlBWWTVkSTZJZ1Ayelo0QzViOHhlTlNCZFVVbjE0Q0k0WDN6ZEg1U3kzekhEbTd4SFcvdHhxRXErZEdzY1JtTXJVTW5jaG4zZ1JsUGM2a3RNaEt0dXRxa2kvbEs1TFJ1ekJTN3hadzI5dDBGOTR0aG9HZlBuSjFpZE4rTTVzeHdGaXlkN0xLMkJ5TGp6Nno3d3g0L1A2TmMrYnRmeWlQSnFNYzNoL29XcVh0ZndmSnF3OFlFbldSa3lWeUZjMmIvSmF4eDlBSy81UURzU1VHcno3L3pGUit4eVZrdz09";
@@ -240,7 +240,7 @@ public class AccountControllerTests
     public async Task ConfirmEmail_ShouldReturnNotFound_WhenTokenIsInvalid()
     {
         //arrange
-        _account.ConfirmEmailAsync(Arg.Any<string>(),Arg.Any<string>()).Returns(IdentityResult.Failed());
+        _account.ConfirmEmailAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(IdentityResult.Failed());
         var controller = new AccountController(_account);
         var email = "vavsye38sd@happy2023year.com";
         var token = "Q2dz09";

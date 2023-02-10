@@ -81,7 +81,7 @@ public class AccountRepository : IAccountRepository
         {
             await _userManager.AddToRoleAsync(user, "User");
             await _userManager.UpdateAsync(user);
-            var token =  Convert.ToBase64String(Encoding.UTF8.GetBytes(await _userManager.GenerateEmailConfirmationTokenAsync(user)));
+            var token = Convert.ToBase64String(Encoding.UTF8.GetBytes(await _userManager.GenerateEmailConfirmationTokenAsync(user)));
             var url = $"https://ucbackend.azurewebsites.net/api/account/ConfirmEmail?email={user.Email}&token={token}";
             var body = "Click the link below to confirm your email.<br>" + url;
             await SendEmailAsync(user.Email, "Confirm email", "", body);
@@ -236,7 +236,7 @@ public class AccountRepository : IAccountRepository
         var result = await _userManager.ConfirmEmailAsync(user, Encoding.UTF8.GetString(Convert.FromBase64String(token)));
         return result;
     }
-    public async Task SendEmailAsync(string toEmail, string subject, string plainTextContent,string content)
+    public async Task SendEmailAsync(string toEmail, string subject, string plainTextContent, string content)
     {
         var apiKey = "APIKey";
         var client = new SendGridClient(apiKey);
