@@ -145,7 +145,7 @@ public class ArticlesLocaleController : ControllerBase
                 .GetFirstByConditionAsync(art => art.Id == id && art.CultureId == cultureId, ChangesType.AsNoTracking)
             is { } articleLocale)
         {
-            Document document = new Document(); 
+            Document document = new Document();
             Section section = document.AddSection();
 
             Paragraph header = section.AddParagraph();
@@ -154,12 +154,12 @@ public class ArticlesLocaleController : ControllerBase
             header.Format.Font.Size = 15;
             header.Format.SpaceAfter = 12;
             header.AddText(articleLocale.Title);
-            
+
             Paragraph paragraph = section.AddParagraph();
             paragraph.Format.Alignment = ParagraphAlignment.Left;
             paragraph.Format.Font.Size = 12;
             paragraph.AddText(articleLocale.Content);
-            
+
             PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(true);
             pdfRenderer.Document = document;
             pdfRenderer.RenderDocument();
