@@ -16,6 +16,6 @@ public class CategoryRepository : RepositoryBase<Category>, ICategoryRepository
     public async Task<IEnumerable<Category>> GetAllByConditionAsync(Expression<Func<Category, bool>> expression, ChangesType trackChanges)
         => await FindByCondition(expression, trackChanges).ToListAsync();
 
-    public async Task<Category?> GetFirstByCondiotionAsync(Expression<Func<Category, bool>> expression, ChangesType trackChanges)
+    public async Task<Category?> GetFirstByConditionAsync(Expression<Func<Category, bool>> expression, ChangesType trackChanges)
         => await FindByCondition(expression, trackChanges).FirstOrDefaultAsync();
 }

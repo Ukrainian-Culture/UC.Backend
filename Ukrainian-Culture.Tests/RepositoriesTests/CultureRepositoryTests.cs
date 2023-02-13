@@ -3,6 +3,7 @@
 public class CultureRepositoryTests
 {
     private readonly RepositoryContext _context;
+
     public CultureRepositoryTests()
     {
         using var factory = new ConnectionFactory();
@@ -14,7 +15,6 @@ public class CultureRepositoryTests
     {
         //Arrange
         Guid articleId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
-        Guid categoryId = new("5b32effd-1111-4cab-8ac9-3258c746aa53");
         Guid cultureId = new("5b32effd-2636-4cab-8ac9-3258c746aa53");
 
         _context.Cultures.Add(new Culture()
@@ -33,7 +33,9 @@ public class CultureRepositoryTests
         var cultureRepository = new CultureRepository(_context);
         //Act
 
-        var result = await cultureRepository.GetCultureWithContentAsync(cultureId, ChangesType.AsNoTracking);
+        var result =
+            await cultureRepository.GetFirstWithIncludesAsync(culture => culture.Id == cultureId,
+                ChangesType.AsNoTracking);
         //Assert
         result.ArticlesTranslates.Should().HaveCount(1);
         result.Name.Should().Be("en");
@@ -43,7 +45,6 @@ public class CultureRepositoryTests
     public async Task GetCultureWithContentAsync_ShouldReturnCultureWithEmptyArticles_WhenArticlesDontContainsInDb()
     {
         //Arrange
-        Guid categoryId = new("5b32effd-1111-4cab-8ac9-3258c746aa53");
         Guid cultureId = new("5b32effd-2636-4cab-8ac9-3258c746aa53");
 
         _context.Cultures.Add(new Culture()
@@ -57,11 +58,13 @@ public class CultureRepositoryTests
         var cultureRepository = new CultureRepository(_context);
         //Act
 
-        var result = await cultureRepository.GetCultureWithContentAsync(cultureId, ChangesType.AsNoTracking);
+        var result = await cultureRepository
+            .GetFirstWithIncludesAsync(culture => culture.Id == cultureId, ChangesType.AsNoTracking);
         //Assert
         result.ArticlesTranslates.Should().BeEmpty();
         result.Name.Should().Be("en");
     }
+
     [Fact]
     public async Task GetCultureWithContentAsync_ShouldReturnCultureWithEmptyCategories_WhenCategoriesDontContainsInDb()
     {
@@ -86,7 +89,9 @@ public class CultureRepositoryTests
         var cultureRepository = new CultureRepository(_context);
         //Act
 
-        var result = await cultureRepository.GetCultureWithContentAsync(cultureId, ChangesType.AsNoTracking);
+        var result =
+            await cultureRepository.GetFirstWithIncludesAsync(culture => culture.Id == cultureId,
+                ChangesType.AsNoTracking);
         //Assert
         result.ArticlesTranslates.Should().HaveCount(1);
         result.Name.Should().Be("en");
@@ -95,7 +100,8 @@ public class CultureRepositoryTests
     [Theory]
     [InlineData("5eca5808-4f44-4c4c-b481-72d2bdf24203", "en")]
     [InlineData("5b32effd-2636-4cab-8ac9-3258c746aa53", "ua")]
-    public async Task GetCultureWithContentAsync_ShouldReturnCorrectCulture_WhenContainsInDb(string idToCompareAsString, string expectedLanguage)
+    public async Task GetCultureWithContentAsync_ShouldReturnCorrectCulture_WhenContainsInDb(string idToCompareAsString,
+        string expectedLanguage)
     {
         //Arrange
         Guid firstCultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
@@ -110,7 +116,7 @@ public class CultureRepositoryTests
                     Name = "en",
                     DisplayedName = "English"
                 },
-                new ()
+                new()
                 {
                     Id = secondCultureId,
                     Name = "ua",
@@ -122,7 +128,8 @@ public class CultureRepositoryTests
         var cultureRepository = new CultureRepository(_context);
         //Act
         Guid idToCompare = new(idToCompareAsString);
-        var result = await cultureRepository.GetCultureWithContentAsync(idToCompare, ChangesType.AsNoTracking);
+        var result =
+            await cultureRepository.GetFirstWithIncludesAsync(cul => cul.Id == idToCompare, ChangesType.AsNoTracking);
         //Assert
         result.Name.Should().Be(expectedLanguage);
     }
@@ -135,7 +142,8 @@ public class CultureRepositoryTests
         try
         {
             //Act
-            _ = await cultureRepository.GetCultureWithContentAsync(new Guid(), ChangesType.AsNoTracking);
+            _ = await cultureRepository.GetFirstWithIncludesAsync(cul => cul.Id == new Guid(),
+                ChangesType.AsNoTracking);
         }
         catch (Exception ex)
         {
