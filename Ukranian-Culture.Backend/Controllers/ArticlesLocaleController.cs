@@ -17,18 +17,22 @@ public class ArticlesLocaleController : ControllerBase
     private readonly IMapper _mapper;
     private readonly ILoggerManager _logger;
     private readonly IErrorMessageProvider _messageProvider;
-    public ArticlesLocaleController(IRepositoryManager repositoryManager, IMapper mapper, ILoggerManager logger, IErrorMessageProvider messageProvider)
+
+    public ArticlesLocaleController(IRepositoryManager repositoryManager, IMapper mapper, ILoggerManager logger,
+        IErrorMessageProvider messageProvider)
     {
         _repositoryManager = repositoryManager;
         _mapper = mapper;
         _logger = logger;
         _messageProvider = messageProvider;
     }
+
     [HttpGet]
     public async Task<IActionResult> GetAllArticlesLocales(Guid cultureId)
     {
         if (await IsCultureExistInDb(cultureId) == false)
-            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId)); ;
+            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId));
+
 
         var articlesLocale = await _repositoryManager.ArticleLocales
             .GetArticlesLocaleByConditionAsync(artL => artL.CultureId == cultureId, ChangesType.AsNoTracking);
@@ -40,7 +44,7 @@ public class ArticlesLocaleController : ControllerBase
     public async Task<IActionResult> GetArticleLocaleById(Guid id, Guid cultureId)
     {
         if (await IsCultureExistInDb(cultureId) == false)
-            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId)); ;
+            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId));
 
         if (await _repositoryManager
                 .ArticleLocales
@@ -57,7 +61,8 @@ public class ArticlesLocaleController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateArticleLocale([FromBody] ArticleLocaleToCreateDto? articleLocaleCreateDto, Guid cultureId)
+    public async Task<IActionResult> CreateArticleLocale([FromBody] ArticleLocaleToCreateDto? articleLocaleCreateDto,
+        Guid cultureId)
     {
         if (articleLocaleCreateDto is null)
         {
@@ -67,7 +72,8 @@ public class ArticlesLocaleController : ControllerBase
         }
 
         if (await IsCultureExistInDb(cultureId) == false)
-            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId)); ;
+            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId));
+
 
         var articleEntity = _mapper.Map<ArticlesLocale>(articleLocaleCreateDto);
         _repositoryManager.ArticleLocales.CreateArticlesLocaleForCulture(cultureId, articleEntity);
@@ -80,10 +86,11 @@ public class ArticlesLocaleController : ControllerBase
     public async Task<IActionResult> DeleteArticleLocale(Guid id, Guid cultureId)
     {
         if (await IsCultureExistInDb(cultureId) == false)
-            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId)); ;
+            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId));
 
         var articleLocale = await _repositoryManager.ArticleLocales
-            .GetFirstByConditionAsync(article => article.Id == id && article.CultureId == cultureId, ChangesType.AsNoTracking);
+            .GetFirstByConditionAsync(article => article.Id == id && article.CultureId == cultureId,
+                ChangesType.AsNoTracking);
 
         if (articleLocale is null)
         {
@@ -98,7 +105,8 @@ public class ArticlesLocaleController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateArticleLocale(Guid id, [FromBody] ArticleLocaleToUpdateDto? articleLocaleToUpdate, Guid cultureId)
+    public async Task<IActionResult> UpdateArticleLocale(Guid id,
+        [FromBody] ArticleLocaleToUpdateDto? articleLocaleToUpdate, Guid cultureId)
     {
         if (articleLocaleToUpdate is null)
         {
@@ -108,7 +116,8 @@ public class ArticlesLocaleController : ControllerBase
         }
 
         if (await IsCultureExistInDb(cultureId) == false)
-            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId)); ;
+            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId));
+        ;
 
         var articleEntity = await _repositoryManager.ArticleLocales
             .GetFirstByConditionAsync(art => art.Id == id && art.CultureId == cultureId, ChangesType.Tracking);
@@ -128,18 +137,21 @@ public class ArticlesLocaleController : ControllerBase
 
     private async Task<bool> IsCultureExistInDb(Guid cultureId)
     {
-        var culture = await _repositoryManager.Cultures.GetCultureAsync(cultureId, ChangesType.AsNoTracking);
-        if (culture is not null)
-            return true;
+        var culture = await _repositoryManager
+            .Cultures
+            .GetFirstByConditionAsync(culture1 => culture1.Id == cultureId, ChangesType.AsNoTracking);
+        if (culture is not null) return true;
 
         _logger.LogError(_messageProvider.NotFoundMessage<Culture>(cultureId));
         return false;
     }
+
     [HttpGet("ArticleLocalePDFById")]
     public async Task<IActionResult> GetArticleLocalePDFById(Guid id, Guid cultureId)
     {
         if (await IsCultureExistInDb(cultureId) == false)
-            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId)); ;
+            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId));
+        ;
 
         if (await _repositoryManager
                 .ArticleLocales

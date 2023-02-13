@@ -1,4 +1,5 @@
-﻿using Contracts;
+﻿using System.Linq.Expressions;
+using Contracts;
 using Entities;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
@@ -17,10 +18,8 @@ public class UserRepository : RepositoryBase<User>, IUserRepository
         => await FindAll(trackChanges)
             .ToListAsync();
 
-    public async Task<User?> GetUserByIdAsync(Guid id, ChangesType trackChanges)
-        => await FindByCondition(user => user.Id == id, trackChanges)
-            .SingleOrDefaultAsync();
-
+    public async Task<User?> GetFirstByConditionAsync(Expression<Func<User, bool>> func, ChangesType trackChanges)
+        => await FindByCondition(func, trackChanges).FirstOrDefaultAsync();
 
     public void CreateUser(User user) => Create(user);
     public void UpdateUser(User user) => Update(user);

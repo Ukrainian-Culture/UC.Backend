@@ -13,17 +13,19 @@ public class CultureRepository : RepositoryBase<Culture>, ICultureRepository
     {
     }
 
-    public async Task<Culture> GetCultureWithContentAsync(Guid cultureId, ChangesType asNoTracking)
-    => await Context.Cultures.AsNoTracking()
+    public async Task<Culture?> GetFirstWithIncludesAsync(Expression<Func<Culture, bool>> func,
+        ChangesType asNoTracking)
+        => await Context.Cultures.AsNoTracking()
             .Include(cult => cult.ArticlesTranslates)
-            .FirstAsync(cult => cult.Id == cultureId);
+            .FirstAsync(func);
 
-    public async Task<Culture?> GetCultureAsync(Guid cultureId, ChangesType asNoTracking)
-        => await FindByCondition(cult => cult.Id == cultureId, asNoTracking).FirstOrDefaultAsync();
+    public async Task<Culture?> GetFirstByConditionAsync(Expression<Func<Culture, bool>> func, ChangesType changesType)
+        => await FindByCondition(func, changesType).FirstOrDefaultAsync();
 
-    public async Task<IEnumerable<Culture>> GetCulturesByCondition(Expression<Func<Culture, bool>> func,
+    public async Task<IEnumerable<Culture>> GetAllCulturesByCondition(Expression<Func<Culture, bool>> func,
         ChangesType asNoTracking)
         => await FindByCondition(func, asNoTracking).ToListAsync();
+
 
     public void CreateCulture(Culture cultureEntity)
     {
