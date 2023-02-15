@@ -5,9 +5,8 @@ namespace Contracts;
 
 public interface ICultureRepository
 {
-    Task<Culture> GetCultureWithContentAsync(Guid cultureId, ChangesType asNoTracking);
-    Task<Culture?> GetCultureAsync(Guid cultureId, ChangesType asNoTracking);
-    Task<IEnumerable<Culture>> GetCulturesByCondition(Expression<Func<Culture, bool>> func, ChangesType asNoTracking);
+    Task<IEnumerable<Culture>> GetAllCulturesByCondition(Expression<Func<Culture, bool>> func, ChangesType changesType);
+    Task<Culture?> GetFirstByConditionAsync(Expression<Func<Culture, bool>> func, ChangesType changesType);
     void CreateCulture(Culture cultureEntity);
     void DeleteCulture(Culture culture);
 }

@@ -10,13 +10,13 @@ namespace Ukranian_Culture.Backend.Controllers;
 [ApiController]
 public class UserHistoryController : ControllerBase
 {
-    // api/idUser/UserHistory/new UserHistory{Title, ArticleId, UserId}
-
     private readonly IRepositoryManager _repository;
     private readonly IMapper _mapper;
     private readonly ILoggerManager _logger;
     private readonly IErrorMessageProvider _messageProvider;
-    public UserHistoryController(IRepositoryManager repository, IMapper mapper, ILoggerManager logger, IErrorMessageProvider messageProvider)
+
+    public UserHistoryController(IRepositoryManager repository, IMapper mapper, ILoggerManager logger,
+        IErrorMessageProvider messageProvider)
     {
         _repository = repository;
         _mapper = mapper;
@@ -27,7 +27,7 @@ public class UserHistoryController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllUserHistory(Guid userId)
     {
-        User? user = await _repository.Users.GetUserByIdAsync(userId, ChangesType.AsNoTracking);
+        User? user = await _repository.Users.GetFirstByConditionAsync(user => user.Id == userId, ChangesType.AsNoTracking);
         if (user is null)
         {
             var message = _messageProvider.NotFoundMessage<User>(userId);
@@ -51,7 +51,7 @@ public class UserHistoryController : ControllerBase
             return BadRequest(message);
         }
 
-        User? user = await _repository.Users.GetUserByIdAsync(userId, ChangesType.AsNoTracking);
+        User? user = await _repository.Users.GetFirstByConditionAsync(user => user.Id == userId, ChangesType.AsNoTracking);
         if (user is null)
         {
             var message = _messageProvider.NotFoundMessage<User>(userId);

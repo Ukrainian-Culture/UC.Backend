@@ -3,8 +3,9 @@
 public class UserRepositoryTests
 {
     private readonly RepositoryContext _context;
-    Guid firstId = new Guid("eff42197-94d2-4e2a-b5cf-bcb60082858d");
-    Guid secondId = new Guid("f4d8a14c-8f6f-4f22-b641-1c6b627a9482");
+    private readonly Guid _firstId = new("eff42197-94d2-4e2a-b5cf-bcb60082858d");
+    private readonly Guid _secondId = new("f4d8a14c-8f6f-4f22-b641-1c6b627a9482");
+
     public UserRepositoryTests()
     {
         using var factory = new ConnectionFactory();
@@ -19,11 +20,11 @@ public class UserRepositoryTests
         {
             new()
             {
-                Id = firstId
+                Id = _firstId
             },
             new()
             {
-                Id = secondId
+                Id = _secondId
             }
         });
         await _context.SaveChangesAsync();
@@ -34,8 +35,8 @@ public class UserRepositoryTests
 
         //Assert
         users.Count.Should().Be(2);
-        users[0].Id.Should().Be(firstId);
-        users[1].Id.Should().Be(secondId);
+        users[0].Id.Should().Be(_firstId);
+        users[1].Id.Should().Be(_secondId);
     }
 
     [Fact]
@@ -59,21 +60,21 @@ public class UserRepositoryTests
         {
             new()
             {
-                Id = firstId
+                Id = _firstId
             },
             new()
             {
-                Id = secondId
+                Id = _secondId
             }
         });
         await _context.SaveChangesAsync();
         var userRepository = new UserRepository(_context);
 
         //Act
-        var user = await userRepository.GetUserByIdAsync(firstId, ChangesType.AsNoTracking);
+        var user = await userRepository.GetFirstByConditionAsync(user => user.Id == _firstId, ChangesType.AsNoTracking);
 
         //Assert
-        user.Id.Should().Be(firstId);
+        user.Id.Should().Be(_firstId);
     }
 
     [Fact]
@@ -84,7 +85,8 @@ public class UserRepositoryTests
         try
         {
             //Act
-            var user = await userRepository.GetUserByIdAsync(firstId, ChangesType.AsNoTracking);
+            var user = await userRepository.GetFirstByConditionAsync(user => user.Id == _firstId,
+                ChangesType.AsNoTracking);
         }
         catch (Exception ex)
         {
@@ -102,13 +104,14 @@ public class UserRepositoryTests
         //Act
         userRepository.CreateUser(new User
         {
-            Id = firstId
+            Id = _firstId
         });
         await _context.SaveChangesAsync();
 
         //Assert
         _context.Users.Should().HaveCount(1);
     }
+
     [Fact]
     public async Task CreateUser_ShouldThrowException_WhenMissingData()
     {
@@ -120,7 +123,7 @@ public class UserRepositoryTests
             //Act
             userRepository.CreateUser(new User
             {
-                Id = firstId
+                Id = _firstId
             });
             await _context.SaveChangesAsync();
         }
@@ -130,15 +133,16 @@ public class UserRepositoryTests
             ex.Should().BeOfType<DbUpdateException>();
         }
     }
+
     [Fact]
     public async Task CreateUser_ShouldThrowException_WhenIdAlreadyExists()
     {
         //Arrange
         _context.Users.AddRange(new List<User>
         {
-             new()
+            new()
             {
-                Id = firstId
+                Id = _firstId
             }
         });
         await _context.SaveChangesAsync();
@@ -149,7 +153,7 @@ public class UserRepositoryTests
             //Act
             userRepository.CreateUser(new User
             {
-                Id = firstId
+                Id = _firstId
             });
             await _context.SaveChangesAsync();
         }
@@ -163,11 +167,10 @@ public class UserRepositoryTests
     [Fact]
     public async Task UpdateUser_ShouldUpdateUser_WhenNewDataIsCorrect()
     {
-
         //Arrange
         var user = new User
         {
-            Id = firstId,
+            Id = _firstId,
             UserName = "Test"
         };
         _context.Users.Add(user);
@@ -186,11 +189,10 @@ public class UserRepositoryTests
     [Fact]
     public async Task UpdateUser_ShouldThrowException_WhenTryToModifyId()
     {
-
         //Arrange
         var user = new User
         {
-            Id = firstId
+            Id = _firstId
         };
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
@@ -199,7 +201,7 @@ public class UserRepositoryTests
         try
         {
             //Act
-            user.Id = secondId;
+            user.Id = _secondId;
             userRepository.UpdateUser(user);
             await _context.SaveChangesAsync();
         }
@@ -217,7 +219,7 @@ public class UserRepositoryTests
         //Arrange
         var user = new User
         {
-            Id = firstId
+            Id = _firstId
         };
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
@@ -230,13 +232,14 @@ public class UserRepositoryTests
         //Assert
         _context.Users.Should().BeEmpty();
     }
+
     [Fact]
     public async Task DeleteUser_ShoulThrowException_WhenTryToDeleteUnrealUser()
     {
         //Arrange
         _context.Users.Add(new User
         {
-            Id = secondId
+            Id = _secondId
         });
         await _context.SaveChangesAsync();
         var userRepository = new UserRepository(_context);
@@ -246,7 +249,7 @@ public class UserRepositoryTests
             //Act
             var user = new User
             {
-                Id = firstId
+                Id = _firstId
             };
             userRepository.DeleteUser(user);
             await _context.SaveChangesAsync();
@@ -269,7 +272,7 @@ public class UserRepositoryTests
             //Act
             var user = new User
             {
-                Id = firstId
+                Id = _firstId
             };
             userRepository.DeleteUser(user);
             await _context.SaveChangesAsync();

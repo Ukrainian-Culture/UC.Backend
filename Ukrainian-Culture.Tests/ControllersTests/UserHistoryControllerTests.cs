@@ -12,7 +12,9 @@ public class UserHistoryControllerTests
     {
         //Arrange
         var id = new Guid("1bd9644b-7a67-44f0-8e2b-1bc4ac8dc920");
-        _repositoryManager.Users.GetUserByIdAsync(id, Arg.Any<ChangesType>())
+        _repositoryManager
+            .Users
+            .GetFirstByConditionAsync(user => user.Id == id, Arg.Any<ChangesType>())
             .ReturnsNull();
         var controller = new UserHistoryController(_repositoryManager, _mapper, _logger, _errorMessageProvider);
 
@@ -30,7 +32,7 @@ public class UserHistoryControllerTests
     {
         //Arrange
         var id = new Guid("1bd9644b-7a67-44f0-8e2b-1bc4ac8dc920");
-        _repositoryManager.Users.GetUserByIdAsync(id, Arg.Any<ChangesType>())
+        _repositoryManager.Users.GetFirstByConditionAsync(Arg.Any<Expression<Func<User, bool>>>(), Arg.Any<ChangesType>())
             .Returns(new User());
 
         _repositoryManager
@@ -67,7 +69,7 @@ public class UserHistoryControllerTests
     {
         //Arrange
         var id = new Guid("1bd9644b-7a67-44f0-8e2b-1bc4ac8dc920");
-        _repositoryManager.Users.GetUserByIdAsync(id, Arg.Any<ChangesType>())
+        _repositoryManager.Users.GetFirstByConditionAsync(user => user.Id == id, Arg.Any<ChangesType>())
             .ReturnsNull();
 
         var controller = new UserHistoryController(_repositoryManager, _mapper, _logger, _errorMessageProvider);
@@ -84,7 +86,7 @@ public class UserHistoryControllerTests
     {
         //Arrange
         var id = new Guid("1bd9644b-7a67-44f0-8e2b-1bc4ac8dc920");
-        _repositoryManager.Users.GetUserByIdAsync(id, Arg.Any<ChangesType>())
+        _repositoryManager.Users.GetFirstByConditionAsync(Arg.Any<Expression<Func<User, bool>>>(), Arg.Any<ChangesType>())
             .Returns(new User());
         var controller = new UserHistoryController(_repositoryManager, _mapper, _logger, _errorMessageProvider);
         //Act

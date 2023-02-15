@@ -15,7 +15,8 @@ public class CultureController : ControllerBase
     private readonly ILoggerManager _logger;
     private readonly IErrorMessageProvider _messageProvider;
 
-    public CultureController(IRepositoryManager repositoryManager, IMapper mapper, ILoggerManager logger, IErrorMessageProvider messageProvider)
+    public CultureController(IRepositoryManager repositoryManager, IMapper mapper, ILoggerManager logger,
+        IErrorMessageProvider messageProvider)
     {
         _repositoryManager = repositoryManager;
         _mapper = mapper;
@@ -26,7 +27,7 @@ public class CultureController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllCultures()
     {
-        var cultures = await _repositoryManager.Cultures.GetCulturesByCondition(_ => true, ChangesType.AsNoTracking);
+        var cultures = await _repositoryManager.Cultures.GetAllCulturesByCondition(_ => true, ChangesType.AsNoTracking);
         var culturesDtos = _mapper.Map<IEnumerable<CultureToGetDto>>(cultures);
         return Ok(culturesDtos);
     }
@@ -34,7 +35,9 @@ public class CultureController : ControllerBase
     [HttpGet("{cultureId:guid}")]
     public async Task<IActionResult> GetCulture(Guid cultureId)
     {
-        if (await _repositoryManager.Cultures.GetCultureAsync(cultureId, ChangesType.AsNoTracking)
+        if (await _repositoryManager.Cultures
+                .GetFirstByConditionAsync(culture1 => culture1.Id == cultureId,
+                ChangesType.AsNoTracking)
             is { } culture)
         {
             var cultureDto = _mapper.Map<CultureToGetDto>(culture);
@@ -52,7 +55,7 @@ public class CultureController : ControllerBase
         var cultures
             = await _repositoryManager
                 .Cultures
-                .GetCulturesByCondition(_ => true, ChangesType.AsNoTracking);
+                .GetAllCulturesByCondition(_ => true, ChangesType.AsNoTracking);
 
         Dictionary<string, Guid> cultureIds = cultures.ToDictionary(cult => cult.Name, culture => culture.Id);
         return Ok(cultureIds);
@@ -80,7 +83,7 @@ public class CultureController : ControllerBase
     {
         var culture = await _repositoryManager
             .Cultures
-            .GetCultureAsync(id, ChangesType.AsNoTracking);
+            .GetFirstByConditionAsync(culture => culture.Id == id, ChangesType.AsNoTracking);
 
         if (culture is null)
         {
@@ -106,7 +109,7 @@ public class CultureController : ControllerBase
 
         var cultureEntity = await _repositoryManager
             .Cultures
-            .GetCultureAsync(id, ChangesType.Tracking);
+            .GetFirstByConditionAsync(culture => culture.Id == id, ChangesType.Tracking);
 
         if (cultureEntity is null)
         {

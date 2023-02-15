@@ -8,6 +8,6 @@ public interface ICategoryRepository
     Task<IEnumerable<Category>> GetAllByConditionAsync(Expression<Func<Category, bool>> expression,
         ChangesType trackChanges);
 
-    Task<Category?> GetFirstByCondiotionAsync(Expression<Func<Category, bool>> expression,
+    Task<Category?> GetFirstByConditionAsync(Expression<Func<Category, bool>> expression,
         ChangesType trackChanges);
 }
