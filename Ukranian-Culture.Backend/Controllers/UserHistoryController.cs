@@ -38,7 +38,8 @@ public class UserHistoryController : ControllerBase
         var history = await _repository
             .UserHistory
             .GetAllUserHistoryByConditionAsync(his => his.UserId == user.Id, ChangesType.AsNoTracking);
-        return Ok(history);
+        var userHistoryDto = _mapper.Map<IEnumerable<UserHistoryToGetDto>>(history);
+        return Ok(userHistoryDto);
     }
 
     [HttpPost]

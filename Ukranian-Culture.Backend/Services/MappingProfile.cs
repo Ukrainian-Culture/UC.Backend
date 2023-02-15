@@ -78,5 +78,9 @@ public class MappingProfile : Profile
                 opt => opt.Ignore());
 
         CreateMap<HistoryToCreateDto, UserHistory>();
+        CreateMap<UserHistory, UserHistoryToGetDto>()
+            .ForMember(hisDto => hisDto.DateOfWatch,
+                opt
+                    => opt.MapFrom(his => his.DateOfWatch.ToString("MM.dd.yyyy")));
     }
 }
