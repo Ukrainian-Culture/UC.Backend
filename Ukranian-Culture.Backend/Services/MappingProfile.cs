@@ -84,7 +84,7 @@ public class MappingProfile : Profile
                 opt => opt.Ignore())
             .ForMember(his => his.Id,
                 opt => opt.Ignore());
-        
+
         CreateMap<UserHistory, UserHistoryToGetDto>()
             .ForMember(hisDto => hisDto.DateOfWatch,
                 opt

@@ -7,7 +7,7 @@ public class UserHistory
 {
     public Guid Id { get; set; }
     public DateTime DateOfWatch { get; set; }
-    
+
     public Guid ArticleId { get; init; }
     public string Region { get; init; } = null!;
     public string SubText { get; set; } = null!;

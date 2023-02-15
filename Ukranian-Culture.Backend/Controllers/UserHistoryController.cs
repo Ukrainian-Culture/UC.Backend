@@ -63,7 +63,7 @@ public class UserHistoryController : ControllerBase
         }
 
         var articleEntity = _mapper.Map<UserHistory>(historyToCreateDto);
-        
+
         _repository.UserHistory.AddHistoryToUser(user.Id, articleEntity);
         await _repository.UserHistory.ClearOldHistory();
         await _repository.SaveAsync();
