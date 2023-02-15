@@ -27,4 +27,15 @@ public class UserHistoryRepository : RepositoryBase<UserHistory>, IUserHistoryRe
         userHistory.Id = Guid.NewGuid();
         Create(userHistory);
     }
+
+    public Task ClearOldHistory()
+    {
+        var collectionToRemove = Context
+            .UsersHistories
+            .OrderByDescending(x => x.DateOfWatch)
+            .Skip(HistoryToGetCount);
+
+        Context.UsersHistories.RemoveRange(collectionToRemove);
+        return Task.CompletedTask;
+    }
 }

@@ -27,7 +27,8 @@ public class UserHistoryController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllUserHistory(string email)
     {
-        User? user = await _repository.Users.GetFirstByConditionAsync(user => user.Email == email, ChangesType.AsNoTracking);
+        User? user =
+            await _repository.Users.GetFirstByConditionAsync(user => user.Email == email, ChangesType.AsNoTracking);
         if (user is null)
         {
             var message = _messageProvider.NotFoundMessage<User, string>(email);
@@ -43,16 +44,17 @@ public class UserHistoryController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddHistoryToUser(string email, HistoryToCreateDto? historyToCreate)
+    public async Task<IActionResult> AddHistoryToUser(string email, HistoryToCreateDto? history)
     {
-        if (historyToCreate is null)
+        if (history is null)
         {
             var message = _messageProvider.BadRequestMessage<HistoryToCreateDto>();
             _logger.LogError(message);
             return BadRequest(message);
         }
-
-        User? user = await _repository.Users.GetFirstByConditionAsync(user => user.Email == email, ChangesType.AsNoTracking);
+        
+        User? user =
+            await _repository.Users.GetFirstByConditionAsync(user => user.Email == email, ChangesType.AsNoTracking);
         if (user is null)
         {
             var message = _messageProvider.NotFoundMessage<User, string>(email);
@@ -60,8 +62,15 @@ public class UserHistoryController : ControllerBase
             return NotFound(message);
         }
 
-        UserHistory? articleEntity = _mapper.Map<UserHistory>(historyToCreate);
+        var articleEntity = new UserHistory
+        {
+            Id = Guid.NewGuid(),
+            UserId = user.Id,
+            DateOfWatch = DateTime.Now,
+            Title = history.Title
+        };
         _repository.UserHistory.AddHistoryToUser(user.Id, articleEntity);
+        await _repository.UserHistory.ClearOldHistory();
         await _repository.SaveAsync();
         return NoContent();
     }
