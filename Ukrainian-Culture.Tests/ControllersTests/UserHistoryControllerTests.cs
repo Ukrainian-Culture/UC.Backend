@@ -75,7 +75,7 @@ public class UserHistoryControllerTests
         statusCode.Should().Be((int)HttpStatusCode.NotFound);
         _logger.ReceivedCalls().Should().HaveCount(1);
     }
-    
+
     [Fact]
     public async Task AddHistoryToUser_ShouldReturnNoContent_WhenUserExistInDbAndRecieveCorrectObj()
     {
@@ -91,7 +91,7 @@ public class UserHistoryControllerTests
         _mapper.ReceivedCalls().Should().HaveCount(1);
         _repositoryManager.UserHistory.ReceivedCalls().Should().HaveCount(1);
     }
-    
+
     private Task<User?> TestableUserFromDb()
     {
         return _repositoryManager
