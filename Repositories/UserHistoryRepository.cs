@@ -14,12 +14,12 @@ public class UserHistoryRepository : RepositoryBase<UserHistory>, IUserHistoryRe
     {
     }
 
-    public async Task<IEnumerable<UserHistory>> GetAllUserHistoryByConditionAsync(
+    public Task<IEnumerable<UserHistory>> GetAllUserHistoryByConditionAsync(
         Expression<Func<UserHistory, bool>> func, ChangesType changeType)
-        => Context
+        => Task.FromResult<IEnumerable<UserHistory>>(Context
             .UsersHistories
             .Where(func)
-            .Take(HistoryToGetCount);
+            .Take(HistoryToGetCount));
 
     public void AddHistoryToUser(Guid userId, UserHistory userHistory)
     {
