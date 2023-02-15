@@ -8,17 +8,27 @@ public class ErrorMessageProviderTests
     public void NotFoundMessage_ShouldReturnCorrectMessage()
     {
         Guid testableId = new("a757f007-0222-470c-8aca-b6220a5da944");
-        NotFoundMessage_Helper<int>($"Int32 with id: \"a757f007-0222-470c-8aca-b6220a5da944\" doesn't exist in database", testableId);
-        NotFoundMessage_Helper<Article>($"Article with id: \"a757f007-0222-470c-8aca-b6220a5da944\" doesn't exist in database", testableId);
-        NotFoundMessage_Helper<string>($"String with id: \"a757f007-0222-470c-8aca-b6220a5da944\" doesn't exist in database", testableId);
+        const string testableMessage = "hello";
+        NotFoundMessage_Helper<int, Guid>(
+            "Int32 with property Guid and value: a757f007-0222-470c-8aca-b6220a5da944 doesn't exist in database",
+            testableId);
+        NotFoundMessage_Helper<Article, Guid>(
+            "Article with property Guid and value: a757f007-0222-470c-8aca-b6220a5da944 doesn't exist in database",
+            testableId);
+        NotFoundMessage_Helper<string, Guid>(
+            "String with property Guid and value: a757f007-0222-470c-8aca-b6220a5da944 doesn't exist in database",
+            testableId);
+        NotFoundMessage_Helper<string, string>(
+            "String with property String and value: hello doesn't exist in database",
+            testableMessage);
     }
 
-    private void NotFoundMessage_Helper<T>(string message, Guid idOfTestedObj)
+    private void NotFoundMessage_Helper<TErrType, TErrValue>(string message, TErrValue value)
     {
         //Arrange
         ErrorMessageProvider messageProvider = new();
         //Act
-        var receiveMessage = messageProvider.NotFoundMessage<T>(idOfTestedObj);
+        var receiveMessage = messageProvider.NotFoundMessage<TErrType, TErrValue>(value);
         //Assert
         receiveMessage.Should().Be(message);
     }
