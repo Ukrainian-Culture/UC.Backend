@@ -41,7 +41,7 @@ public class ArticlesController : ControllerBase
             return Ok(articleDto);
         }
 
-        var errorMessage = _messageProvider.NotFoundMessage<Article>(id);
+        var errorMessage = _messageProvider.NotFoundMessage<Article, Guid>(id);
         _logger.LogError(errorMessage);
         return NotFound(errorMessage);
     }
@@ -73,7 +73,7 @@ public class ArticlesController : ControllerBase
 
         if (article is null)
         {
-            var errorMessage = _messageProvider.NotFoundMessage<Article>(id);
+            var errorMessage = _messageProvider.NotFoundMessage<Article, Guid>(id);
             _logger.LogInfo(errorMessage);
             return NotFound(errorMessage);
         }
@@ -99,7 +99,7 @@ public class ArticlesController : ControllerBase
 
         if (articleEntity is null)
         {
-            var errorMessage = _messageProvider.NotFoundMessage<Article>(id);
+            var errorMessage = _messageProvider.NotFoundMessage<Article, Guid>(id);
             _logger.LogInfo(errorMessage);
             return NotFound(errorMessage);
         }
