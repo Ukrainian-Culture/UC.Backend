@@ -52,7 +52,7 @@ public class UserHistoryController : ControllerBase
             _logger.LogError(message);
             return BadRequest(message);
         }
-        
+
         User? user =
             await _repository.Users.GetFirstByConditionAsync(user => user.Email == email, ChangesType.AsNoTracking);
         if (user is null)
