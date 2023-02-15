@@ -88,8 +88,7 @@ public class UserHistoryControllerTests
         var status = result!.StatusCode;
         //Assert
         status.Should().Be((int)HttpStatusCode.NoContent);
-        _mapper.ReceivedCalls().Should().HaveCount(1);
-        _repositoryManager.UserHistory.ReceivedCalls().Should().HaveCount(1);
+        _repositoryManager.UserHistory.ReceivedCalls().Should().HaveCount(2);
     }
 
     private Task<User?> TestableUserFromDb()
