@@ -44,9 +44,9 @@ public class UserHistoryController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddHistoryToUser(string email, HistoryToCreateDto? history)
+    public async Task<IActionResult> AddHistoryToUser(string email, HistoryToCreateDto? historyToCreateDto)
     {
-        if (history is null)
+        if (historyToCreateDto is null)
         {
             var message = _messageProvider.BadRequestMessage<HistoryToCreateDto>();
             _logger.LogError(message);
@@ -62,13 +62,8 @@ public class UserHistoryController : ControllerBase
             return NotFound(message);
         }
 
-        var articleEntity = new UserHistory
-        {
-            Id = Guid.NewGuid(),
-            UserId = user.Id,
-            DateOfWatch = DateTime.Now,
-            Title = history.Title
-        };
+        var articleEntity = _mapper.Map<UserHistory>(historyToCreateDto);
+        
         _repository.UserHistory.AddHistoryToUser(user.Id, articleEntity);
         await _repository.UserHistory.ClearOldHistory();
         await _repository.SaveAsync();

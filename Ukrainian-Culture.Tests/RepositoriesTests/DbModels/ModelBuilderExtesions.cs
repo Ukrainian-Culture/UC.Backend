@@ -32,6 +32,10 @@ public static class ModelBuilderExtesions
         modelBuilder.Entity<UserHistory>().HasKey(uh => uh.Id);
         modelBuilder.Entity<UserHistory>().Property(uh => uh.DateOfWatch);
         modelBuilder.Entity<UserHistory>().Property(uh => uh.Title);
+        modelBuilder.Entity<UserHistory>().Property(uh => uh.Category);
+        modelBuilder.Entity<UserHistory>().Property(uh => uh.Region);
+        modelBuilder.Entity<UserHistory>().Property(uh => uh.SubText);
+        modelBuilder.Entity<UserHistory>().Property(uh => uh.ArticleId);
         modelBuilder.Entity<UserHistory>()
             .HasOne(uh => uh.User)
             .WithMany(user => user.History)
