@@ -313,17 +313,19 @@ public class ArticlesLocalesControllerTests
     public async Task GetArticleLocalePDFById_SholudReturnFileResult_WhenRecievesCorrectIdAndCultureExist()
     {
         //Arrange
-        Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        Guid cultureId = new("4fd5d8c1-f34b-4824-b252-69910285e681");
+        Guid id = new("443a5808-4f44-4c4c-b481-72d2bdf24203");
         CultureToTest().Returns(new Culture());
-        ArticleLocaleToTest().Returns(new ArticlesLocale());
+        ArticleLocaleToTest().Returns(new ArticlesLocale(){Content = "content", Title = "title", Id = id});
+        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
         var controller = new ArticlesLocaleController(_repositoryManager, _mapper, _logger, _messageProvider);
 
         //Act
-        var result = await controller.GetArticleLocaleById(new Guid(), cultureId) as OkObjectResult;
-        var statusCode = result!.StatusCode;
+        var result = await controller.GetArticleLocalePDFById(id, cultureId) as FileContentResult;
+
         //Assert
-        statusCode.Should().Be((int)HttpStatusCode.OK);
+        result.Should().NotBeNull();
     }
 
     private Task<ArticlesLocale?> ArticleLocaleToTest()
