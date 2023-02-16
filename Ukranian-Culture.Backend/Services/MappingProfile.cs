@@ -77,6 +77,17 @@ public class MappingProfile : Profile
             .ForMember(cul => cul.ArticlesTranslates,
                 opt => opt.Ignore());
 
-        CreateMap<HistoryToCreateDto, UserHistory>();
+        CreateMap<HistoryToCreateDto, UserHistory>()
+            .ForMember(his => his.DateOfWatch,
+                opt => opt.MapFrom(_ => DateTime.Now))
+            .ForMember(his => his.UserId,
+                opt => opt.Ignore())
+            .ForMember(his => his.Id,
+                opt => opt.Ignore());
+
+        CreateMap<UserHistory, UserHistoryToGetDto>()
+            .ForMember(hisDto => hisDto.DateOfWatch,
+                opt
+                    => opt.MapFrom(his => his.DateOfWatch.ToString("MM.dd.yyyy")));
     }
 }

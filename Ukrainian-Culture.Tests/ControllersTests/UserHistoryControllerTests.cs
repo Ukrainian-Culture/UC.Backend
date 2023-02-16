@@ -11,15 +11,12 @@ public class UserHistoryControllerTests
     public async Task GetAllUserHistory_ShouldReturnNotFoundAndLog_WhenUserDontExist()
     {
         //Arrange
-        var id = new Guid("1bd9644b-7a67-44f0-8e2b-1bc4ac8dc920");
-        _repositoryManager
-            .Users
-            .GetFirstByConditionAsync(user => user.Id == id, Arg.Any<ChangesType>())
-            .ReturnsNull();
+        const string email = "test@gmail.com";
+        TestableUserFromDb().ReturnsNull();
         var controller = new UserHistoryController(_repositoryManager, _mapper, _logger, _errorMessageProvider);
 
         //Act
-        var result = await controller.GetAllUserHistory(id) as NotFoundObjectResult;
+        var result = await controller.GetAllUserHistory(email) as NotFoundObjectResult;
         var statusCode = result!.StatusCode;
 
         //Assert
@@ -31,9 +28,8 @@ public class UserHistoryControllerTests
     public async Task GetAllUserHistory_ShouldReturnOkResult_WhenUserExistAndIdIsCorrect()
     {
         //Arrange
-        var id = new Guid("1bd9644b-7a67-44f0-8e2b-1bc4ac8dc920");
-        _repositoryManager.Users.GetFirstByConditionAsync(Arg.Any<Expression<Func<User, bool>>>(), Arg.Any<ChangesType>())
-            .Returns(new User());
+        const string email = "test@gmail.com";
+        TestableUserFromDb().Returns(new User());
 
         _repositoryManager
             .UserHistory
@@ -42,7 +38,7 @@ public class UserHistoryControllerTests
         var controller = new UserHistoryController(_repositoryManager, _mapper, _logger, _errorMessageProvider);
 
         //Act
-        var result = await controller.GetAllUserHistory(id) as OkObjectResult;
+        var result = await controller.GetAllUserHistory(email) as OkObjectResult;
         var status = result!.StatusCode;
 
         //Assert
@@ -54,10 +50,10 @@ public class UserHistoryControllerTests
     public async Task AddHistoryToUser_ShouldReturnBadResultAndLog_WhenRecieveNull()
     {
         //Arrange
-        var id = new Guid("1bd9644b-7a67-44f0-8e2b-1bc4ac8dc920");
+        const string email = "test@gmail.com";
         var controller = new UserHistoryController(_repositoryManager, _mapper, _logger, _errorMessageProvider);
         //Act
-        var result = await controller.AddHistoryToUser(id, null) as BadRequestObjectResult;
+        var result = await controller.AddHistoryToUser(email, null) as BadRequestObjectResult;
         var statusCode = result!.StatusCode;
         //Assert
         statusCode.Should().Be((int)HttpStatusCode.BadRequest);
@@ -68,13 +64,12 @@ public class UserHistoryControllerTests
     public async Task AddHistoryToUser_ShouldReturnNotFoundAndLog_WhenUserEntityDoesntExist()
     {
         //Arrange
-        var id = new Guid("1bd9644b-7a67-44f0-8e2b-1bc4ac8dc920");
-        _repositoryManager.Users.GetFirstByConditionAsync(user => user.Id == id, Arg.Any<ChangesType>())
-            .ReturnsNull();
+        const string email = "test@gmail.com";
+        TestableUserFromDb().ReturnsNull();
 
         var controller = new UserHistoryController(_repositoryManager, _mapper, _logger, _errorMessageProvider);
         //Act
-        var result = await controller.AddHistoryToUser(id, new HistoryToCreateDto()) as NotFoundObjectResult;
+        var result = await controller.AddHistoryToUser(email, new HistoryToCreateDto()) as NotFoundObjectResult;
         var statusCode = result!.StatusCode;
         //Assert
         statusCode.Should().Be((int)HttpStatusCode.NotFound);
@@ -85,16 +80,21 @@ public class UserHistoryControllerTests
     public async Task AddHistoryToUser_ShouldReturnNoContent_WhenUserExistInDbAndRecieveCorrectObj()
     {
         //Arrange
-        var id = new Guid("1bd9644b-7a67-44f0-8e2b-1bc4ac8dc920");
-        _repositoryManager.Users.GetFirstByConditionAsync(Arg.Any<Expression<Func<User, bool>>>(), Arg.Any<ChangesType>())
-            .Returns(new User());
+        const string email = "test@gmail.com";
+        TestableUserFromDb().Returns(new User());
         var controller = new UserHistoryController(_repositoryManager, _mapper, _logger, _errorMessageProvider);
         //Act
-        var result = await controller.AddHistoryToUser(id, new HistoryToCreateDto()) as NoContentResult;
+        var result = await controller.AddHistoryToUser(email, new HistoryToCreateDto()) as NoContentResult;
         var status = result!.StatusCode;
         //Assert
         status.Should().Be((int)HttpStatusCode.NoContent);
-        _mapper.ReceivedCalls().Should().HaveCount(1);
-        _repositoryManager.UserHistory.ReceivedCalls().Should().HaveCount(1);
+        _repositoryManager.UserHistory.ReceivedCalls().Should().HaveCount(2);
+    }
+
+    private Task<User?> TestableUserFromDb()
+    {
+        return _repositoryManager
+            .Users
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<User, bool>>>(), Arg.Any<ChangesType>());
     }
 }

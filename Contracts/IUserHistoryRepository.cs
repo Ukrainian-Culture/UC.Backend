@@ -9,4 +9,5 @@ public interface IUserHistoryRepository
         ChangesType changeType);
 
     void AddHistoryToUser(Guid userId, UserHistory userHistory);
+    Task ClearOldHistory();
 }

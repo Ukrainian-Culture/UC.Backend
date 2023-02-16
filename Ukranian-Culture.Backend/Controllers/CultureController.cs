@@ -44,7 +44,7 @@ public class CultureController : ControllerBase
             return Ok(cultureDto);
         }
 
-        var errorMessage = _messageProvider.NotFoundMessage<Culture>(cultureId);
+        var errorMessage = _messageProvider.NotFoundMessage<Culture, Guid>(cultureId);
         _logger.LogError(errorMessage);
         return NotFound(errorMessage);
     }
@@ -87,7 +87,7 @@ public class CultureController : ControllerBase
 
         if (culture is null)
         {
-            var errorMessage = _messageProvider.NotFoundMessage<Culture>(id);
+            var errorMessage = _messageProvider.NotFoundMessage<Culture, Guid>(id);
             _logger.LogInfo(errorMessage);
             return NotFound(errorMessage);
         }
@@ -113,7 +113,7 @@ public class CultureController : ControllerBase
 
         if (cultureEntity is null)
         {
-            var errorMessage = _messageProvider.NotFoundMessage<Culture>(id);
+            var errorMessage = _messageProvider.NotFoundMessage<Culture, Guid>(id);
             _logger.LogInfo(errorMessage);
             return NotFound(errorMessage);
         }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Ukranian_Culture.Backend.Controllers;
 
-[Route("api/{userId:guid}/[controller]")]
+[Route("api/{email}/[controller]")]
 [ApiController]
 public class UserHistoryController : ControllerBase
 {
@@ -25,42 +25,47 @@ public class UserHistoryController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllUserHistory(Guid userId)
+    public async Task<IActionResult> GetAllUserHistory(string email)
     {
-        User? user = await _repository.Users.GetFirstByConditionAsync(user => user.Id == userId, ChangesType.AsNoTracking);
+        User? user =
+            await _repository.Users.GetFirstByConditionAsync(user => user.Email == email, ChangesType.AsNoTracking);
         if (user is null)
         {
-            var message = _messageProvider.NotFoundMessage<User>(userId);
+            var message = _messageProvider.NotFoundMessage<User, string>(email);
             _logger.LogError(message);
             return NotFound(message);
         }
 
         var history = await _repository
             .UserHistory
-            .GetAllUserHistoryByConditionAsync(his => his.UserId == userId, ChangesType.AsNoTracking);
-        return Ok(history);
+            .GetAllUserHistoryByConditionAsync(his => his.UserId == user.Id, ChangesType.AsNoTracking);
+        var userHistoryDto = _mapper.Map<IEnumerable<UserHistoryToGetDto>>(history);
+        return Ok(userHistoryDto);
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddHistoryToUser(Guid userId, HistoryToCreateDto? historyToCreate)
+    public async Task<IActionResult> AddHistoryToUser(string email, HistoryToCreateDto? historyToCreateDto)
     {
-        if (historyToCreate is null)
+        if (historyToCreateDto is null)
         {
             var message = _messageProvider.BadRequestMessage<HistoryToCreateDto>();
             _logger.LogError(message);
             return BadRequest(message);
         }
 
-        User? user = await _repository.Users.GetFirstByConditionAsync(user => user.Id == userId, ChangesType.AsNoTracking);
+        User? user =
+            await _repository.Users.GetFirstByConditionAsync(user => user.Email == email, ChangesType.AsNoTracking);
         if (user is null)
         {
-            var message = _messageProvider.NotFoundMessage<User>(userId);
+            var message = _messageProvider.NotFoundMessage<User, string>(email);
             _logger.LogError(message);
             return NotFound(message);
         }
 
-        UserHistory? articleEntity = _mapper.Map<UserHistory>(historyToCreate);
-        _repository.UserHistory.AddHistoryToUser(userId, articleEntity);
+        var articleEntity = _mapper.Map<UserHistory>(historyToCreateDto);
+
+        _repository.UserHistory.AddHistoryToUser(user.Id, articleEntity);
+        await _repository.UserHistory.ClearOldHistory();
         await _repository.SaveAsync();
         return NoContent();
     }

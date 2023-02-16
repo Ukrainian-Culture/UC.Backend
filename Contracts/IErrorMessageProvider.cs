@@ -2,6 +2,6 @@
 
 public interface IErrorMessageProvider
 {
-    string NotFoundMessage<T>(Guid id);
+    string NotFoundMessage<TErrType, TErrValue>(TErrValue value);
     string BadRequestMessage<T>();
 }

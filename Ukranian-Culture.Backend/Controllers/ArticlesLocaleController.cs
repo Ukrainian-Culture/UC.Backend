@@ -30,7 +30,7 @@ public class ArticlesLocaleController : ControllerBase
     public async Task<IActionResult> GetAllArticlesLocales(Guid cultureId)
     {
         if (await IsCultureExistInDb(cultureId) == false)
-            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId));
+            return NotFound(_messageProvider.NotFoundMessage<Culture, Guid>(cultureId));
 
 
         var articlesLocale = await _repositoryManager.ArticleLocales
@@ -43,7 +43,7 @@ public class ArticlesLocaleController : ControllerBase
     public async Task<IActionResult> GetArticleLocaleById(Guid id, Guid cultureId)
     {
         if (await IsCultureExistInDb(cultureId) == false)
-            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId));
+            return NotFound(_messageProvider.NotFoundMessage<Culture, Guid>(cultureId));
 
         if (await _repositoryManager
                 .ArticleLocales
@@ -54,7 +54,7 @@ public class ArticlesLocaleController : ControllerBase
             return Ok(articleLocaleDto);
         }
 
-        var message = _messageProvider.NotFoundMessage<ArticlesLocale>(id);
+        var message = _messageProvider.NotFoundMessage<ArticlesLocale, Guid>(id);
         _logger.LogError(message);
         return NotFound(message);
     }
@@ -71,7 +71,7 @@ public class ArticlesLocaleController : ControllerBase
         }
 
         if (await IsCultureExistInDb(cultureId) == false)
-            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId));
+            return NotFound(_messageProvider.NotFoundMessage<Culture, Guid>(cultureId));
 
 
         var articleEntity = _mapper.Map<ArticlesLocale>(articleLocaleCreateDto);
@@ -85,7 +85,7 @@ public class ArticlesLocaleController : ControllerBase
     public async Task<IActionResult> DeleteArticleLocale(Guid id, Guid cultureId)
     {
         if (await IsCultureExistInDb(cultureId) == false)
-            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId));
+            return NotFound(_messageProvider.NotFoundMessage<Culture, Guid>(cultureId));
 
         var articleLocale = await _repositoryManager.ArticleLocales
             .GetFirstByConditionAsync(article => article.Id == id && article.CultureId == cultureId,
@@ -93,7 +93,7 @@ public class ArticlesLocaleController : ControllerBase
 
         if (articleLocale is null)
         {
-            var message = _messageProvider.NotFoundMessage<ArticlesLocale>(id);
+            var message = _messageProvider.NotFoundMessage<ArticlesLocale, Guid>(id);
             _logger.LogInfo(message);
             return NotFound(message);
         }
@@ -115,7 +115,7 @@ public class ArticlesLocaleController : ControllerBase
         }
 
         if (await IsCultureExistInDb(cultureId) == false)
-            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId));
+            return NotFound(_messageProvider.NotFoundMessage<Culture, Guid>(cultureId));
         ;
 
         var articleEntity = await _repositoryManager.ArticleLocales
@@ -123,7 +123,7 @@ public class ArticlesLocaleController : ControllerBase
 
         if (articleEntity is null)
         {
-            var message = _messageProvider.NotFoundMessage<ArticlesLocale>(id);
+            var message = _messageProvider.NotFoundMessage<ArticlesLocale, Guid>(id);
             _logger.LogInfo(message);
             return NotFound(message);
         }
@@ -141,7 +141,7 @@ public class ArticlesLocaleController : ControllerBase
             .GetFirstByConditionAsync(culture1 => culture1.Id == cultureId, ChangesType.AsNoTracking);
         if (culture is not null) return true;
 
-        _logger.LogError(_messageProvider.NotFoundMessage<Culture>(cultureId));
+        _logger.LogError(_messageProvider.NotFoundMessage<Culture, Guid>(cultureId));
         return false;
     }
 
@@ -149,7 +149,7 @@ public class ArticlesLocaleController : ControllerBase
     public async Task<IActionResult> GetArticleLocalePDFById(Guid id, Guid cultureId)
     {
         if (await IsCultureExistInDb(cultureId) == false)
-            return NotFound(_messageProvider.NotFoundMessage<Culture>(cultureId));
+            return NotFound(_messageProvider.NotFoundMessage<Culture, Guid>(cultureId));
         ;
 
         if (await _repositoryManager
@@ -183,7 +183,7 @@ public class ArticlesLocaleController : ControllerBase
             return File(response, "application/pdf", filename);
         }
 
-        var message = _messageProvider.NotFoundMessage<ArticlesLocale>(id);
+        var message = _messageProvider.NotFoundMessage<ArticlesLocale, Guid>(id);
         _logger.LogError(message);
         return NotFound(message);
     }
