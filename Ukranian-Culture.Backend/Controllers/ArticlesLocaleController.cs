@@ -5,6 +5,7 @@ using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using PdfSharpCore;
 using PdfSharpCore.Pdf;
+using Ukranian_Culture.Backend.ActionFilters.ArticleLocaleActionFilters;
 using VetCV.HtmlRendererCore.PdfSharpCore;
 
 namespace Ukranian_Culture.Backend.Controllers;
@@ -28,38 +29,24 @@ public class ArticlesLocaleController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllArticlesLocales(Guid cultureId)
+    [ServiceFilter(typeof(ArticleLocaleIEmumerableExistAttribute))]
+    public Task<IActionResult> GetAllArticlesLocales(Guid cultureId)
     {
-        if (await IsCultureExistInDb(cultureId) == false)
-            return NotFound(_messageProvider.NotFoundMessage<Culture, Guid>(cultureId));
-
-        var articlesLocale = await _repositoryManager.ArticleLocales
-            .GetArticlesLocaleByConditionAsync(artL => artL.CultureId == cultureId, ChangesType.AsNoTracking);
+        var articlesLocale = HttpContext.Items["articlesLocale"] as IEnumerable<ArticlesLocale>;
 
         var articlesLocaleDtos
             = articlesLocale
                 .Select(art => GetArticleLocaleDtoWithFullInfo(art).Result)
                 .ToList();
-        return Ok(articlesLocaleDtos);
+        return Task.FromResult<IActionResult>(Ok(articlesLocaleDtos));
     }
 
     [HttpGet("{id:guid}", Name = "ArticleLocaleById")]
+    [ServiceFilter(typeof(ArticleLocaleExistAttribute))]
     public async Task<IActionResult> GetArticleLocaleById(Guid id, Guid cultureId)
     {
-        if (await IsCultureExistInDb(cultureId) == false)
-            return NotFound(_messageProvider.NotFoundMessage<Culture, Guid>(cultureId));
-        
-        if (await _repositoryManager
-                .ArticleLocales
-                .GetFirstByConditionAsync(art => art.Id == id && art.CultureId == cultureId, ChangesType.AsNoTracking)
-            is { } articleLocale)
-        {
-            return Ok(await GetArticleLocaleDtoWithFullInfo(articleLocale));
-        }
-
-        var message = _messageProvider.NotFoundMessage<ArticlesLocale, Guid>(id);
-        _logger.LogError(message);
-        return NotFound(message);
+        var articleLocale = HttpContext.Items["articleLocale"] as ArticlesLocale;
+        return Ok(await GetArticleLocaleDtoWithFullInfo(articleLocale!));
     }
 
     private async Task<ArticlesLocaleToGetDto> GetArticleLocaleDtoWithFullInfo(ArticlesLocale articleLocale)
@@ -95,28 +82,17 @@ public class ArticlesLocaleController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [ServiceFilter(typeof(ArticleLocaleExistAttribute))]
     public async Task<IActionResult> DeleteArticleLocale(Guid id, Guid cultureId)
     {
-        if (await IsCultureExistInDb(cultureId) == false)
-            return NotFound(_messageProvider.NotFoundMessage<Culture, Guid>(cultureId));
-
-        var articleLocale = await _repositoryManager.ArticleLocales
-            .GetFirstByConditionAsync(article => article.Id == id && article.CultureId == cultureId,
-                ChangesType.AsNoTracking);
-
-        if (articleLocale is null)
-        {
-            var message = _messageProvider.NotFoundMessage<ArticlesLocale, Guid>(id);
-            _logger.LogInfo(message);
-            return NotFound(message);
-        }
-
-        _repositoryManager.ArticleLocales.DeleteArticlesLocale(articleLocale);
+        var articleEntity = HttpContext.Items["articleLocale"] as ArticlesLocale;
+        _repositoryManager.ArticleLocales.DeleteArticlesLocale(articleEntity!);
         await _repositoryManager.SaveAsync();
         return NoContent();
     }
 
     [HttpPut("{id:guid}")]
+    [ServiceFilter(typeof(ArticleLocaleExistAttribute))]
     public async Task<IActionResult> UpdateArticleLocale(Guid id,
         [FromBody] ArticleLocaleToUpdateDto? articleLocaleToUpdate, Guid cultureId)
     {
@@ -127,23 +103,7 @@ public class ArticlesLocaleController : ControllerBase
             return BadRequest(message);
         }
 
-        if (await IsCultureExistInDb(cultureId) == false)
-            return NotFound(_messageProvider.NotFoundMessage<Culture, Guid>(cultureId));
-
-
-        var articleEntity =
-            await _repositoryManager
-                .ArticleLocales
-                .GetFirstByConditionAsync(art => art.Id == id && art.CultureId == cultureId,
-                    ChangesType.Tracking);
-
-        if (articleEntity is null)
-        {
-            var message = _messageProvider.NotFoundMessage<ArticlesLocale, Guid>(id);
-            _logger.LogInfo(message);
-            return NotFound(message);
-        }
-
+        var articleEntity = HttpContext.Items["articleLocale"] as ArticlesLocale;
         _mapper.Map(articleLocaleToUpdate, articleEntity);
         await _repositoryManager.SaveAsync();
         return NoContent();
@@ -164,28 +124,16 @@ public class ArticlesLocaleController : ControllerBase
     }
 
     [HttpGet("ArticleLocalePDFById")]
-    public async Task<IActionResult> GetArticleLocalePdfById(Guid id, Guid cultureId)
+    [ServiceFilter(typeof(ArticleLocaleExistAttribute))]
+    public Task<IActionResult> GetArticleLocalePdfById(Guid id, Guid cultureId)
     {
-        if (await IsCultureExistInDb(cultureId) == false)
-            return NotFound(_messageProvider.NotFoundMessage<Culture, Guid>(cultureId));
+        var articleLocale = HttpContext.Items["articleLocale"] as ArticlesLocale;
 
-        if (await _repositoryManager
-                .ArticleLocales
-                .GetFirstByConditionAsync(art => art.Id == id && art.CultureId == cultureId, ChangesType.AsNoTracking)
-            is { } articleLocale)
-        {
-            var document = new PdfDocument();
-            PdfGenerator.AddPdfPages(document, articleLocale.Content, PageSize.A4, 20, null, null, null);
-            byte[]? response = null;
-            MemoryStream ms = new MemoryStream();
-            document.Save(ms);
-            response = ms.ToArray();
-            string filename = articleLocale.Title + ".pdf";
-            return File(response, "application/pdf", filename);
-        }
-
-        var message = _messageProvider.NotFoundMessage<ArticlesLocale, Guid>(id);
-        _logger.LogError(message);
-        return NotFound(message);
+        var document = new PdfDocument();
+        PdfGenerator.AddPdfPages(document, articleLocale!.Content, PageSize.A4, 20, null, null, null);
+        MemoryStream ms = new MemoryStream();
+        document.Save(ms);
+        string filename = articleLocale.Title + ".pdf";
+        return Task.FromResult<IActionResult>(File(ms.ToArray(), "application/pdf", filename));
     }
 }

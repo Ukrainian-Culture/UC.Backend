@@ -19,6 +19,7 @@ using Parsers;
 using NLog.Fluent;
 using Entities.Configurations;
 using Microsoft.OpenApi.Models;
+using Ukranian_Culture.Backend.ActionFilters.ArticleLocaleActionFilters;
 using Ukranian_Culture.Backend.Controllers;
 using Ukranian_Culture.Backend.Services;
 using OnlineUsersHub = Ukranian_Culture.Backend.Services.OnlineUsersHub;
@@ -34,6 +35,8 @@ builder.Services.AddTransient<IRepositoryManager, RepositoryManager>();
 builder.Services.AddScoped<IErrorMessageProvider, ErrorMessageProvider>();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<IArticleTileService, ArticleTilesService>();
+builder.Services.AddScoped<ArticleLocaleIEmumerableExistAttribute>();
+builder.Services.AddScoped<ArticleLocaleExistAttribute>();
 
 builder.Services.AddDbContext<RepositoryContext>(
     opts => opts.UseSqlServer(
