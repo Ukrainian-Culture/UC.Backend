@@ -1,4 +1,5 @@
-﻿using Azure;
+﻿using System.Globalization;
+using Azure;
 using Contracts;
 using Entities.DTOs;
 using Entities.Models;
@@ -12,10 +13,17 @@ namespace Ukranian_Culture.Backend.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly IAccountRepository _accountRepository;
+    private readonly IRepositoryManager _repositoryManager;
+    private readonly IErrorMessageProvider _messageProvider;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
-    public AccountController(IAccountRepository accountRepository)
+    public AccountController(IAccountRepository accountRepository, IRepositoryManager repositoryManager,
+        IErrorMessageProvider messageProvider, IDateTimeProvider dateTimeProvider)
     {
         _accountRepository = accountRepository;
+        _repositoryManager = repositoryManager;
+        _messageProvider = messageProvider;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     [HttpPost("signup")]
@@ -92,14 +100,19 @@ public class AccountController : ControllerBase
 
     [HttpPost]
     [Route("refreshToken")]
-    public async Task<IActionResult> RefreshToken(TokenModel tokenModel)
+    public async Task<IActionResult> RefreshToken(TokenModel? tokenModel)
     {
         if (tokenModel is null)
         {
             return BadRequest();
         }
+
         var result = await _accountRepository.RefreshToken(tokenModel);
-        if (result is null) { return BadRequest(); }
+        if (result is null)
+        {
+            return BadRequest();
+        }
+
         return Ok(result);
     }
 
@@ -110,11 +123,13 @@ public class AccountController : ControllerBase
         {
             return BadRequest();
         }
+
         var result = await _accountRepository.Revoke(email);
         if (!result.Succeeded)
         {
             return BadRequest();
         }
+
         return Ok(result);
     }
 
@@ -132,12 +147,28 @@ public class AccountController : ControllerBase
         if (!result.Succeeded)
         {
             return NotFound();
-
         }
+
         return Ok("Your email was confirmed");
     }
+
+    [HttpGet("endDate/{email}")]
+    public async Task<IActionResult> GetSubscriptionEndDate(string email)
+    {
+        var user = await _repositoryManager
+            .Users
+            .GetFirstByConditionAsync(user => user.Email == email, ChangesType.AsNoTracking);
+        if (user is null)
+        {
+            return NotFound(_messageProvider.NotFoundMessage<User, string>(email));
+        }
+
+        if (_dateTimeProvider.GetCurrentTime() > user.SubscriptionEndDate)
+        {
+            return Ok("00:00");
+        }
+        
+        var timeLeft = user.SubscriptionEndDate - _dateTimeProvider.GetCurrentTime();
+        return Ok(timeLeft.ToString(@"dd\:hh", CultureInfo.CurrentCulture));
+    }
 }
-
-
-
-
