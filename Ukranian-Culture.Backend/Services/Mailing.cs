@@ -81,7 +81,7 @@ public class Mailing : RepositoryBase<User>, IMailing
         mail.To.Add(MailboxAddress.Parse(_settings.To));
 
 
-     
+
         mail.ReplyTo.Add(new MailboxAddress(_settings.ReplyToName, _settings.ReplyTo));
 
         if (mailData.Bcc != null)
@@ -94,5 +94,5 @@ public class Mailing : RepositoryBase<User>, IMailing
         foreach (string mailAddress in mailData.Bcc.Where(x => !string.IsNullOrWhiteSpace(x)))
             mail.Bcc.Add(MailboxAddress.Parse(mailAddress.Trim()));
     }
-   
+
 }
