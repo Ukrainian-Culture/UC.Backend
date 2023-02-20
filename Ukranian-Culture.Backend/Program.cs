@@ -34,6 +34,7 @@ builder.Services.AddTransient<IRepositoryManager, RepositoryManager>();
 builder.Services.AddScoped<IErrorMessageProvider, ErrorMessageProvider>();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<IArticleTileService, ArticleTilesService>();
+builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
 builder.Services.AddDbContext<RepositoryContext>(
     opts => opts.UseSqlServer(

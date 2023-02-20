@@ -21,6 +21,7 @@ public static class ModelBuilderExtesions
         modelBuilder.Entity<User>().Ignore(p => p.TwoFactorEnabled);
         modelBuilder.Entity<User>().Ignore(p => p.RefreshToken);
         modelBuilder.Entity<User>().Ignore(p => p.RefreshTokenExpiryTime);
+        modelBuilder.Entity<User>().Property(p => p.SubscriptionEndDate);
         modelBuilder.Entity<User>()
             .HasMany(a => a.History)
             .WithOne(a => a.User)
