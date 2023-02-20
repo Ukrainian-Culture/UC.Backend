@@ -23,7 +23,7 @@ public class UsersConfigurations : IEntityTypeConfiguration<User>
                 NormalizedEmail = "ADMIN@GMAIL.COM",
                 PasswordHash = hasher.HashPassword(null, "AdminPassword"),
                 SecurityStamp = Guid.NewGuid().ToString(),
-                SubscriptionEndDate = new DateTime(2023,03,19)
+                SubscriptionEndDate = new DateTime(2023, 03, 19)
             },
             new User
             {
@@ -34,7 +34,7 @@ public class UsersConfigurations : IEntityTypeConfiguration<User>
                 Email = "Bohdan@gmail.com",
                 PasswordHash = hasher.HashPassword(null, "BohdanPassword"),
                 SecurityStamp = Guid.NewGuid().ToString(),
-                SubscriptionEndDate = new DateTime(2023,05,19)
+                SubscriptionEndDate = new DateTime(2023, 05, 19)
 
             }
         );

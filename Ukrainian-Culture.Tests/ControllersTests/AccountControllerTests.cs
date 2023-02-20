@@ -299,12 +299,12 @@ public class AccountControllerTests
             .Returns(user);
 
         var controller = new AccountController(_account, _repository, _messageProvider, _dateTimeProvider);
-        
+
         //Act
         var result = await controller.GetSubscriptionEndDate("test") as OkObjectResult;
         var statusCode = result.StatusCode;
         var message = result.Value;
-        
+
         //Assert
         statusCode.Should().Be((int)HttpStatusCode.OK);
         message.Should().Be(expectedFormattedTime);
@@ -318,12 +318,12 @@ public class AccountControllerTests
             .Users
             .GetFirstByConditionAsync(Arg.Any<Expression<Func<User, bool>>>(), Arg.Any<ChangesType>())
             .ReturnsNull();
-        
+
         var controller = new AccountController(_account, _repository, _messageProvider, _dateTimeProvider);
         //Act
         var result = await controller.GetSubscriptionEndDate("false") as NotFoundObjectResult;
         var statusCode = result.StatusCode;
-        
+
         //Assert
         statusCode.Should().Be((int)HttpStatusCode.NotFound);
     }

@@ -167,7 +167,7 @@ public class AccountController : ControllerBase
         {
             return Ok("00:00");
         }
-        
+
         var timeLeft = user.SubscriptionEndDate - _dateTimeProvider.GetCurrentTime();
         return Ok(timeLeft.ToString(@"dd\:hh", CultureInfo.CurrentCulture));
     }
