@@ -17,5 +17,7 @@ public class MailSettings
     public int Port { get; set; }
     public bool UseSSL { get; set; }
     public bool UseStartTls { get; set; }
+    public string ReplyTo { get; set; }
+    public string ReplyToName { get; set; }
 }
 

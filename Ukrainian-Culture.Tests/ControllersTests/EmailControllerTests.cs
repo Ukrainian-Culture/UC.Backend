@@ -30,8 +30,6 @@ public class EmailControllerTests
         var maildata = new MailDataWithAttachments()
         {
             Bcc = null,
-            ReplyTo = null!,
-            ReplyToName = null!,
             Subject = null!,
             Body = null!,
             Attachments = null!,
@@ -54,8 +52,6 @@ public class EmailControllerTests
         var maildata = new MailDataWithAttachments()
         {
             Bcc = null!,
-            ReplyTo = null!,
-            ReplyToName = null!,
             Subject = null,
             Body = null!,
             Attachments = null!,
@@ -80,8 +76,6 @@ public class EmailControllerTests
         {
 
             Bcc = new List<string> { "example@gmail.com" },
-            ReplyTo = "ukrainiancultureemail@gmail.com",
-            ReplyToName = "UCsupport",
             Subject = "Mailing",
             Body = "Find out something new about Ukraine",
             Attachments = formFiles,
@@ -107,8 +101,6 @@ public class EmailControllerTests
         {
 
             Bcc = new List<string> { "example@gmail.com" },
-            ReplyTo = "ukrainiancultureemail@gmail.com",
-            ReplyToName = "UCsupport",
             Subject = "Mailing",
             Body = "Find out something new about Ukraine",
             Attachments = formFiles,

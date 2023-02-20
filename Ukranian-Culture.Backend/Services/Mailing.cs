@@ -81,8 +81,8 @@ public class Mailing : RepositoryBase<User>, IMailing
         mail.To.Add(MailboxAddress.Parse(_settings.To));
 
 
-        if (!string.IsNullOrWhiteSpace(mailData.ReplyTo))
-            mail.ReplyTo.Add(new MailboxAddress(mailData.ReplyToName, mailData.ReplyTo));
+
+        mail.ReplyTo.Add(new MailboxAddress(_settings.ReplyToName, _settings.ReplyTo));
 
         if (mailData.Bcc != null)
         {
