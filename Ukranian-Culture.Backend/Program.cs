@@ -37,6 +37,8 @@ builder.Services.AddSignalR();
 builder.Services.AddScoped<IArticleTileService, ArticleTilesService>();
 builder.Services.AddScoped<ArticleLocaleIEmumerableExistAttribute>();
 builder.Services.AddScoped<ArticleLocaleExistAttribute>();
+builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+
 
 builder.Services.AddDbContext<RepositoryContext>(
     opts => opts.UseSqlServer(

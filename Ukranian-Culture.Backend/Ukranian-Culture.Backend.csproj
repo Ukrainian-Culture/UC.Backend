@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Ukranian_Culture.Backend</RootNamespace>
+    <UserSecretsId>0ad45709-807e-4c30-b03f-2e50b3234503</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
