@@ -21,6 +21,9 @@ public class UserHistoryRepository : RepositoryBase<UserHistory>, IUserHistoryRe
             .Where(func)
             .Take(HistoryToGetCount));
 
+    public Task<UserHistory?> GetFirstOrDefaultAsync(Expression<Func<UserHistory, bool>> func, ChangesType changeType)
+        => FindByCondition(func, changeType).FirstOrDefaultAsync();
+
     public void AddHistoryToUser(Guid userId, UserHistory userHistory)
     {
         userHistory.UserId = userId;
@@ -38,4 +41,10 @@ public class UserHistoryRepository : RepositoryBase<UserHistory>, IUserHistoryRe
         Context.UsersHistories.RemoveRange(collectionToRemove);
         return Task.CompletedTask;
     }
+
+    public async Task<bool> IsUserContainHistory(Guid userId, string title)
+        => await Context
+                .UsersHistories
+                .FirstOrDefaultAsync(userH => userH.Title == title && userH.UserId == userId)
+            is not null;
 }

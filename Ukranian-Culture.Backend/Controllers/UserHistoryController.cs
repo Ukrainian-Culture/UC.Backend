@@ -39,7 +39,10 @@ public class UserHistoryController : ControllerBase
         var history = await _repository
             .UserHistory
             .GetAllUserHistoryByConditionAsync(his => his.UserId == user.Id, ChangesType.AsNoTracking);
-        var userHistoryDto = _mapper.Map<IEnumerable<UserHistoryToGetDto>>(history);
+
+        var userHistoryDto = _mapper.Map<IEnumerable<UserHistoryToGetDto>>(history)
+            .OrderByDescending(x => x.DateOfWatch);
+
         return Ok(userHistoryDto);
     }
 
@@ -62,9 +65,23 @@ public class UserHistoryController : ControllerBase
             return NotFound(message);
         }
 
-        var articleEntity = _mapper.Map<UserHistory>(historyToCreateDto);
+        if (await _repository
+                .UserHistory
+                .IsUserContainHistory(user.Id, historyToCreateDto.Title))
+        {
+            var history = await _repository
+                .UserHistory
+                .GetFirstOrDefaultAsync(his => his.Title == historyToCreateDto.Title &&
+                                               his.Region == historyToCreateDto.Region, ChangesType.Tracking);
 
-        _repository.UserHistory.AddHistoryToUser(user.Id, articleEntity);
+            _mapper.Map(historyToCreateDto, history);
+            await _repository.SaveAsync();
+            return NoContent();
+        }
+
+        var userHistoryEntity = _mapper.Map<UserHistory>(historyToCreateDto);
+
+        _repository.UserHistory.AddHistoryToUser(user.Id, userHistoryEntity);
         await _repository.UserHistory.ClearOldHistory();
         await _repository.SaveAsync();
         return NoContent();
