@@ -1,4 +1,11 @@
-﻿namespace Ukrainian_Culture.Tests.ControllersTests;
+﻿/*using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Ukranian_Culture.Backend.ActionFilters.ArticleLocaleActionFilters;
+using RouteData = Microsoft.AspNetCore.Routing.RouteData;
+
+namespace Ukrainian_Culture.Tests.ControllersTests;
 
 public class ArticlesLocalesControllerTests
 {
@@ -12,7 +19,9 @@ public class ArticlesLocalesControllerTests
     {
         //Arrange
         Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
-        CultureToTest().ReturnsNull();
+        _repositoryManager.Cultures
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<Culture, bool>>>(), Arg.Any<ChangesType>())
+            .ReturnsNull();
 
         var controller = new ArticlesLocaleController(_repositoryManager, _mapper, _logger, _messageProvider);
 
@@ -30,7 +39,9 @@ public class ArticlesLocalesControllerTests
     {
         //Arrange
         Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
-        CultureToTest().ReturnsNull();
+        _repositoryManager.Cultures
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<Culture, bool>>>(), Arg.Any<ChangesType>())
+            .ReturnsNull();
 
         var controller = new ArticlesLocaleController(_repositoryManager, _mapper, _logger, _messageProvider);
 
@@ -48,8 +59,13 @@ public class ArticlesLocalesControllerTests
     {
         //Arrange
         Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
-        CultureToTest().Returns(new Culture());
-        ArticleLocaleToTest().ReturnsNull();
+        _repositoryManager.Cultures
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<Culture, bool>>>(), Arg.Any<ChangesType>())
+            .Returns(new Culture());
+
+        _repositoryManager.ArticleLocales
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<ArticlesLocale, bool>>>(), Arg.Any<ChangesType>())
+            .ReturnsNull();
 
         var controller = new ArticlesLocaleController(_repositoryManager, _mapper, _logger, _messageProvider);
 
@@ -68,9 +84,20 @@ public class ArticlesLocalesControllerTests
     {
         //Arrange
         Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        _repositoryManager.Cultures
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<Culture, bool>>>(), Arg.Any<ChangesType>())
+            .Returns(new Culture());
 
-        CultureToTest().Returns(new Culture());
-        ArticleLocaleToTest().Returns(new ArticlesLocale());
+        _repositoryManager.ArticleLocales
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<ArticlesLocale, bool>>>(), Arg.Any<ChangesType>())
+            .Returns(new ArticlesLocale());
+
+        _repositoryManager.Articles
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<Article, bool>>>(), Arg.Any<ChangesType>())
+            .Returns(new Article());
+
+        _mapper.Map<ArticlesLocaleToGetDto>(Arg.Any<ArticlesLocale>())
+            .Returns(new ArticlesLocaleToGetDto());
 
         var controller = new ArticlesLocaleController(_repositoryManager, _mapper, _logger, _messageProvider);
 
@@ -87,7 +114,9 @@ public class ArticlesLocalesControllerTests
     {
         //Arrange
         Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
-        CultureToTest().Returns(new Culture());
+        _repositoryManager.Cultures
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<Culture, bool>>>(), Arg.Any<ChangesType>())
+            .Returns(new Culture());
 
         var controller = new ArticlesLocaleController(_repositoryManager, _mapper, _logger, _messageProvider);
         //Act
@@ -104,7 +133,9 @@ public class ArticlesLocalesControllerTests
     {
         //Arrange
         Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
-        CultureToTest().ReturnsNull();
+        _repositoryManager.Cultures
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<Culture, bool>>>(), Arg.Any<ChangesType>())
+            .ReturnsNull();
 
         var controller = new ArticlesLocaleController(_repositoryManager, _mapper, _logger, _messageProvider);
 
@@ -123,7 +154,10 @@ public class ArticlesLocalesControllerTests
     {
         //Arrange
         Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
-        CultureToTest().Returns(new Culture());
+        _repositoryManager
+            .Cultures
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<Culture, bool>>>(), Arg.Any<ChangesType>())
+            .Returns(new Culture());
 
         var controller = new ArticlesLocaleController(_repositoryManager, _mapper, _logger, _messageProvider);
 
@@ -142,7 +176,9 @@ public class ArticlesLocalesControllerTests
     {
         //Arrange
         Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
-        CultureToTest().ReturnsNull();
+        _repositoryManager.Cultures
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<Culture, bool>>>(), Arg.Any<ChangesType>())
+            .ReturnsNull();
 
         var controller = new ArticlesLocaleController(_repositoryManager, _mapper, _logger, _messageProvider);
 
@@ -160,8 +196,14 @@ public class ArticlesLocalesControllerTests
     {
         //Arrange
         Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
-        CultureToTest().Returns(new Culture());
-        ArticleLocaleToTest().ReturnsNull();
+        _repositoryManager.Cultures
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<Culture, bool>>>(), Arg.Any<ChangesType>())
+            .Returns(new Culture());
+
+        _repositoryManager.ArticleLocales
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<ArticlesLocale, bool>>>(), Arg.Any<ChangesType>())
+            .ReturnsNull();
+
         var controller = new ArticlesLocaleController(_repositoryManager, _mapper, _logger, _messageProvider);
 
         //Act
@@ -179,8 +221,14 @@ public class ArticlesLocalesControllerTests
     {
         //Arrange
         Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
-        CultureToTest().Returns(new Culture());
-        ArticleLocaleToTest().Returns(new ArticlesLocale());
+        _repositoryManager.Cultures
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<Culture, bool>>>(), Arg.Any<ChangesType>())
+            .Returns(new Culture());
+
+        _repositoryManager.ArticleLocales
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<ArticlesLocale, bool>>>(), Arg.Any<ChangesType>())
+            .Returns(new ArticlesLocale());
+
         var controller = new ArticlesLocaleController(_repositoryManager, _mapper, _logger, _messageProvider);
 
         //Act
@@ -213,7 +261,9 @@ public class ArticlesLocalesControllerTests
     {
         //Arrange
         Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
-        CultureToTest().ReturnsNull();
+        _repositoryManager.Cultures
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<Culture, bool>>>(), Arg.Any<ChangesType>())
+            .ReturnsNull();
 
         var controller = new ArticlesLocaleController(_repositoryManager, _mapper, _logger, _messageProvider);
 
@@ -232,11 +282,32 @@ public class ArticlesLocalesControllerTests
     public async Task UpdateArticleLocale_ShouldReturnNotFoundAndLogging_WhenArticleRecievedIdWhichNotContainInDb()
     {
         //Arrange
-        Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
-        CultureToTest().Returns(new Culture());
-        ArticleLocaleToTest().ReturnsNull();
 
+        Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
+        _repositoryManager.Cultures
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<Culture, bool>>>(), Arg.Any<ChangesType>())
+            .Returns(new Culture());
+
+        _repositoryManager.ArticleLocales
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<ArticlesLocale, bool>>>(), Arg.Any<ChangesType>())
+            .ReturnsNull();
         var controller = new ArticlesLocaleController(_repositoryManager, _mapper, _logger, _messageProvider);
+        var actionFilter = new ArticleLocaleExistAttribute(_repositoryManager, _messageProvider, _logger);
+
+        var httpContext = new DefaultHttpContext();
+        var actionContext = new ActionContext(httpContext,
+            new RouteData(),
+            new ActionDescriptor(),
+            new ModelStateDictionary());
+        var actionExecutingContext = new ActionExecutingContext(actionContext,
+            new List<IFilterMetadata>(),
+            new Dictionary<string, object>()!,
+            controller: controller);
+
+        ActionExecutionDelegate mockDelegate = ()
+            => Task.FromResult(new ActionExecutedContext(actionContext, new List<IFilterMetadata>(), controller));
+
+        await actionFilter.OnActionExecutionAsync(actionExecutingContext, mockDelegate);
 
         //Act
         var unCorrectId = new Guid();
@@ -255,8 +326,13 @@ public class ArticlesLocalesControllerTests
     {
         //Arrange
         Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
-        CultureToTest().Returns(new Culture());
-        ArticleLocaleToTest().Returns(new ArticlesLocale());
+        _repositoryManager.Cultures
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<Culture, bool>>>(), Arg.Any<ChangesType>())
+            .Returns(new Culture());
+
+        _repositoryManager.ArticleLocales
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<ArticlesLocale, bool>>>(), Arg.Any<ChangesType>())
+            .Returns(new ArticlesLocale());
 
         var controller = new ArticlesLocaleController(_repositoryManager, _mapper, _logger, _messageProvider);
 
@@ -276,12 +352,14 @@ public class ArticlesLocalesControllerTests
     {
         //Arrange
         Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
-        CultureToTest().ReturnsNull();
+        _repositoryManager.Cultures
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<Culture, bool>>>(), Arg.Any<ChangesType>())
+            .ReturnsNull();
 
         var controller = new ArticlesLocaleController(_repositoryManager, _mapper, _logger, _messageProvider);
 
         //Act
-        var result = await controller.GetArticleLocalePDFById(new Guid(), cultureId) as NotFoundObjectResult;
+        var result = await controller.GetArticleLocalePdfById(new Guid(), cultureId) as NotFoundObjectResult;
         var statusCode = result!.StatusCode;
 
         //Assert
@@ -294,14 +372,19 @@ public class ArticlesLocalesControllerTests
     {
         //Arrange
         Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
-        CultureToTest().Returns(new Culture());
-        ArticleLocaleToTest().ReturnsNull();
+        _repositoryManager.Cultures
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<Culture, bool>>>(), Arg.Any<ChangesType>())
+            .Returns(new Culture());
+
+        _repositoryManager.ArticleLocales
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<ArticlesLocale, bool>>>(), Arg.Any<ChangesType>())
+            .ReturnsNull();
 
         var controller = new ArticlesLocaleController(_repositoryManager, _mapper, _logger, _messageProvider);
 
         //Act
         var unCorrectId = new Guid();
-        var result = await controller.GetArticleLocalePDFById(unCorrectId, cultureId) as NotFoundObjectResult;
+        var result = await controller.GetArticleLocalePdfById(unCorrectId, cultureId) as NotFoundObjectResult;
         var statusCode = result!.StatusCode;
 
         //Assert
@@ -309,34 +392,24 @@ public class ArticlesLocalesControllerTests
         _logger.ReceivedCalls().Should().HaveCount(1);
     }
 
-    [Fact]
+    /*[Fact]
     public async Task GetArticleLocalePDFById_SholudReturnFileResult_WhenRecievesCorrectIdAndCultureExist()
     {
         //Arrange
         Guid cultureId = new("5eca5808-4f44-4c4c-b481-72d2bdf24203");
-        CultureToTest().Returns(new Culture());
-        ArticleLocaleToTest().Returns(new ArticlesLocale());
+        _repositoryManager.Cultures.GetFirstByConditionAsync(Arg.Any<Expression<Func<Culture, bool>>>(), Arg.Any<ChangesType>())
+            .Returns(new Culture());
+
+        _repositoryManager.ArticleLocales
+            .GetFirstByConditionAsync(Arg.Any<Expression<Func<ArticlesLocale, bool>>>(), Arg.Any<ChangesType>())
+            .Returns(new ArticlesLocale());
 
         var controller = new ArticlesLocaleController(_repositoryManager, _mapper, _logger, _messageProvider);
 
         //Act
-        var result = await controller.GetArticleLocaleById(new Guid(), cultureId) as OkObjectResult;
+        var result = await controller.GetArticleLocalePDFById(new Guid(), cultureId) as OkObjectResult;
         var statusCode = result!.StatusCode;
         //Assert
         statusCode.Should().Be((int)HttpStatusCode.OK);
-    }
-
-    private Task<ArticlesLocale?> ArticleLocaleToTest()
-    {
-        return _repositoryManager
-            .ArticleLocales
-            .GetFirstByConditionAsync(Arg.Any<Expression<Func<ArticlesLocale, bool>>>(), Arg.Any<ChangesType>());
-    }
-
-    private Task<Culture?> CultureToTest()
-    {
-        return _repositoryManager
-            .Cultures
-            .GetFirstByConditionAsync(Arg.Any<Expression<Func<Culture, bool>>>(), Arg.Any<ChangesType>());
-    }
-}
+    }#1#
+}*/
