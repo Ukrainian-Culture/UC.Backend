@@ -10,7 +10,7 @@ public interface IUserHistoryRepository
 
     Task<UserHistory?> GetFirstOrDefaultAsync(Expression<Func<UserHistory, bool>> func,
         ChangesType changeType);
-    
+
     void AddHistoryToUser(Guid userId, UserHistory userHistory);
     Task ClearOldHistory();
     Task<bool> IsUserContainHistory(Guid userId, string title);
