@@ -43,7 +43,7 @@ public class UserHistoryController : ControllerBase
         var userHistoryDto
             = _mapper.Map<IEnumerable<UserHistoryToGetDto>>(history
                 .OrderByDescending(x => x.DateOfWatch));
-        
+
         return Ok(userHistoryDto);
     }
 
