@@ -8,7 +8,7 @@ namespace Repositories;
 
 public class UserHistoryRepository : RepositoryBase<UserHistory>, IUserHistoryRepository
 {
-    private const int HistoryToGetCount = 10;
+    private const int HistoryToGetCount = 12;
 
     public UserHistoryRepository(RepositoryContext context) : base(context)
     {
