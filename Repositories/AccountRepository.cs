@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System.Security.Cryptography;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Repositories;
@@ -238,7 +240,14 @@ public class AccountRepository : IAccountRepository
     }
     public async Task SendEmailAsync(string toEmail, string subject, string plainTextContent, string content)
     {
-        var apiKey = "APIKey";
+        const string secretName = "SendGridKey";
+        var keyVaultName = "UkCuKeyVault";
+        var kvUri = $"https://{keyVaultName}.vault.azure.net";
+        var defaultAzureCredential = new DefaultAzureCredential();
+        var uri = new Uri(kvUri);
+        var azureClient = new SecretClient(uri, defaultAzureCredential);
+        var secret = await azureClient.GetSecretAsync(secretName);
+        var apiKey = secret.Value.Value;
         var client = new SendGridClient(apiKey);
         var from = new EmailAddress("ukrainianculture938@gmail.com", "UC");
         var to = new EmailAddress(toEmail, "New User");
