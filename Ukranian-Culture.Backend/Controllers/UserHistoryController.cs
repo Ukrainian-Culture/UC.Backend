@@ -40,9 +40,10 @@ public class UserHistoryController : ControllerBase
             .UserHistory
             .GetAllUserHistoryByConditionAsync(his => his.UserId == user.Id, ChangesType.AsNoTracking);
 
-        var userHistoryDto = _mapper.Map<IEnumerable<UserHistoryToGetDto>>(history)
-            .OrderByDescending(x => x.DateOfWatch);
-
+        var userHistoryDto
+            = _mapper.Map<IEnumerable<UserHistoryToGetDto>>(history
+                .OrderByDescending(x => x.DateOfWatch));
+        
         return Ok(userHistoryDto);
     }
 
