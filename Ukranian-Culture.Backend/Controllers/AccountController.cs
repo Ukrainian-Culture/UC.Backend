@@ -81,6 +81,23 @@ public class AccountController : ControllerBase
         return Ok(result);
     }
 
+    [HttpPatch("ChangeEndOfSub")]
+    public async Task<IActionResult> ChangeEndOfSub([FromBody] ChangeEndOfSubscriptionDto endSubDto)
+    {
+        var user = await _repositoryManager
+            .Users
+            .GetFirstByConditionAsync(user => user.Email == endSubDto.Email, ChangesType.Tracking);
+
+        if (user is null)
+        {
+            return NotFound(_messageProvider.NotFoundMessage<User, string>(endSubDto.Email));
+        }
+
+        user.SubscriptionEndDate = endSubDto.NewEndOfSubscription;
+        await _repositoryManager.SaveAsync();
+        return NoContent();
+    }
+
     [HttpPost("logout")]
     [Authorize]
     public async Task<IActionResult> Logout()
