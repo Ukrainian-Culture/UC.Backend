@@ -18,6 +18,11 @@ public static class SeedData
        {
            RoleId = new("431f29e9-13ff-4f5f-b178-511610d5103f"),
            UserId = new("169a9df2-231c-45e8-9a0a-c7333f0dc9f4")
+       },
+       new IdentityUserRole<Guid>
+       {
+           RoleId = new("5adbec33-97c5-4041-be6a-e0f3d3ca6f44"),
+           UserId = new("87d76511-8b74-4250-aef1-c47b8cb9308f")
        }
       );
     }

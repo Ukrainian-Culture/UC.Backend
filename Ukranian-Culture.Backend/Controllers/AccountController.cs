@@ -157,16 +157,27 @@ public class AccountController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("ConfirmEmail")]
-    public async Task<IActionResult> ConfirmEmail(string email, string token)
+    [HttpPost("confirmEmail")]
+    public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailDto confirmEmail)
     {
-        var result = await _accountRepository.ConfirmEmailAsync(email, token);
+        var result = await _accountRepository.ConfirmEmailAsync(confirmEmail.Email, confirmEmail.Token);
         if (!result.Succeeded)
         {
             return NotFound();
         }
 
         return Ok("Your email was confirmed");
+    }
+    [HttpPost("sendEmailConfirmToken")]
+    public async Task<IActionResult> SendEmailToConfirm([FromBody] SendEmailDto sendEmail)
+    {
+        var result = await _accountRepository.GetTokenSendEmailAsync(sendEmail.Email, sendEmail.Url);
+        if (string.IsNullOrWhiteSpace(result))
+        {
+            return NotFound();
+        }
+
+        return Ok(result);
     }
 
     [HttpGet("endDate/{email}")]
@@ -187,5 +198,37 @@ public class AccountController : ControllerBase
 
         var timeLeft = user.SubscriptionEndDate - _dateTimeProvider.GetCurrentTime();
         return Ok(timeLeft.ToString(@"dd\:hh", CultureInfo.CurrentCulture));
+    }
+
+    [HttpPost("sendEmailForgotPasswordToken")]
+    public async Task<IActionResult> SendEmailToForgotPassword([FromBody] SendEmailDto sendEmail)
+    {
+        var result = await _accountRepository.GetTokenForgotPasswordAsync(sendEmail.Email, sendEmail.Url);
+        if (string.IsNullOrEmpty(result))
+            return NotFound();
+        return Ok(result);
+    }
+
+    [HttpPost("ResetPassword")]
+    public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPassword)
+    {
+        if (resetPassword is null)
+        {
+            return BadRequest();
+        }
+        var result = await _accountRepository.ResetPasswordAsync(resetPassword);
+        if (!result.Succeeded)
+        {
+            return NotFound();
+        }
+        return Ok(result);
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpDelete("DeleteFailedUsers")]
+    public async Task<IActionResult> DeleteFailedUsers()
+    {
+        await _accountRepository.DeleteFailedUsers();
+        return Ok();
     }
 }

@@ -17,5 +17,9 @@ public interface IAccountRepository
     Task<IdentityResult> Revoke(string email);
     Task RevokeAll();
     Task<IdentityResult> ConfirmEmailAsync(string email, string token);
+    Task<IdentityResult> ResetPasswordAsync(ResetPasswordDto resetPassword);
+    Task<string> GetTokenForgotPasswordAsync(string email, string url);
+    Task<string> GetTokenSendEmailAsync(string email, string url);
+    Task DeleteFailedUsers();
 }
 
