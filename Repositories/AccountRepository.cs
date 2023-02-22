@@ -16,6 +16,7 @@ using System.Security.Cryptography;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Repositories;
 
@@ -83,10 +84,6 @@ public class AccountRepository : IAccountRepository
         {
             await _userManager.AddToRoleAsync(user, "User");
             await _userManager.UpdateAsync(user);
-            var token = Convert.ToBase64String(Encoding.UTF8.GetBytes(await _userManager.GenerateEmailConfirmationTokenAsync(user)));
-            var url = $"https://ucbackend.azurewebsites.net/api/account/ConfirmEmail?email={user.Email}&token={token}";
-            var body = "Click the link below to confirm your email.<br>" + url;
-            await SendEmailAsync(user.Email, "Confirm email", "", body);
         }
         return result;
     }
@@ -186,6 +183,7 @@ public class AccountRepository : IAccountRepository
             claims.Add(roleClaim);
         }
     }
+
     public async Task<TokenModel> RefreshToken(TokenModel tokenModel)
     {
         string? accessToken = tokenModel.AccessToken;
@@ -235,6 +233,7 @@ public class AccountRepository : IAccountRepository
         {
             return IdentityResult.Failed();
         }
+
         var result = await _userManager.ConfirmEmailAsync(user, Encoding.UTF8.GetString(Convert.FromBase64String(token)));
         return result;
     }
@@ -253,5 +252,50 @@ public class AccountRepository : IAccountRepository
         var to = new EmailAddress(toEmail, "New User");
         var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, content);
         var response = await client.SendEmailAsync(msg);
+    }
+
+    public async Task<string> GetTokenSendEmailAsync(string email,string url)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user is null) return string.Empty;
+        var token = Convert.ToBase64String(Encoding.UTF8.GetBytes(await _userManager.GenerateEmailConfirmationTokenAsync(user)));
+        var body = "Click the link below to confirm your email.<br>" + url;
+        await SendEmailAsync(user.Email, "Confirm email", "", body);
+        return token;
+    }
+
+    public async Task<string> GetTokenForgotPasswordAsync(string email,string url)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user is null) return string.Empty;
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var encodedToken = Encoding.UTF8.GetBytes(token);
+        var validToken = WebEncoders.Base64UrlEncode(encodedToken);
+
+       await SendEmailAsync(email, "Reset Password","", "<h1>Follow the instructions to reset your password</h1>" +
+            $"<p>To reset your password <a href='{url}'>Click here</a></p>");
+        return validToken;
+    }
+
+    public async Task<IdentityResult> ResetPasswordAsync(ResetPasswordDto resetPassword)
+    {
+        var user = await _userManager.FindByEmailAsync(resetPassword.Email);
+        if (user == null)
+        {
+            return IdentityResult.Failed();
+        }
+        var decodedToken = WebEncoders.Base64UrlDecode(resetPassword.Token);
+        var token=Encoding.UTF8.GetString(decodedToken);
+        var result = await _userManager.ResetPasswordAsync(user,token, resetPassword.Password);
+        return result;
+    }
+
+    public async Task DeleteFailedUsers()
+    {
+        var users=_userManager.Users.Where(x=>x.EmailConfirmed== false).ToList();
+        foreach (var user in users)
+        {
+            await _userManager.DeleteAsync(user);
+        }
     }
 }

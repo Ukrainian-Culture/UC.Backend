@@ -19,6 +19,7 @@ public class UsersConfigurations : IEntityTypeConfiguration<User>
                 Id = _firstId,
                 UserName = "Admin",
                 Email = "Admin@gmail.com",
+                EmailConfirmed= true,
                 NormalizedUserName = "ADMIN",
                 NormalizedEmail = "ADMIN@GMAIL.COM",
                 PasswordHash = hasher.HashPassword(null, "AdminPassword"),
@@ -29,6 +30,7 @@ public class UsersConfigurations : IEntityTypeConfiguration<User>
             {
                 Id = _secondId,
                 UserName = "Bohdan",
+                EmailConfirmed=true,
                 NormalizedUserName = "BOHDAN",
                 NormalizedEmail = "BOHDAN@GMAIL.COM",
                 Email = "Bohdan@gmail.com",
