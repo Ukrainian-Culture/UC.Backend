@@ -218,7 +218,7 @@ public class AccountControllerTests
             "Q2ZESjhIKzduanVwQjF4T3IvM0VzT3FwaWNYaDErZEpubkdZY3BCRTN5WlBWWTVkSTZJZ1Ayelo0QzViOHhlTlNCZFVVbjE0Q0k0WDN6ZEg1U3kzekhEbTd4SFcvdHhxRXErZEdzY1JtTXJVTW5jaG4zZ1JsUGM2a3RNaEt0dXRxa2kvbEs1TFJ1ekJTN3hadzI5dDBGOTR0aG9HZlBuSjFpZE4rTTVzeHdGaXlkN0xLMkJ5TGp6Nno3d3g0L1A2TmMrYnRmeWlQSnFNYzNoL29XcVh0ZndmSnF3OFlFbldSa3lWeUZjMmIvSmF4eDlBSy81UURzU1VHcno3L3pGUit4eVZrdz09"
 
         };
-        
+
         //act
         var result = await controller.ConfirmEmail(emailDto) as OkObjectResult;
         var statusCode = result.StatusCode;

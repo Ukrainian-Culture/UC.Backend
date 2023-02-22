@@ -254,7 +254,7 @@ public class AccountRepository : IAccountRepository
         var response = await client.SendEmailAsync(msg);
     }
 
-    public async Task<string> GetTokenSendEmailAsync(string email,string url)
+    public async Task<string> GetTokenSendEmailAsync(string email, string url)
     {
         var user = await _userManager.FindByEmailAsync(email);
         if (user is null) return string.Empty;
@@ -264,7 +264,7 @@ public class AccountRepository : IAccountRepository
         return token;
     }
 
-    public async Task<string> GetTokenForgotPasswordAsync(string email,string url)
+    public async Task<string> GetTokenForgotPasswordAsync(string email, string url)
     {
         var user = await _userManager.FindByEmailAsync(email);
         if (user is null) return string.Empty;
@@ -272,8 +272,8 @@ public class AccountRepository : IAccountRepository
         var encodedToken = Encoding.UTF8.GetBytes(token);
         var validToken = WebEncoders.Base64UrlEncode(encodedToken);
 
-       await SendEmailAsync(email, "Reset Password","", "<h1>Follow the instructions to reset your password</h1>" +
-            $"<p>To reset your password <a href='{url}'>Click here</a></p>");
+        await SendEmailAsync(email, "Reset Password", "", "<h1>Follow the instructions to reset your password</h1>" +
+             $"<p>To reset your password <a href='{url}'>Click here</a></p>");
         return validToken;
     }
 
@@ -285,14 +285,14 @@ public class AccountRepository : IAccountRepository
             return IdentityResult.Failed();
         }
         var decodedToken = WebEncoders.Base64UrlDecode(resetPassword.Token);
-        var token=Encoding.UTF8.GetString(decodedToken);
-        var result = await _userManager.ResetPasswordAsync(user,token, resetPassword.Password);
+        var token = Encoding.UTF8.GetString(decodedToken);
+        var result = await _userManager.ResetPasswordAsync(user, token, resetPassword.Password);
         return result;
     }
 
     public async Task DeleteFailedUsers()
     {
-        var users=_userManager.Users.Where(x=>x.EmailConfirmed== false).ToList();
+        var users = _userManager.Users.Where(x => x.EmailConfirmed == false).ToList();
         foreach (var user in users)
         {
             await _userManager.DeleteAsync(user);

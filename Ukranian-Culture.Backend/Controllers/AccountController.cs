@@ -171,7 +171,7 @@ public class AccountController : ControllerBase
     [HttpPost("sendEmailConfirmToken")]
     public async Task<IActionResult> SendEmailToConfirm([FromBody] SendEmailDto sendEmail)
     {
-        var result = await _accountRepository.GetTokenSendEmailAsync(sendEmail.Email,sendEmail.Url);
+        var result = await _accountRepository.GetTokenSendEmailAsync(sendEmail.Email, sendEmail.Url);
         if (string.IsNullOrWhiteSpace(result))
         {
             return NotFound();
@@ -203,7 +203,7 @@ public class AccountController : ControllerBase
     [HttpPost("sendEmailForgotPasswordToken")]
     public async Task<IActionResult> SendEmailToForgotPassword([FromBody] SendEmailDto sendEmail)
     {
-        var result= await _accountRepository.GetTokenForgotPasswordAsync(sendEmail.Email,sendEmail.Url);
+        var result = await _accountRepository.GetTokenForgotPasswordAsync(sendEmail.Email, sendEmail.Url);
         if (string.IsNullOrEmpty(result))
             return NotFound();
         return Ok(result);
@@ -216,7 +216,7 @@ public class AccountController : ControllerBase
         {
             return BadRequest();
         }
-        var result=await _accountRepository.ResetPasswordAsync(resetPassword);
+        var result = await _accountRepository.ResetPasswordAsync(resetPassword);
         if (!result.Succeeded)
         {
             return NotFound();
@@ -224,7 +224,7 @@ public class AccountController : ControllerBase
         return Ok(result);
     }
 
-    [Authorize(Roles="Admin")]
+    [Authorize(Roles = "Admin")]
     [HttpDelete("DeleteFailedUsers")]
     public async Task<IActionResult> DeleteFailedUsers()
     {
