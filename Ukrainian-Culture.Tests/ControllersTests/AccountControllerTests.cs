@@ -103,11 +103,11 @@ public class AccountControllerTests
         };
 
         //act
-        var result = await controller.ChangePassword(user) as OkObjectResult;
+        var result = await controller.ChangePassword(user) as NoContentResult;
         var statusCode = result.StatusCode;
 
         //assert
-        statusCode.Should().Be((int)HttpStatusCode.OK);
+        statusCode.Should().Be((int)HttpStatusCode.NoContent);
     }
 
     [Fact]
@@ -126,7 +126,7 @@ public class AccountControllerTests
 
         //act
         var result = await controller.ChangePassword(user);
-        var statusCode = (result as NotFoundResult)!.StatusCode;
+        var statusCode = (result as NotFoundObjectResult)!.StatusCode;
 
         //assert
         statusCode.Should().Be((int)HttpStatusCode.NotFound);
@@ -145,11 +145,11 @@ public class AccountControllerTests
         };
 
         //act
-        var result = await controller.ChangeEmail(user) as OkObjectResult;
+        var result = await controller.ChangeEmail(user) as NoContentResult;
         var statusCode = result.StatusCode;
 
         //assert
-        statusCode.Should().Be((int)HttpStatusCode.OK);
+        statusCode.Should().Be((int)HttpStatusCode.NoContent);
     }
 
     [Fact]
@@ -167,7 +167,7 @@ public class AccountControllerTests
 
         //act
         var result = await controller.ChangeEmail(user);
-        var statusCode = (result as NotFoundResult)!.StatusCode;
+        var statusCode = (result as NotFoundObjectResult)!.StatusCode;
 
         //assert
         statusCode.Should().Be((int)HttpStatusCode.NotFound);
@@ -183,7 +183,7 @@ public class AccountControllerTests
 
         //act
         var result = await controller.DeleteAccount(id);
-        var statusCode = (result as NotFoundResult)!.StatusCode;
+        var statusCode = (result as NotFoundObjectResult)!.StatusCode;
 
         //assert
         statusCode.Should().Be((int)HttpStatusCode.NotFound);
@@ -198,11 +198,11 @@ public class AccountControllerTests
         var controller = new AccountController(_account, _repository, _messageProvider, _dateTimeProvider);
 
         //act
-        var result = await controller.DeleteAccount(id) as OkObjectResult;
+        var result = await controller.DeleteAccount(id) as NoContentResult;
         var statusCode = result.StatusCode;
 
         //assert
-        statusCode.Should().Be((int)HttpStatusCode.OK);
+        statusCode.Should().Be((int)HttpStatusCode.NoContent);
     }
 
     [Fact]
@@ -241,7 +241,7 @@ public class AccountControllerTests
 
         };
         //act
-        var result = await controller.ConfirmEmail(emailDto) as NotFoundResult;
+        var result = await controller.ConfirmEmail(emailDto) as NotFoundObjectResult;
         var statusCode = result.StatusCode;
 
         //assert
@@ -260,7 +260,7 @@ public class AccountControllerTests
             Token = "Q2dz09"
         };
         //act
-        var result = await controller.ConfirmEmail(emailDto) as NotFoundResult;
+        var result = await controller.ConfirmEmail(emailDto) as NotFoundObjectResult;
         var statusCode = result.StatusCode;
 
         //assert
