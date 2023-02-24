@@ -36,7 +36,7 @@ public class AccountController : ControllerBase
             return Ok(result.Succeeded);
         }
 
-        return StatusCode(409,$"Account with email {signUpModel.Email} already exist");
+        return StatusCode(409, $"Account with email {signUpModel.Email} already exist");
     }
 
     [HttpPost("login")]
