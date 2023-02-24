@@ -36,7 +36,7 @@ public class AccountController : ControllerBase
             return Ok(result.Succeeded);
         }
 
-        return Unauthorized();
+        return StatusCode(409,$"Account with email {signUpModel.Email} already exist");
     }
 
     [HttpPost("login")]
@@ -46,7 +46,7 @@ public class AccountController : ControllerBase
 
         if (result is null)
         {
-            return Unauthorized();
+            return Unauthorized("Email or password entered incorrectly");
         }
 
         return Ok(result);
@@ -61,10 +61,10 @@ public class AccountController : ControllerBase
 
         if (!result.Succeeded)
         {
-            return NotFound();
+            return NotFound(_messageProvider.NotFoundMessage<User, string>(changePasswordDto.Email));
         }
 
-        return Ok(result);
+        return NoContent();
     }
 
     [HttpPatch("changeEmail")]
@@ -75,10 +75,10 @@ public class AccountController : ControllerBase
 
         if (!result.Succeeded)
         {
-            return NotFound();
+            return NotFound(_messageProvider.NotFoundMessage<User, string>(changeEmailDto.CurrentEmail));
         }
 
-        return Ok(result);
+        return NoContent();
     }
 
     [HttpPatch("ChangeEndOfSub")]
@@ -103,7 +103,7 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> Logout()
     {
         await _accountRepository.Logout();
-        return Ok();
+        return NoContent();
     }
 
     [HttpDelete("deleteAccount/{id:guid}")]
@@ -111,8 +111,11 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> DeleteAccount(Guid id)
     {
         var result = await _accountRepository.DeleteAccountAsync(id);
-        if (!result.Succeeded) return NotFound();
-        return Ok(result);
+        if (!result.Succeeded)
+        {
+            return NotFound(_messageProvider.NotFoundMessage<User, Guid>(id));
+        }
+        return NoContent();
     }
 
     [HttpPost]
@@ -147,14 +150,14 @@ public class AccountController : ControllerBase
             return BadRequest();
         }
 
-        return Ok(result);
+        return NoContent();
     }
 
     [HttpPost("revokeAll")]
     public async Task<IActionResult> RevokeAll()
     {
         await _accountRepository.RevokeAll();
-        return Ok();
+        return NoContent();
     }
 
     [HttpPost("confirmEmail")]
@@ -163,7 +166,7 @@ public class AccountController : ControllerBase
         var result = await _accountRepository.ConfirmEmailAsync(confirmEmail.Email, confirmEmail.Token);
         if (!result.Succeeded)
         {
-            return NotFound();
+            return NotFound(_messageProvider.NotFoundMessage<User, string>(confirmEmail.Email));
         }
 
         return Ok("Your email was confirmed");
@@ -174,7 +177,7 @@ public class AccountController : ControllerBase
         var result = await _accountRepository.GetTokenSendEmailAsync(sendEmail.Email, sendEmail.Url);
         if (string.IsNullOrWhiteSpace(result))
         {
-            return NotFound();
+            return NotFound(_messageProvider.NotFoundMessage<User, string>(sendEmail.Email));
         }
 
         return Ok(result);
@@ -219,9 +222,9 @@ public class AccountController : ControllerBase
         var result = await _accountRepository.ResetPasswordAsync(resetPassword);
         if (!result.Succeeded)
         {
-            return NotFound();
+            return NotFound(_messageProvider.NotFoundMessage<User, string>(resetPassword.Email));
         }
-        return Ok(result);
+        return NoContent();
     }
 
     [Authorize(Roles = "Admin")]
@@ -229,6 +232,6 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> DeleteFailedUsers()
     {
         await _accountRepository.DeleteFailedUsers();
-        return Ok();
+        return NoContent();
     }
 }
