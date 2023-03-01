@@ -15,7 +15,6 @@ using Parsers;
 using Entities.Configurations;
 using Lucene.Net.Util;
 using Microsoft.OpenApi.Models;
-using Repositories.CachingRepository;
 using Ukranian_Culture.Backend.ActionFilters.ArticleLocaleActionFilters;
 using Ukranian_Culture.Backend.Services;
 using OnlineUsersHub = Ukranian_Culture.Backend.Services.OnlineUsersHub;
@@ -41,14 +40,12 @@ builder.Services.AddScoped(provider => new Lazy<IUserRepository>(
     LazyThreadSafetyMode.ExecutionAndPublication));
 
 builder.Services.AddScoped<IArticleLocalesRepository, ArticleLocalesRepository>();
-//builder.Services.Decorate<IArticleLocalesRepository, CachingArticleLocalesRepository>();
 builder.Services.AddScoped(provider => new Lazy<IArticleLocalesRepository>(
     () => provider.GetService<IArticleLocalesRepository>()!,
     LazyThreadSafetyMode.ExecutionAndPublication));
 
 
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
-//builder.Services.Decorate<IArticleRepository, CachingArticleRepository>();
 builder.Services.AddScoped(provider => new Lazy<IArticleRepository>(
     () => provider.GetService<IArticleRepository>()!,
     LazyThreadSafetyMode.ExecutionAndPublication));

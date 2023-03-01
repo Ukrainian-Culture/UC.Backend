@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 
-namespace Repositories.CachingRepository;
+namespace Ukranian_Culture.Backend.Services;
 
 public class CachingHelperService
 {
