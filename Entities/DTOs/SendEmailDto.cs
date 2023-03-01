@@ -1,14 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Entities.DTOs
-{
-    public class SendEmailDto
-    {
-        [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
+namespace Entities.DTOs;
 
-        public string Url { get; set; }
-    }
+public class SendEmailDto
+{
+    [Required]
+    [EmailAddress]
+    [Display(Name = "Email")]
+    public string Email { get; set; }
+
+    public string Url { get; set; }
 }
