@@ -130,7 +130,7 @@ public class ArticlesLocaleController : ControllerBase
     public Task<IActionResult> GetArticleLocalePdfById(Guid id, Guid cultureId)
     {
         var articleLocale = HttpContext.Items["articleLocale"] as ArticlesLocale;
-        
+
         Document document = new Document();
         Section section = document.AddSection();
 
@@ -140,12 +140,12 @@ public class ArticlesLocaleController : ControllerBase
         header.Format.Font.Size = 15;
         header.Format.SpaceAfter = 12;
         header.AddText(articleLocale.Title);
-        
+
         Paragraph paragraph = section.AddParagraph();
         paragraph.Format.Alignment = ParagraphAlignment.Left;
         paragraph.Format.Font.Size = 12;
         paragraph.AddText(articleLocale.Content);
-        
+
         PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(true);
         pdfRenderer.Document = document;
         pdfRenderer.RenderDocument();
