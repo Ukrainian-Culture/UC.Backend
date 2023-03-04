@@ -3,6 +3,8 @@ using Contracts;
 using Entities.DTOs;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
+using MigraDoc.DocumentObjectModel;
+using MigraDoc.Rendering;
 using PdfSharpCore;
 using PdfSharpCore.Pdf;
 using Ukranian_Culture.Backend.ActionFilters.ArticleLocaleActionFilters;
@@ -129,10 +131,27 @@ public class ArticlesLocaleController : ControllerBase
     {
         var articleLocale = HttpContext.Items["articleLocale"] as ArticlesLocale;
 
-        var document = new PdfDocument();
-        PdfGenerator.AddPdfPages(document, articleLocale!.Content, PageSize.A4, 20, null, null, null);
+        Document document = new Document();
+        Section section = document.AddSection();
+
+        Paragraph header = section.AddParagraph();
+        header.Format.Alignment = ParagraphAlignment.Center;
+        header.Format.Font.Bold = true;
+        header.Format.Font.Size = 15;
+        header.Format.SpaceAfter = 12;
+        header.AddText(articleLocale.Title);
+
+        Paragraph paragraph = section.AddParagraph();
+        paragraph.Format.Alignment = ParagraphAlignment.Left;
+        paragraph.Format.Font.Size = 12;
+        paragraph.AddText(articleLocale.Content);
+
+        PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(true);
+        pdfRenderer.Document = document;
+        pdfRenderer.RenderDocument();
+        byte[]? response = null;
         MemoryStream ms = new MemoryStream();
-        document.Save(ms);
+        pdfRenderer.PdfDocument.Save(ms);
         string filename = articleLocale.Title + ".pdf";
         return Task.FromResult<IActionResult>(File(ms.ToArray(), "application/pdf", filename));
     }
