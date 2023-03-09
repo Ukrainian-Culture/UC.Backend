@@ -11,16 +11,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
 using Repositories;
-using Ukranian_Culture.Backend;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Parsers;
-using NLog.Fluent;
 using Entities.Configurations;
+using Lucene.Net.Util;
 using Microsoft.OpenApi.Models;
 using Ukranian_Culture.Backend.ActionFilters.ArticleLocaleActionFilters;
-using Ukranian_Culture.Backend.Controllers;
 using Ukranian_Culture.Backend.Services;
 using OnlineUsersHub = Ukranian_Culture.Backend.Services.OnlineUsersHub;
 
@@ -31,14 +26,46 @@ builder.Services.AddScoped<ILoggerManager, LoggerManager>();
 builder.Services.AddTransient<IParser, Parser>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 builder.Services.AddMvc();
-builder.Services.AddTransient<IRepositoryManager, RepositoryManager>();
 builder.Services.AddScoped<IErrorMessageProvider, ErrorMessageProvider>();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<IArticleTileService, ArticleTilesService>();
+builder.Services.Decorate<IArticleTileService, CachingArticleTileService>();
 builder.Services.AddScoped<ArticleLocaleIEmumerableExistAttribute>();
 builder.Services.AddScoped<ArticleLocaleExistAttribute>();
 builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped(provider => new Lazy<IUserRepository>(
+    () => provider.GetService<IUserRepository>()!,
+    LazyThreadSafetyMode.ExecutionAndPublication));
 
+builder.Services.AddScoped<IArticleLocalesRepository, ArticleLocalesRepository>();
+builder.Services.AddScoped(provider => new Lazy<IArticleLocalesRepository>(
+    () => provider.GetService<IArticleLocalesRepository>()!,
+    LazyThreadSafetyMode.ExecutionAndPublication));
+
+
+builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
+builder.Services.AddScoped(provider => new Lazy<IArticleRepository>(
+    () => provider.GetService<IArticleRepository>()!,
+    LazyThreadSafetyMode.ExecutionAndPublication));
+
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped(provider => new Lazy<ICategoryRepository>(
+    () => provider.GetService<ICategoryRepository>()!,
+    LazyThreadSafetyMode.ExecutionAndPublication));
+
+builder.Services.AddScoped<ICultureRepository, CultureRepository>();
+builder.Services.AddScoped(provider => new Lazy<ICultureRepository>(
+    () => provider.GetService<ICultureRepository>()!,
+    LazyThreadSafetyMode.ExecutionAndPublication));
+
+builder.Services.AddScoped<IUserHistoryRepository, UserHistoryRepository>();
+builder.Services.AddScoped(provider => new Lazy<IUserHistoryRepository>(
+    () => provider.GetService<IUserHistoryRepository>()!,
+    LazyThreadSafetyMode.ExecutionAndPublication));
+
+builder.Services.AddTransient<IRepositoryManager, RepositoryManager>();
 
 builder.Services.AddDbContext<RepositoryContext>(
     opts => opts.UseSqlServer(
