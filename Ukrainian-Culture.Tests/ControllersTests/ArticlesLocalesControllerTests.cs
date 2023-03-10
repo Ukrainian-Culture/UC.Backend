@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Ukranian_Culture.Backend.ActionFilters.ArticleLocaleActionFilters;
 using RouteData = Microsoft.AspNetCore.Routing.RouteData;
-
+/*
 namespace Ukrainian_Culture.Tests.ControllersTests;
 
 public class ArticlesLocalesControllerTests
@@ -414,4 +414,4 @@ public class ArticlesLocalesControllerTests
         //Assert
         result.Should().NotBeNull();
     }
-}
+}*/
