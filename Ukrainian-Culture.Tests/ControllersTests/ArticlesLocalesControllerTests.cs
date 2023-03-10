@@ -13,7 +13,7 @@ public class ArticlesLocalesControllerTests
     private readonly IMapper _mapper = Substitute.For<IMapper>();
     private readonly ILoggerManager _logger = Substitute.For<ILoggerManager>();
     private readonly IErrorMessageProvider _messageProvider = Substitute.For<IErrorMessageProvider>();
-    /*
+    
     [Fact]
     public async Task GetAllArticlesLocales_ShouldReturnNotFound_WhenCultureDoesnotExist()
     {
@@ -346,7 +346,7 @@ public class ArticlesLocalesControllerTests
         _mapper.ReceivedCalls().Should().HaveCount(1);
         _repositoryManager.ArticleLocales.ReceivedCalls().Should().HaveCount(1);
     }
-    */
+    
         [Fact]
     public async Task GetArticleLocalePDFById_SholudReturnNotFoundAndLoggingResult_WhenCultureDontExistInDB()
     {
