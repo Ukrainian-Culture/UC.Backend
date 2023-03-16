@@ -142,13 +142,13 @@ public class ArticlesLocaleController : ControllerBase
             Paragraph header = section.AddParagraph();
             header.Format.Alignment = ParagraphAlignment.Center;
             //header.Format.Font.Bold = true;
-            header.Format.Font.Size = 15;
+            //header.Format.Font.Size = 15;
             header.Format.SpaceAfter = 12;
             header.AddText(articleLocale.Title);
 
             Paragraph paragraph = section.AddParagraph();
             paragraph.Format.Alignment = ParagraphAlignment.Left;
-            paragraph.Format.Font.Size = 12;
+            //paragraph.Format.Font.Size = 12;
             paragraph.AddText(articleLocale.Content);
 
             PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(true);
