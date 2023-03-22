@@ -18,7 +18,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Parsers;
 using NLog.Fluent;
 using Entities.Configurations;
+using FontResolver;
 using Microsoft.OpenApi.Models;
+using PdfSharp.Fonts;
 using Ukranian_Culture.Backend.ActionFilters.ArticleLocaleActionFilters;
 using Ukranian_Culture.Backend.Controllers;
 using Ukranian_Culture.Backend.Services;
@@ -152,6 +154,8 @@ app.UseExceptionHandler(appError =>
     }));
 
 var logger = LogManager.GetCurrentClassLogger();
+
+GlobalFontSettings.FontResolver = new AppFontResolver();
 
 try
 {
