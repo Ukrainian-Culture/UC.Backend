@@ -7,7 +7,7 @@ namespace Repositories;
 
 public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
 {
-    protected RepositoryContext Context;
+    protected readonly RepositoryContext Context;
 
     protected RepositoryBase(RepositoryContext context)
     {
@@ -27,7 +27,7 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
         => trackChanges switch
         {
             ChangesType.Tracking => Context.Set<T>().Where(expression),
-            ChangesType.AsNoTracking => Context.Set<T>().Where(expression).AsNoTracking(),
+            ChangesType.AsNoTracking => Context.Set<T>().AsNoTracking().Where(expression),
             _ => throw new ArgumentOutOfRangeException(nameof(trackChanges), trackChanges, null)
         };
 
