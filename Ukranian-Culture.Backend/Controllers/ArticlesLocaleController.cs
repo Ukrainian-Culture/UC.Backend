@@ -125,13 +125,13 @@ public class ArticlesLocaleController : ControllerBase
         _logger.LogError(_messageProvider.NotFoundMessage<Culture, Guid>(cultureId));
         return false;
     }
-    
+
     [HttpGet("ArticleLocalePDFById")]
     [ServiceFilter(typeof(ArticleLocaleExistAttribute))]
     public Task<IActionResult> GetArticleLocalePdfById(Guid id, Guid cultureId)
     {
         var articleLocale = HttpContext.Items["articleLocale"] as ArticlesLocale;
-    
+
         Document document = new Document();
         Section section = document.AddSection();
 
@@ -148,7 +148,7 @@ public class ArticlesLocaleController : ControllerBase
         paragraph.Format.Font.Name = "MacPaw";
         paragraph.Format.Font.Size = 12;
         paragraph.AddText(articleLocale.Content);
-        
+
         PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(true);
         pdfRenderer.Document = document;
         pdfRenderer.RenderDocument();
