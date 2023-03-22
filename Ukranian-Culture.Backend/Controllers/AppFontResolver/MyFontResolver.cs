@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using PdfSharp.Fonts;
 using System;
 using System.IO;
-using PdfSharpCore.Utils;
 
 namespace FontResolver
 {
