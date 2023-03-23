@@ -36,7 +36,7 @@ namespace FontResolver
 
         public byte[] GetFont(string faceName)
         {
-            var path = Environment.CurrentDirectory + "\\Controllers\\AppFontResolver\\Fonts\\";
+            var path = Environment.CurrentDirectory;
             var faceNamePath = Path.Join(path, faceName);
             using (var ms = new MemoryStream())
             {
