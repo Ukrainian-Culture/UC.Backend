@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Ukranian_Culture.Backend.Controllers
 {
@@ -10,6 +9,7 @@ namespace Ukranian_Culture.Backend.Controllers
         [HttpGet]
         public IActionResult GetCitys()
         {
+            throw new Exception("asd");
             return Ok(new[]
             {
                 new {city = "I-F"},
