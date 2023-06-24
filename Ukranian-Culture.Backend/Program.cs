@@ -13,8 +13,10 @@ using NLog;
 using Repositories;
 using Parsers;
 using Entities.Configurations;
+using FontResolver;
 using Lucene.Net.Util;
 using Microsoft.OpenApi.Models;
+using PdfSharp.Fonts;
 using Ukranian_Culture.Backend.ActionFilters.ArticleLocaleActionFilters;
 using Ukranian_Culture.Backend.Services;
 using OnlineUsersHub = Ukranian_Culture.Backend.Services.OnlineUsersHub;
@@ -179,6 +181,8 @@ app.UseExceptionHandler(appError =>
     }));
 
 var logger = LogManager.GetCurrentClassLogger();
+
+GlobalFontSettings.FontResolver = new AppFontResolver();
 
 try
 {

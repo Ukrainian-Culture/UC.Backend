@@ -3,12 +3,13 @@ using Contracts;
 using Entities.DTOs;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
+using PdfSharp.Drawing;
+using PdfSharp.Fonts;
+using PdfSharp.Pdf;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
-using PdfSharpCore;
-using PdfSharpCore.Pdf;
+using FontResolver;
 using Ukranian_Culture.Backend.ActionFilters.ArticleLocaleActionFilters;
-using VetCV.HtmlRendererCore.PdfSharpCore;
 
 namespace Ukranian_Culture.Backend.Controllers;
 
@@ -136,6 +137,7 @@ public class ArticlesLocaleController : ControllerBase
 
         Paragraph header = section.AddParagraph();
         header.Format.Alignment = ParagraphAlignment.Center;
+        header.Format.Font.Name = "MacPaw";
         header.Format.Font.Bold = true;
         header.Format.Font.Size = 15;
         header.Format.SpaceAfter = 12;
@@ -143,6 +145,7 @@ public class ArticlesLocaleController : ControllerBase
 
         Paragraph paragraph = section.AddParagraph();
         paragraph.Format.Alignment = ParagraphAlignment.Left;
+        paragraph.Format.Font.Name = "MacPaw";
         paragraph.Format.Font.Size = 12;
         paragraph.AddText(articleLocale.Content);
 
